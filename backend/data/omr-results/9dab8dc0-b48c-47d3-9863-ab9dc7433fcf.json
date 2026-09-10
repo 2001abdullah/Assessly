@@ -1,0 +1,2188 @@
+{
+  "ok": true,
+  "template_id": "tpl_660009f7db0f",
+  "source": "40.jpg",
+  "roll": {
+    "name": "roll",
+    "value": null,
+    "digits": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "statuses": [
+      "multi",
+      "faint",
+      "faint",
+      "multi",
+      "faint",
+      "multi",
+      "multi"
+    ],
+    "confidence": 0.15,
+    "needs_review": true,
+    "note": "unreadable digit column(s): 1, 2, 3, 4, 5, 6, 7"
+  },
+  "registration": {
+    "name": "registration",
+    "value": null,
+    "digits": [
+      null,
+      null,
+      null,
+      null,
+      "6",
+      null,
+      null,
+      null,
+      null,
+      "6"
+    ],
+    "statuses": [
+      "multi",
+      "multi",
+      "multi",
+      "faint",
+      "marked",
+      "multi",
+      "multi",
+      "blank",
+      "blank",
+      "marked"
+    ],
+    "confidence": 0.15,
+    "needs_review": true,
+    "note": "unreadable digit column(s): 1, 2, 3, 4, 6, 7, 8, 9"
+  },
+  "answers": [
+    {
+      "key": "q1",
+      "kind": "question",
+      "index": 1,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.1357,
+      "scores": [
+        0.1857,
+        0.2585,
+        0.0015,
+        0.2333
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q2",
+      "kind": "question",
+      "index": 2,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0317,
+      "scores": [
+        0.1337,
+        0.1753,
+        0,
+        0.1426
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q3",
+      "kind": "question",
+      "index": 3,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0577,
+      "scores": [
+        0.1961,
+        0.1322,
+        0,
+        0.0743
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q4",
+      "kind": "question",
+      "index": 4,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0725,
+      "scores": [
+        0.208,
+        0.107,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q5",
+      "kind": "question",
+      "index": 5,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0001,
+      "scores": [
+        0.1501,
+        0.0817,
+        0,
+        0.0639
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q6",
+      "kind": "question",
+      "index": 6,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0187,
+      "scores": [
+        0.1649,
+        0.1441,
+        0,
+        0.0669
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q7",
+      "kind": "question",
+      "index": 7,
+      "owner": "questions",
+      "value": null,
+      "status": "multi",
+      "confidence": 0.15,
+      "scores": [
+        0.3432,
+        0.4517,
+        0,
+        0.1293
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q8",
+      "kind": "question",
+      "index": 8,
+      "owner": "questions",
+      "value": "A",
+      "status": "marked",
+      "confidence": 0.2789,
+      "scores": [
+        0.3581,
+        0.1456,
+        0,
+        0.1263
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q9",
+      "kind": "question",
+      "index": 9,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0372,
+      "scores": [
+        0.153,
+        0.1798,
+        0,
+        0.0624
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q10",
+      "kind": "question",
+      "index": 10,
+      "owner": "questions",
+      "value": "A",
+      "status": "marked",
+      "confidence": 0.7141,
+      "scores": [
+        0.4799,
+        0.2021,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q11",
+      "kind": "question",
+      "index": 11,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6561,
+      "scores": [
+        0.107,
+        0.1204,
+        0,
+        0.0594
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q12",
+      "kind": "question",
+      "index": 12,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.0818,
+      "scores": [
+        0.0698,
+        0.055,
+        0,
+        0.2155
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q13",
+      "kind": "question",
+      "index": 13,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.1134,
+      "scores": [
+        0,
+        0.2273,
+        0,
+        0.2407
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q14",
+      "kind": "question",
+      "index": 14,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.0335,
+      "scores": [
+        0.0594,
+        0.104,
+        0,
+        0.1768
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q15",
+      "kind": "question",
+      "index": 15,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6052,
+      "scores": [
+        0.1159,
+        0.1382,
+        0.0149,
+        0.0089
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q16",
+      "kind": "question",
+      "index": 16,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6476,
+      "scores": [
+        0.1233,
+        0.0773,
+        0.0059,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q17",
+      "kind": "question",
+      "index": 17,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.7241,
+      "scores": [
+        0.0966,
+        0.0163,
+        0,
+        0.0119
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q18",
+      "kind": "question",
+      "index": 18,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6052,
+      "scores": [
+        0.1382,
+        0.1278,
+        0.1129,
+        0.0253
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q19",
+      "kind": "question",
+      "index": 19,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0428,
+      "scores": [
+        0.1783,
+        0.1842,
+        0.1694,
+        0.0134
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q20",
+      "kind": "question",
+      "index": 20,
+      "owner": "questions",
+      "value": null,
+      "status": "multi",
+      "confidence": 0.15,
+      "scores": [
+        0.4071,
+        0.4175,
+        0.3804,
+        0.5869
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q21",
+      "kind": "question",
+      "index": 21,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.132,
+      "scores": [
+        0.2556,
+        0.2511,
+        0.2526,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q22",
+      "kind": "question",
+      "index": 22,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.1171,
+      "scores": [
+        0.1842,
+        0.2422,
+        0.2437,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q23",
+      "kind": "question",
+      "index": 23,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0094,
+      "scores": [
+        0.1189,
+        0.1575,
+        0.156,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q24",
+      "kind": "question",
+      "index": 24,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0131,
+      "scores": [
+        0.0015,
+        0.1204,
+        0.1605,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q25",
+      "kind": "question",
+      "index": 25,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.028,
+      "scores": [
+        0.1204,
+        0.1248,
+        0.1724,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q26",
+      "kind": "question",
+      "index": 26,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.1004,
+      "scores": [
+        0.2244,
+        0.2303,
+        0.1857,
+        0.1055
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q27",
+      "kind": "question",
+      "index": 27,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.1338,
+      "scores": [
+        0.2571,
+        0.2541,
+        0.2051,
+        0.1322
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q28",
+      "kind": "question",
+      "index": 28,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.067,
+      "scores": [
+        0.2036,
+        0.156,
+        0.0951,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q29",
+      "kind": "question",
+      "index": 29,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.7156,
+      "scores": [
+        0.0312,
+        0.0996,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q30",
+      "kind": "question",
+      "index": 30,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0521,
+      "scores": [
+        0.1917,
+        0.1605,
+        0,
+        0.0059
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q31",
+      "kind": "question",
+      "index": 31,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0577,
+      "scores": [
+        0.1961,
+        0.1352,
+        0,
+        0.0773
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q32",
+      "kind": "question",
+      "index": 32,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0335,
+      "scores": [
+        0.1441,
+        0.1768,
+        0,
+        0.1218
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q33",
+      "kind": "question",
+      "index": 33,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.1097,
+      "scores": [
+        0.1976,
+        0.2051,
+        0,
+        0.2377
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q34",
+      "kind": "question",
+      "index": 34,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.1691,
+      "scores": [
+        0.1902,
+        0.1545,
+        0,
+        0.2853
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q35",
+      "kind": "question",
+      "index": 35,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0688,
+      "scores": [
+        0.1783,
+        0.2051,
+        0,
+        0.1456
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q36",
+      "kind": "question",
+      "index": 36,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.028,
+      "scores": [
+        0.1367,
+        0.1724,
+        0,
+        0.0134
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q37",
+      "kind": "question",
+      "index": 37,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.067,
+      "scores": [
+        0.2036,
+        0.1813,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q38",
+      "kind": "question",
+      "index": 38,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0131,
+      "scores": [
+        0.1605,
+        0.1367,
+        0,
+        0.0401
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q39",
+      "kind": "question",
+      "index": 39,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.002,
+      "scores": [
+        0.1114,
+        0.0936,
+        0,
+        0.1516
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q40",
+      "kind": "question",
+      "index": 40,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.0168,
+      "scores": [
+        0.0654,
+        0.0981,
+        0,
+        0.1634
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q41",
+      "kind": "question",
+      "index": 41,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.015,
+      "scores": [
+        0.0981,
+        0.1025,
+        0,
+        0.162
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q42",
+      "kind": "question",
+      "index": 42,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6774,
+      "scores": [
+        0.101,
+        0.1129,
+        0,
+        0.0535
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q43",
+      "kind": "question",
+      "index": 43,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6179,
+      "scores": [
+        0.1293,
+        0.1337,
+        0.0416,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q44",
+      "kind": "question",
+      "index": 44,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.7198,
+      "scores": [
+        0.0981,
+        0.0743,
+        0.0371,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q45",
+      "kind": "question",
+      "index": 45,
+      "owner": "questions",
+      "value": null,
+      "status": "multi",
+      "confidence": 0.15,
+      "scores": [
+        0.6449,
+        0.4056,
+        0.1932,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q46",
+      "kind": "question",
+      "index": 46,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0224,
+      "scores": [
+        0.1516,
+        0.1605,
+        0.1679,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q47",
+      "kind": "question",
+      "index": 47,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0317,
+      "scores": [
+        0.1753,
+        0.162,
+        0.1501,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q48",
+      "kind": "question",
+      "index": 48,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0447,
+      "scores": [
+        0.1857,
+        0.1679,
+        0.1352,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q49",
+      "kind": "question",
+      "index": 49,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.028,
+      "scores": [
+        0.1516,
+        0.1664,
+        0.1724,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q50",
+      "kind": "question",
+      "index": 50,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.08,
+      "scores": [
+        0.1872,
+        0.211,
+        0.214,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q51",
+      "kind": "question",
+      "index": 51,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.8217,
+      "scores": [
+        0.0624,
+        0,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q52",
+      "kind": "question",
+      "index": 52,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6986,
+      "scores": [
+        0.1055,
+        0,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q53",
+      "kind": "question",
+      "index": 53,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0725,
+      "scores": [
+        0.1085,
+        0.208,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q54",
+      "kind": "question",
+      "index": 54,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.093,
+      "scores": [
+        0.1322,
+        0.2244,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q55",
+      "kind": "question",
+      "index": 55,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0707,
+      "scores": [
+        0.1902,
+        0.2065,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q56",
+      "kind": "question",
+      "index": 56,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0967,
+      "scores": [
+        0.2273,
+        0.1917,
+        0,
+        0.0045
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q57",
+      "kind": "question",
+      "index": 57,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0725,
+      "scores": [
+        0.208,
+        0.153,
+        0,
+        0.0134
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q58",
+      "kind": "question",
+      "index": 58,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0224,
+      "scores": [
+        0.1679,
+        0.104,
+        0,
+        0.0208
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q59",
+      "kind": "question",
+      "index": 59,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6094,
+      "scores": [
+        0.1367,
+        0.0342,
+        0,
+        0.0267
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q60",
+      "kind": "question",
+      "index": 60,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.8174,
+      "scores": [
+        0.0639,
+        0.0238,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q61",
+      "kind": "question",
+      "index": 61,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.8047,
+      "scores": [
+        0.0669,
+        0.052,
+        0.0684,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q62",
+      "kind": "question",
+      "index": 62,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6307,
+      "scores": [
+        0.0802,
+        0.0431,
+        0.1293,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q63",
+      "kind": "question",
+      "index": 63,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0112,
+      "scores": [
+        0.0758,
+        0.0788,
+        0.159,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q64",
+      "kind": "question",
+      "index": 64,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0242,
+      "scores": [
+        0.101,
+        0.1263,
+        0.1694,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q65",
+      "kind": "question",
+      "index": 65,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.028,
+      "scores": [
+        0.107,
+        0.1441,
+        0.1724,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q66",
+      "kind": "question",
+      "index": 66,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6009,
+      "scores": [
+        0.1174,
+        0.1397,
+        0.1397,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q67",
+      "kind": "question",
+      "index": 67,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.584,
+      "scores": [
+        0.1144,
+        0.1248,
+        0.1456,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q68",
+      "kind": "question",
+      "index": 68,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.028,
+      "scores": [
+        0.0892,
+        0.0966,
+        0.1724,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q69",
+      "kind": "question",
+      "index": 69,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6264,
+      "scores": [
+        0.0297,
+        0.0312,
+        0.1308,
+        0.0371
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q70",
+      "kind": "question",
+      "index": 70,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0484,
+      "scores": [
+        0.1694,
+        0.1842,
+        0.1887,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q71",
+      "kind": "question",
+      "index": 71,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.1264,
+      "scores": [
+        0.2229,
+        0.2511,
+        0.2184,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q72",
+      "kind": "question",
+      "index": 72,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0317,
+      "scores": [
+        0.1516,
+        0.1753,
+        0.1575,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q73",
+      "kind": "question",
+      "index": 73,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0892,
+      "scores": [
+        0.1887,
+        0.1768,
+        0.2214,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q74",
+      "kind": "question",
+      "index": 74,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0521,
+      "scores": [
+        0.1917,
+        0.1813,
+        0.1887,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q75",
+      "kind": "question",
+      "index": 75,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.1468,
+      "scores": [
+        0.2675,
+        0.2244,
+        0.0698,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q76",
+      "kind": "question",
+      "index": 76,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 1,
+      "scores": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q77",
+      "kind": "question",
+      "index": 77,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.119,
+      "scores": [
+        0,
+        0.1813,
+        0.2452,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q78",
+      "kind": "question",
+      "index": 78,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0874,
+      "scores": [
+        0.1842,
+        0.0178,
+        0.2199,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q79",
+      "kind": "question",
+      "index": 79,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.1264,
+      "scores": [
+        0.2511,
+        0,
+        0.208,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q80",
+      "kind": "question",
+      "index": 80,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0762,
+      "scores": [
+        0.2095,
+        0,
+        0.211,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q81",
+      "kind": "question",
+      "index": 81,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0948,
+      "scores": [
+        0.2259,
+        0.0475,
+        0.1947,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q82",
+      "kind": "question",
+      "index": 82,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.1022,
+      "scores": [
+        0.2318,
+        0.1159,
+        0.1857,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q83",
+      "kind": "question",
+      "index": 83,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0707,
+      "scores": [
+        0.2065,
+        0.1664,
+        0.1917,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q84",
+      "kind": "question",
+      "index": 84,
+      "owner": "questions",
+      "value": "C",
+      "status": "faint",
+      "confidence": 0.0484,
+      "scores": [
+        0.156,
+        0.1605,
+        0.1887,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q85",
+      "kind": "question",
+      "index": 85,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0112,
+      "scores": [
+        0.1575,
+        0.159,
+        0.1129,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q86",
+      "kind": "question",
+      "index": 86,
+      "owner": "questions",
+      "value": "B",
+      "status": "faint",
+      "confidence": 0.0317,
+      "scores": [
+        0.1709,
+        0.1753,
+        0.0639,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q87",
+      "kind": "question",
+      "index": 87,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0298,
+      "scores": [
+        0.1738,
+        0.1382,
+        0,
+        0
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q88",
+      "kind": "question",
+      "index": 88,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6052,
+      "scores": [
+        0.1382,
+        0.0847,
+        0,
+        0.0416
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q89",
+      "kind": "question",
+      "index": 89,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0205,
+      "scores": [
+        0.1664,
+        0,
+        0,
+        0.0996
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q90",
+      "kind": "question",
+      "index": 90,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0038,
+      "scores": [
+        0.153,
+        0.0104,
+        0,
+        0.1486
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q91",
+      "kind": "question",
+      "index": 91,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.0707,
+      "scores": [
+        0.1308,
+        0.0371,
+        0.0074,
+        0.2065
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q92",
+      "kind": "question",
+      "index": 92,
+      "owner": "questions",
+      "value": "D",
+      "status": "marked",
+      "confidence": 0.3108,
+      "scores": [
+        0.1426,
+        0.0817,
+        0.0624,
+        0.367
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q93",
+      "kind": "question",
+      "index": 93,
+      "owner": "questions",
+      "value": "D",
+      "status": "faint",
+      "confidence": 0.1115,
+      "scores": [
+        0.2095,
+        0.1813,
+        0.1278,
+        0.2392
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q94",
+      "kind": "question",
+      "index": 94,
+      "owner": "questions",
+      "value": null,
+      "status": "multi",
+      "confidence": 0.15,
+      "scores": [
+        0.6315,
+        0.6048,
+        0.6478,
+        0.7741
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q95",
+      "kind": "question",
+      "index": 95,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0651,
+      "scores": [
+        0.2021,
+        0.1679,
+        0.0357,
+        0.1813
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q96",
+      "kind": "question",
+      "index": 96,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0205,
+      "scores": [
+        0.1664,
+        0.1129,
+        0,
+        0.1337
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q97",
+      "kind": "question",
+      "index": 97,
+      "owner": "questions",
+      "value": null,
+      "status": "blank",
+      "confidence": 0.6689,
+      "scores": [
+        0.1159,
+        0.003,
+        0,
+        0.0089
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q98",
+      "kind": "question",
+      "index": 98,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0187,
+      "scores": [
+        0.1649,
+        0.1322,
+        0.0119,
+        0.1114
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q99",
+      "kind": "question",
+      "index": 99,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0688,
+      "scores": [
+        0.2051,
+        0.1159,
+        0.052,
+        0.1575
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "key": "q100",
+      "kind": "question",
+      "index": 100,
+      "owner": "questions",
+      "value": "A",
+      "status": "faint",
+      "confidence": 0.0298,
+      "scores": [
+        0.1738,
+        0.1293,
+        0.1129,
+        0.1516
+      ],
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    }
+  ],
+  "quality": {
+    "sharpness": 109.0057,
+    "contrast": 0.2902,
+    "reprojection_error_px": 0,
+    "fiducials_found": 4,
+    "timing_marks_found": 10,
+    "timing_marks_expected": 50,
+    "ink_threshold": 213.7953,
+    "fill_threshold": 0.35,
+    "skew_deg": 14.143,
+    "grade": "poor",
+    "score": 0.3537
+  },
+  "warnings": [
+    "timing marks were only partially readable (10/50); using corner registration only",
+    "timing marks not readable; using corner registration only",
+    "roll number needs verification: unreadable digit column(s): 1, 2, 3, 4, 5, 6, 7",
+    "registration number needs verification: unreadable digit column(s): 1, 2, 3, 4, 6, 7, 8, 9",
+    "76 question(s) need verification: 1, 2, 3, 4, 5, 6, 7, 9 ..."
+  ],
+  "errors": [],
+  "qr_payload": "",
+  "elapsed_ms": 171.23,
+  "needs_review": true,
+  "debug_image_path": ""
+}

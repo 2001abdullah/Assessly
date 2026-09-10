@@ -1,0 +1,19 @@
+{
+  "ignore": [
+    "data/*",
+    "omr/templates/*",
+    "uploads/*",
+    "*.jpeg",
+    "*.jpg",
+    "*.png",
+    "*.json"
+  ],
+  "watch": [
+    "server.js",
+    "routes/",
+    "config/",
+    "middleware/",
+    "services/"
+  ],
+  "delay": "1000"
+}

@@ -1,0 +1,6896 @@
+{
+  "schema_version": 1,
+  "template_id": "tpl_660009f7db0f",
+  "name": "CUET Admission Test 2026",
+  "page_w_mm": 210.0,
+  "page_h_mm": 297.0,
+  "bubble_r_mm": 2.3,
+  "config": {
+    "exam_name": "CUET Admission Test 2026",
+    "subject": "Physics + Chemistry + Mathematics",
+    "exam_code": "ME-2026-A",
+    "num_questions": 100,
+    "num_options": 4,
+    "option_labels": null,
+    "roll_digits": 7,
+    "registration_digits": 10,
+    "include_name_box": true,
+    "page_size": "A4",
+    "instructions": "Use HB pencil or black/blue ball pen. Fill the bubble completely. Do not fold or stain the sheet. Erase cleanly to change an answer.",
+    "marks_correct": 1.0,
+    "marks_wrong": -0.25,
+    "marks_blank": 0.0
+  },
+  "fiducials": [
+    {
+      "name": "tl",
+      "x_mm": 10.0,
+      "y_mm": 10.0,
+      "size_mm": 6.0,
+      "quiet_mm": 3.0
+    },
+    {
+      "name": "tr",
+      "x_mm": 200.0,
+      "y_mm": 10.0,
+      "size_mm": 6.0,
+      "quiet_mm": 3.0
+    },
+    {
+      "name": "bl",
+      "x_mm": 10.0,
+      "y_mm": 287.0,
+      "size_mm": 6.0,
+      "quiet_mm": 3.0
+    },
+    {
+      "name": "br",
+      "x_mm": 200.0,
+      "y_mm": 287.0,
+      "size_mm": 6.0,
+      "quiet_mm": 3.0
+    }
+  ],
+  "timing_tracks": [
+    {
+      "name": "left",
+      "x_mm": 17.0,
+      "w_mm": 4.0,
+      "h_mm": 2.6,
+      "y_positions_mm": [
+        105.413,
+        112.539,
+        119.66499999999999,
+        126.791,
+        133.917,
+        141.043,
+        148.16899999999998,
+        155.29500000000002,
+        162.421,
+        169.547,
+        176.673,
+        183.799,
+        190.925,
+        198.051,
+        205.17700000000002,
+        212.303,
+        219.429,
+        226.555,
+        233.68099999999998,
+        240.80700000000002,
+        247.933,
+        255.05900000000003,
+        262.185,
+        269.311,
+        276.437
+      ]
+    },
+    {
+      "name": "right",
+      "x_mm": 193.0,
+      "w_mm": 4.0,
+      "h_mm": 2.6,
+      "y_positions_mm": [
+        105.413,
+        112.539,
+        119.66499999999999,
+        126.791,
+        133.917,
+        141.043,
+        148.16899999999998,
+        155.29500000000002,
+        162.421,
+        169.547,
+        176.673,
+        183.799,
+        190.925,
+        198.051,
+        205.17700000000002,
+        212.303,
+        219.429,
+        226.555,
+        233.68099999999998,
+        240.80700000000002,
+        247.933,
+        255.05900000000003,
+        262.185,
+        269.311,
+        276.437
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "key": "roll.d0",
+      "kind": "digit",
+      "index": 0,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 25.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 25.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "roll.d1",
+      "kind": "digit",
+      "index": 1,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 31.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 31.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "roll.d2",
+      "kind": "digit",
+      "index": 2,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 37.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 37.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "roll.d3",
+      "kind": "digit",
+      "index": 3,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 43.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 43.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "roll.d4",
+      "kind": "digit",
+      "index": 4,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 49.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 49.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "roll.d5",
+      "kind": "digit",
+      "index": 5,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 55.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 55.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "roll.d6",
+      "kind": "digit",
+      "index": 6,
+      "owner": "roll",
+      "bubbles": [
+        {
+          "x_mm": 61.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 61.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d0",
+      "kind": "digit",
+      "index": 0,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 77.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 77.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d1",
+      "kind": "digit",
+      "index": 1,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 83.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 83.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d2",
+      "kind": "digit",
+      "index": 2,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 89.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 89.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d3",
+      "kind": "digit",
+      "index": 3,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 95.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 95.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d4",
+      "kind": "digit",
+      "index": 4,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 101.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 101.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d5",
+      "kind": "digit",
+      "index": 5,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 107.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 107.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d6",
+      "kind": "digit",
+      "index": 6,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 113.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 113.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d7",
+      "kind": "digit",
+      "index": 7,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 119.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 119.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d8",
+      "kind": "digit",
+      "index": 8,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 125.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 125.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "registration.d9",
+      "kind": "digit",
+      "index": 9,
+      "owner": "registration",
+      "bubbles": [
+        {
+          "x_mm": 131.0,
+          "y_mm": 49.0,
+          "r_mm": 1.85,
+          "label": "0",
+          "value": "0"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 53.6,
+          "r_mm": 1.85,
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 58.2,
+          "r_mm": 1.85,
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 62.8,
+          "r_mm": 1.85,
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 67.4,
+          "r_mm": 1.85,
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 72.0,
+          "r_mm": 1.85,
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 76.6,
+          "r_mm": 1.85,
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 81.19999999999999,
+          "r_mm": 1.85,
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 85.8,
+          "r_mm": 1.85,
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "x_mm": 131.0,
+          "y_mm": 90.4,
+          "r_mm": 1.85,
+          "label": "9",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "key": "q1",
+      "kind": "question",
+      "index": 1,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q2",
+      "kind": "question",
+      "index": 2,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q3",
+      "kind": "question",
+      "index": 3,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q4",
+      "kind": "question",
+      "index": 4,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q5",
+      "kind": "question",
+      "index": 5,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q6",
+      "kind": "question",
+      "index": 6,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q7",
+      "kind": "question",
+      "index": 7,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q8",
+      "kind": "question",
+      "index": 8,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q9",
+      "kind": "question",
+      "index": 9,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q10",
+      "kind": "question",
+      "index": 10,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q11",
+      "kind": "question",
+      "index": 11,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q12",
+      "kind": "question",
+      "index": 12,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q13",
+      "kind": "question",
+      "index": 13,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q14",
+      "kind": "question",
+      "index": 14,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q15",
+      "kind": "question",
+      "index": 15,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q16",
+      "kind": "question",
+      "index": 16,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q17",
+      "kind": "question",
+      "index": 17,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q18",
+      "kind": "question",
+      "index": 18,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q19",
+      "kind": "question",
+      "index": 19,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q20",
+      "kind": "question",
+      "index": 20,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q21",
+      "kind": "question",
+      "index": 21,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q22",
+      "kind": "question",
+      "index": 22,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q23",
+      "kind": "question",
+      "index": 23,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q24",
+      "kind": "question",
+      "index": 24,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q25",
+      "kind": "question",
+      "index": 25,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 33.28125,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 40.84375,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 48.40625,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 55.96875,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q26",
+      "kind": "question",
+      "index": 26,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q27",
+      "kind": "question",
+      "index": 27,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q28",
+      "kind": "question",
+      "index": 28,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q29",
+      "kind": "question",
+      "index": 29,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q30",
+      "kind": "question",
+      "index": 30,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q31",
+      "kind": "question",
+      "index": 31,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q32",
+      "kind": "question",
+      "index": 32,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q33",
+      "kind": "question",
+      "index": 33,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q34",
+      "kind": "question",
+      "index": 34,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q35",
+      "kind": "question",
+      "index": 35,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q36",
+      "kind": "question",
+      "index": 36,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q37",
+      "kind": "question",
+      "index": 37,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q38",
+      "kind": "question",
+      "index": 38,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q39",
+      "kind": "question",
+      "index": 39,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q40",
+      "kind": "question",
+      "index": 40,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q41",
+      "kind": "question",
+      "index": 41,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q42",
+      "kind": "question",
+      "index": 42,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q43",
+      "kind": "question",
+      "index": 43,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q44",
+      "kind": "question",
+      "index": 44,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q45",
+      "kind": "question",
+      "index": 45,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q46",
+      "kind": "question",
+      "index": 46,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q47",
+      "kind": "question",
+      "index": 47,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q48",
+      "kind": "question",
+      "index": 48,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q49",
+      "kind": "question",
+      "index": 49,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q50",
+      "kind": "question",
+      "index": 50,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 76.03125,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 83.59375,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 91.15625,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 98.71875,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q51",
+      "kind": "question",
+      "index": 51,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q52",
+      "kind": "question",
+      "index": 52,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q53",
+      "kind": "question",
+      "index": 53,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q54",
+      "kind": "question",
+      "index": 54,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q55",
+      "kind": "question",
+      "index": 55,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q56",
+      "kind": "question",
+      "index": 56,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q57",
+      "kind": "question",
+      "index": 57,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q58",
+      "kind": "question",
+      "index": 58,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q59",
+      "kind": "question",
+      "index": 59,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q60",
+      "kind": "question",
+      "index": 60,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q61",
+      "kind": "question",
+      "index": 61,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q62",
+      "kind": "question",
+      "index": 62,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q63",
+      "kind": "question",
+      "index": 63,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q64",
+      "kind": "question",
+      "index": 64,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q65",
+      "kind": "question",
+      "index": 65,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q66",
+      "kind": "question",
+      "index": 66,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q67",
+      "kind": "question",
+      "index": 67,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q68",
+      "kind": "question",
+      "index": 68,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q69",
+      "kind": "question",
+      "index": 69,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q70",
+      "kind": "question",
+      "index": 70,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q71",
+      "kind": "question",
+      "index": 71,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q72",
+      "kind": "question",
+      "index": 72,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q73",
+      "kind": "question",
+      "index": 73,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q74",
+      "kind": "question",
+      "index": 74,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q75",
+      "kind": "question",
+      "index": 75,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 118.78125,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 126.34375,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 133.90625,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 141.46875,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q76",
+      "kind": "question",
+      "index": 76,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 105.413,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q77",
+      "kind": "question",
+      "index": 77,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 112.539,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q78",
+      "kind": "question",
+      "index": 78,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 119.66499999999999,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q79",
+      "kind": "question",
+      "index": 79,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 126.791,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q80",
+      "kind": "question",
+      "index": 80,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 133.917,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q81",
+      "kind": "question",
+      "index": 81,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 141.043,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q82",
+      "kind": "question",
+      "index": 82,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 148.16899999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q83",
+      "kind": "question",
+      "index": 83,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 155.29500000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q84",
+      "kind": "question",
+      "index": 84,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 162.421,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q85",
+      "kind": "question",
+      "index": 85,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 169.547,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q86",
+      "kind": "question",
+      "index": 86,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 176.673,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q87",
+      "kind": "question",
+      "index": 87,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 183.799,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q88",
+      "kind": "question",
+      "index": 88,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 190.925,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q89",
+      "kind": "question",
+      "index": 89,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 198.051,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q90",
+      "kind": "question",
+      "index": 90,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 205.17700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q91",
+      "kind": "question",
+      "index": 91,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 212.303,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q92",
+      "kind": "question",
+      "index": 92,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 219.429,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q93",
+      "kind": "question",
+      "index": 93,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 226.555,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q94",
+      "kind": "question",
+      "index": 94,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 233.68099999999998,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q95",
+      "kind": "question",
+      "index": 95,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 240.80700000000002,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q96",
+      "kind": "question",
+      "index": 96,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 247.933,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q97",
+      "kind": "question",
+      "index": 97,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 255.05900000000003,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q98",
+      "kind": "question",
+      "index": 98,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 262.185,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q99",
+      "kind": "question",
+      "index": 99,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 269.311,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "key": "q100",
+      "kind": "question",
+      "index": 100,
+      "owner": "questions",
+      "bubbles": [
+        {
+          "x_mm": 161.53125,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "x_mm": 169.09375,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "x_mm": 176.65625,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "C",
+          "value": "C"
+        },
+        {
+          "x_mm": 184.21875,
+          "y_mm": 276.437,
+          "r_mm": 2.3,
+          "label": "D",
+          "value": "D"
+        }
+      ]
+    }
+  ],
+  "fields": {
+    "roll": {
+      "name": "roll",
+      "title": "ROLL NUMBER",
+      "digits": 7,
+      "group_keys": [
+        "roll.d0",
+        "roll.d1",
+        "roll.d2",
+        "roll.d3",
+        "roll.d4",
+        "roll.d5",
+        "roll.d6"
+      ]
+    },
+    "registration": {
+      "name": "registration",
+      "title": "REGISTRATION NUMBER",
+      "digits": 10,
+      "group_keys": [
+        "registration.d0",
+        "registration.d1",
+        "registration.d2",
+        "registration.d3",
+        "registration.d4",
+        "registration.d5",
+        "registration.d6",
+        "registration.d7",
+        "registration.d8",
+        "registration.d9"
+      ]
+    }
+  },
+  "texts": [
+    {
+      "x_mm": 22.0,
+      "y_mm": 13.0,
+      "w_mm": 148.0,
+      "h_mm": 6.0,
+      "text": "CUET Admission Test 2026",
+      "font_size": 13.0,
+      "bold": true,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 19.0,
+      "w_mm": 166.0,
+      "h_mm": 4.0,
+      "text": "Physics + Chemistry + Mathematics   |   ME-2026-A",
+      "font_size": 8.5,
+      "bold": false,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 24.0,
+      "w_mm": 166.0,
+      "h_mm": 7.0,
+      "text": "Use HB pencil or black/blue ball pen. Fill the bubble completely. Do not fold or stain the sheet. Erase cleanly to change an answer.",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 30.0,
+      "w_mm": 166.0,
+      "h_mm": 4.0,
+      "text": "Correct +1   Wrong -0.25   Unanswered 0   Questions 100",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 35.0,
+      "w_mm": 42.0,
+      "h_mm": 4.0,
+      "text": "ROLL NUMBER",
+      "font_size": 6.8,
+      "bold": true,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 22.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 28.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 34.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 40.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 46.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 52.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 58.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 47.4,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "0",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 52.0,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "1",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 56.6,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "2",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 61.199999999999996,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "3",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 65.80000000000001,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "4",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 70.4,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "5",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 75.0,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "6",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 79.6,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "7",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 84.2,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "8",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 17.8,
+      "y_mm": 88.80000000000001,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "9",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 74.0,
+      "y_mm": 35.0,
+      "w_mm": 60.0,
+      "h_mm": 4.0,
+      "text": "REGISTRATION NUMBER",
+      "font_size": 6.8,
+      "bold": true,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 74.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 80.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 86.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 92.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 98.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 104.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 110.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 116.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 122.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 128.4,
+      "y_mm": 39.0,
+      "w_mm": 5.2,
+      "h_mm": 7.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 47.4,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "0",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 52.0,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "1",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 56.6,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "2",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 61.199999999999996,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "3",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 65.80000000000001,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "4",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 70.4,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "5",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 75.0,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "6",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 79.6,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "7",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 84.2,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "8",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 69.8,
+      "y_mm": 88.80000000000001,
+      "w_mm": 3.4,
+      "h_mm": 3.2,
+      "text": "9",
+      "font_size": 5.6,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 144.0,
+      "y_mm": 35.0,
+      "w_mm": 44.0,
+      "h_mm": 4.0,
+      "text": "CANDIDATE NAME",
+      "font_size": 6.8,
+      "bold": true,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 144.0,
+      "y_mm": 39.0,
+      "w_mm": 44.0,
+      "h_mm": 13.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 144.0,
+      "y_mm": 55.0,
+      "w_mm": 44.0,
+      "h_mm": 4.0,
+      "text": "SIGNATURE",
+      "font_size": 6.8,
+      "bold": true,
+      "box": false,
+      "align": "left"
+    },
+    {
+      "x_mm": 144.0,
+      "y_mm": 59.0,
+      "w_mm": 44.0,
+      "h_mm": 11.0,
+      "text": "",
+      "font_size": 8.0,
+      "bold": false,
+      "box": true,
+      "align": "left"
+    },
+    {
+      "x_mm": 31.28125,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "A",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 38.84375,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "B",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 46.40625,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "C",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 53.96875,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "D",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 103.713,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "1",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 110.839,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "2",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 117.96499999999999,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "3",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 125.091,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "4",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 132.217,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "5",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 139.34300000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "6",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 146.469,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "7",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 153.59500000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "8",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 160.721,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "9",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 167.847,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "10",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 174.973,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "11",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 182.09900000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "12",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 189.22500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "13",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 196.351,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "14",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 203.47700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "15",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 210.603,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "16",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 217.729,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "17",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 224.85500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "18",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 231.981,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "19",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 239.10700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "20",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 246.233,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "21",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 253.35900000000004,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "22",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 260.485,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "23",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 267.611,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "24",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 22.0,
+      "y_mm": 274.737,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "25",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 74.03125,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "A",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 81.59375,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "B",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 89.15625,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "C",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 96.71875,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "D",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 103.713,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "26",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 110.839,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "27",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 117.96499999999999,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "28",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 125.091,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "29",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 132.217,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "30",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 139.34300000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "31",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 146.469,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "32",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 153.59500000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "33",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 160.721,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "34",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 167.847,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "35",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 174.973,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "36",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 182.09900000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "37",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 189.22500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "38",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 196.351,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "39",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 203.47700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "40",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 210.603,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "41",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 217.729,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "42",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 224.85500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "43",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 231.981,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "44",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 239.10700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "45",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 246.233,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "46",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 253.35900000000004,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "47",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 260.485,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "48",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 267.611,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "49",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 64.75,
+      "y_mm": 274.737,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "50",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 116.78125,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "A",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 124.34375,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "B",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 131.90625,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "C",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 139.46875,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "D",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 103.713,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "51",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 110.839,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "52",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 117.96499999999999,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "53",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 125.091,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "54",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 132.217,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "55",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 139.34300000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "56",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 146.469,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "57",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 153.59500000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "58",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 160.721,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "59",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 167.847,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "60",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 174.973,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "61",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 182.09900000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "62",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 189.22500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "63",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 196.351,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "64",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 203.47700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "65",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 210.603,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "66",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 217.729,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "67",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 224.85500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "68",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 231.981,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "69",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 239.10700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "70",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 246.233,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "71",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 253.35900000000004,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "72",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 260.485,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "73",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 267.611,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "74",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 107.5,
+      "y_mm": 274.737,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "75",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 159.53125,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "A",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 167.09375,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "B",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 174.65625,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "C",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 182.21875,
+      "y_mm": 98.25,
+      "w_mm": 4.0,
+      "h_mm": 3.6,
+      "text": "D",
+      "font_size": 6.4,
+      "bold": true,
+      "box": false,
+      "align": "center"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 103.713,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "76",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 110.839,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "77",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 117.96499999999999,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "78",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 125.091,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "79",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 132.217,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "80",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 139.34300000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "81",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 146.469,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "82",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 153.59500000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "83",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 160.721,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "84",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 167.847,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "85",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 174.973,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "86",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 182.09900000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "87",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 189.22500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "88",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 196.351,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "89",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 203.47700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "90",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 210.603,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "91",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 217.729,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "92",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 224.85500000000002,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "93",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 231.981,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "94",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 239.10700000000003,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "95",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 246.233,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "96",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 253.35900000000004,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "97",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 260.485,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "98",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 267.611,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "99",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    },
+    {
+      "x_mm": 150.25,
+      "y_mm": 274.737,
+      "w_mm": 6.1,
+      "h_mm": 3.4,
+      "text": "100",
+      "font_size": 6.2,
+      "bold": false,
+      "box": false,
+      "align": "right"
+    }
+  ],
+  "qr_x_mm": 174.0,
+  "qr_y_mm": 12.0,
+  "qr_size_mm": 14.0,
+  "qr_payload": "OMR1|tpl_660009f7db0f|100|4|7|10",
+  "roi": [
+    10.0,
+    10.0,
+    200.0,
+    287.0
+  ],
+  "meta": {
+    "columns": 4,
+    "rows": 25,
+    "row_pitch_mm": 7.126,
+    "opt_pitch_mm": 7.562,
+    "question_top_mm": 98.25,
+    "question_bottom_mm": 280.0
+  }
+}
