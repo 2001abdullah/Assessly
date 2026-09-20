@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../services/omr_service.dart';
 
@@ -20,6 +21,7 @@ class ScanOmrScreen extends StatefulWidget {
 class _ScanOmrScreenState extends State<ScanOmrScreen> {
   final OmrService _omrService = OmrService();
   final ScoringService _scoringService = ScoringService();
+  final ImagePicker _imagePicker = ImagePicker();
 
   File? selectedImage;
 
@@ -52,6 +54,28 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
 
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
+    }
+  }
+
+  Future<void> takePicture() async {
+    try {
+      final photo = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 95,
+      );
+
+      if (photo == null) return;
+
+      setState(() {
+        selectedImage = File(photo.path);
+        scanResult = null;
+        scoreResult = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to take picture: $e')));
     }
   }
 
@@ -205,12 +229,24 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
             // ------------------------------------------
             // SELECT IMAGE
             // ------------------------------------------
-            ElevatedButton.icon(
-              onPressed: isScanning || isScoring ? null : pickImage,
-
-              icon: const Icon(Icons.image),
-
-              label: const Text('Select OMR Image'),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: isScanning || isScoring ? null : takePicture,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Take Picture'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: isScanning || isScoring ? null : pickImage,
+                    icon: const Icon(Icons.image),
+                    label: const Text('Choose Image'),
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 16),
