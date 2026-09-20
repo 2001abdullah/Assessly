@@ -3,6 +3,8 @@ import 'package:assessly/services/exam_service.dart';
 import 'package:assessly/themes/app_colors.dart';
 import 'package:assessly/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:assessly/providers/auth_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,11 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // --------------------------------------------------
 
   void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature is coming soon.'),
-      ),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('$feature is coming soon.')));
   }
 
   // --------------------------------------------------
@@ -72,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Assessly"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => _showAccountMenu(context),
             icon: const Icon(Icons.person_outline),
           ),
         ],
@@ -84,15 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // --------------------------------------------------
               // Welcome
               // --------------------------------------------------
 
-              Text(
-                "Welcome Back👋",
-                style: AppTextStyles.title,
-              ),
+              Text("Welcome Back👋", style: AppTextStyles.title),
 
               const SizedBox(height: 8),
 
@@ -106,25 +101,18 @@ class _HomeScreenState extends State<HomeScreen> {
               // --------------------------------------------------
               // Create New Exam
               // --------------------------------------------------
-
               SizedBox(
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    await Navigator.pushNamed(
-                      context,
-                      AppRoutes.createNewExam,
-                    );
+                    await Navigator.pushNamed(context, AppRoutes.createNewExam);
 
                     // Refresh exams after returning
                     _loadExams();
                   },
                   icon: const Icon(Icons.add),
-                  label: Text(
-                    "Create new exam",
-                    style: AppTextStyles.title,
-                  ),
+                  label: Text("Create new exam", style: AppTextStyles.title),
                 ),
               ),
 
@@ -133,27 +121,19 @@ class _HomeScreenState extends State<HomeScreen> {
               // --------------------------------------------------
               // Quick Actions
               // --------------------------------------------------
-
-              Text(
-                "Quick Actions",
-                style: AppTextStyles.title,
-              ),
+              Text("Quick Actions", style: AppTextStyles.title),
 
               const SizedBox(height: 16),
 
               Row(
                 children: [
-
                   // Exams
                   Expanded(
                     child: _quickAction(
                       icon: Icons.description_outlined,
                       title: 'Exams',
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.exams,
-                        );
+                        Navigator.pushNamed(context, AppRoutes.exams);
                       },
                     ),
                   ),
@@ -166,10 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.document_scanner_outlined,
                       title: 'Scan OMR',
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.exams,
-                        );
+                        Navigator.pushNamed(context, AppRoutes.exams);
                       },
                     ),
                   ),
@@ -180,17 +157,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Row(
                 children: [
-
                   // Results
                   Expanded(
                     child: _quickAction(
                       icon: Icons.bar_chart_outlined,
                       title: 'Results',
                       onTap: () {
-                        _showComingSoon(
-                          context,
-                          'Results',
-                        );
+                        _showComingSoon(context, 'Results');
                       },
                     ),
                   ),
@@ -203,10 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.key_outlined,
                       title: 'Answer Key',
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.exams,
-                        );
+                        Navigator.pushNamed(context, AppRoutes.exams);
                       },
                     ),
                   ),
@@ -218,22 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
               // --------------------------------------------------
               // Your Exams
               // --------------------------------------------------
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  Text(
-                    'Your Exams',
-                    style: AppTextStyles.title,
-                  ),
+                  Text('Your Exams', style: AppTextStyles.title),
 
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        AppRoutes.exams,
-                      );
+                      Navigator.pushNamed(context, AppRoutes.exams);
                     },
                     child: const Text("See all"),
                   ),
@@ -245,12 +207,34 @@ class _HomeScreenState extends State<HomeScreen> {
               // --------------------------------------------------
               // Recent Exams
               // --------------------------------------------------
-
               _buildRecentExams(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showAccountMenu(BuildContext context) async {
+    final shouldLogout = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: ListTile(
+          leading: const Icon(Icons.logout),
+          title: const Text('Log out'),
+          onTap: () => Navigator.pop(sheetContext, true),
+        ),
+      ),
+    );
+
+    if (shouldLogout != true || !context.mounted) return;
+
+    await context.read<AuthProvider>().logout();
+    if (!context.mounted) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.login,
+      (route) => false,
     );
   }
 
@@ -263,16 +247,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isLoadingExams) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(
-          vertical: 30,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppColors.surface,
         ),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -280,17 +260,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (exams.isEmpty) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(
-          vertical: 40,
-          horizontal: 20,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppColors.surface,
         ),
         child: Column(
           children: [
-
             Icon(
               Icons.assignment_outlined,
               size: 48,
@@ -299,10 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 12),
 
-            Text(
-              "No exams yet",
-              style: AppTextStyles.body,
-            ),
+            Text("No exams yet", style: AppTextStyles.body),
 
             const SizedBox(height: 6),
 
@@ -324,14 +297,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: recentExams.map((exam) {
-        final title =
-            exam['title']?.toString() ?? 'Untitled Exam';
+        final title = exam['title']?.toString() ?? 'Untitled Exam';
 
-        final subject =
-            exam['subject']?.toString() ?? 'No subject';
+        final subject = exam['subject']?.toString() ?? 'No subject';
 
-        final totalQuestions =
-            exam['total_questions']?.toString() ?? '0';
+        final totalQuestions = exam['total_questions']?.toString() ?? '0';
 
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
@@ -353,24 +323,17 @@ class _HomeScreenState extends State<HomeScreen> {
             // Exam title
             title: Text(
               title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
 
             // Subject + questions
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: Text(
-                '$subject • $totalQuestions questions',
-              ),
+              child: Text('$subject • $totalQuestions questions'),
             ),
 
             // Arrow
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-            ),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
 
             // Open exam
             onTap: () {
@@ -403,19 +366,12 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.border,
-          ),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-            Icon(
-              icon,
-              size: 30,
-              color: AppColors.primary,
-            ),
+            Icon(icon, size: 30, color: AppColors.primary),
 
             const SizedBox(height: 12),
 

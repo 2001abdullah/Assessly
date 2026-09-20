@@ -39,7 +39,9 @@ while additional production hardening and reporting features are planned.
   - Pass percentage
   - Treatment of ambiguous answers
   - Optional negative-score clamping
-- OMR answer-sheet image selection from the Flutter application
+- OMR answer-sheet image selection and camera capture from the Flutter application
+- Reusable pure-Dart OMR frame analyzer in
+  `lib/services/omr_frame_analyzer.dart` for sheet detection and capture coaching
 - OMR scanning through the backend and Python processing boundary
 - Scan validation and structured scan-result persistence
 - Automatic scoring of a completed scan against the selected exam
@@ -78,6 +80,7 @@ The following items are planned for future iterations:
 - **Provider** for application state management
 - **HTTP** for REST API communication
 - **File Picker** for selecting answer-sheet images
+- **Image Picker** for taking answer-sheet pictures with the device camera
 - **Shared Preferences** for local preferences and session-related storage
 
 ### Backend
@@ -215,6 +218,23 @@ The backend currently exposes endpoints for:
 For OMR scanning, the API accepts a multipart image upload at
 `POST /api/omr/scan`. The scan is associated with an exam and returns a
 structured result that can then be passed to the scoring workflow.
+
+The scan screen now supports both **Take Picture** and **Choose Image**. The
+provided analyzer is intentionally platform-independent: it accepts luminance
+frames through `LumaFrame`, so a future live-camera preview can feed frames to
+`OmrFrameAnalyzer` without coupling detection logic to Flutter or a camera
+plugin. The current capture flow takes a high-quality still image and sends it
+through the existing backend OMR pipeline.
+
+## Account status
+
+Registration, JWT login, local token persistence, and token removal on logout
+are implemented. A logout action is available from the account icon on the
+home screen. Per-user data isolation is **not** implemented yet: the exam,
+answer-key, scoring, result, and OMR routes currently do not require the JWT
+or filter records by an owner/user ID. Adding that safely requires the
+database schema/migration for ownership columns and applying the same
+authorization checks consistently across those routes.
 
 ## Security
 
