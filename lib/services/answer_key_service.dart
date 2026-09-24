@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'api_config.dart';
 import 'authed_http.dart';
 
 class AnswerKeyService {
-  static const String baseUrl = 'http://192.168.0.105:5000';
+  static String get baseUrl => ApiConfig.baseUrl;
 
   Future<void> saveAnswerKey({
     required String examId,

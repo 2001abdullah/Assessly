@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'api_config.dart';
+
 /// Thrown when the server rejects the saved token (expired, invalid, user gone).
 class SessionExpiredException implements Exception {
   const SessionExpiredException();
@@ -11,7 +13,7 @@ class SessionExpiredException implements Exception {
 }
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.0.105:5000/api';
+  static String get baseUrl => '${ApiConfig.baseUrl}/api';
   static Future<Map<String, dynamic>> login(
     String email,
     String password,
