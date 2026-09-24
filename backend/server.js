@@ -53,13 +53,6 @@ app.get('/health', async (_req, res) => {
 
 const port = Number(process.env.PORT || 5000);
 
-pool.query(`
-  ALTER TABLE exams
-  ADD COLUMN IF NOT EXISTS owner_id UUID REFERENCES users(id)
-`).catch((error) => {
-  console.error('Could not ensure exam ownership column:', error.message);
-});
-
 pool.on('error', (error) => {
   console.error('Unexpected PostgreSQL pool error:', error);
 });
