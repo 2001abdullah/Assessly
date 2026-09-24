@@ -7,7 +7,7 @@ and a Python-based optical mark recognition (OMR) pipeline.
 
 ## Install the Android beta
 
-[Download Assessly v1.0.0 Beta 1 for Android](https://github.com/2001abdullah/Assessly/releases/download/v1.0.0-beta.1/Assessly-v1.0.0-beta.1.apk)
+[Download Assessly v1.0.0 Beta 2 for Android](https://github.com/2001abdullah/Assessly/releases/download/v1.0.0-beta.2/Assessly-v1.0.0-beta.2.apk)
 
 Open the link on an Android device, download the APK, and allow installation
 from the browser or file manager if Android prompts you. This beta is intended
