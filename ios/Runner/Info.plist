@@ -49,6 +49,10 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Assessly uses the camera to scan and read OMR answer sheets.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Assessly reads OMR sheet photos you choose from your library.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

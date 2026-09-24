@@ -2,6 +2,11 @@ const express = require('express');
 const pool = require('../config/db');
 
 const router = express.Router();
+const { examParam, resultParam } = require('../middleware/ownership');
+
+// :id is a result id; :exam_id is an exam id. Both must belong to the caller.
+router.param('id', resultParam);
+router.param('exam_id', examParam);
 
 
 // ========================================

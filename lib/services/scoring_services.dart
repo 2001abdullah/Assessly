@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'authed_http.dart';
 
 class ScoringService {
   static String get baseUrl {
@@ -11,7 +11,7 @@ class ScoringService {
     }
 
     return Platform.isAndroid
-        ? 'http://10.0.2.2:5000'
+        ? 'http://192.168.0.105:5000'
         : 'http://127.0.0.1:5000';
   }
 
@@ -19,7 +19,7 @@ class ScoringService {
     required String examId,
     required String scanId,
   }) async {
-    final response = await http.post(
+    final response = await AuthedHttp.post(
       Uri.parse('$baseUrl/api/scoring/score'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'exam_id': examId, 'scan_id': scanId}),

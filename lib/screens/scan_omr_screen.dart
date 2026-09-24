@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../services/omr_service.dart';
+import 'camera_scan_screen.dart';
 
 import 'package:assessly/services/scoring_services.dart';
 import 'package:assessly/routes/app_routes.dart';
@@ -21,7 +21,6 @@ class ScanOmrScreen extends StatefulWidget {
 class _ScanOmrScreenState extends State<ScanOmrScreen> {
   final OmrService _omrService = OmrService();
   final ScoringService _scoringService = ScoringService();
-  final ImagePicker _imagePicker = ImagePicker();
 
   File? selectedImage;
 
@@ -31,52 +30,77 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
   bool isScanning = false;
   bool isScoring = false;
 
+  /// Friendly explanation shown (with a Retake button) when a scan fails.
+  String? scanFailure;
+
   // --------------------------------------------------
-  // PICK IMAGE
+  // PICK/CAPTURE IMAGE
   // --------------------------------------------------
 
-  Future<void> pickImage() async {
+  Future<void> _getImage(ImageSource source) async {
     try {
-      final file = await FilePicker.pickFile(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png'],
-      );
+      final ImagePicker picker = ImagePicker();
+      final XFile? file = await picker.pickImage(source: source);
 
-      if (file == null || file.path == null) return;
+      if (file == null) return;
 
       setState(() {
-        selectedImage = File(file.path!);
+        selectedImage = File(file.path);
         scanResult = null;
         scoreResult = null;
+        scanFailure = null;
       });
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
+          .showSnackBar(SnackBar(content: Text('Failed to acquire image: $e')));
     }
   }
 
-  Future<void> takePicture() async {
-    try {
-      final photo = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 95,
-      );
+  /// Opens the live scanner. A captured sheet is scanned immediately.
+  Future<void> _openCamera() async {
+    final File? shot = await Navigator.of(context).push<File>(
+      MaterialPageRoute(
+        builder: (_) => const CameraScanScreen(),
+        fullscreenDialog: true,
+      ),
+    );
+    if (shot == null || !mounted) return;
 
-      if (photo == null) return;
+    setState(() {
+      selectedImage = shot;
+      scanResult = null;
+      scoreResult = null;
+      scanFailure = null;
+    });
+    await scanOmr();
+  }
 
-      setState(() {
-        selectedImage = File(photo.path);
-        scanResult = null;
-        scoreResult = null;
-      });
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed to take picture: $e')));
+  /// Turns engine/network errors into advice the user can act on.
+  String _friendlyError(Object error) {
+    final raw = error.toString().replaceFirst('Exception: ', '');
+    final m = raw.toLowerCase();
+    if (m.contains('corner registration')) {
+      return 'We could not see all four corner squares. Keep the whole sheet '
+          'inside the frame and do not cover the corners.';
     }
+    if (m.contains('cut off')) {
+      return 'Part of the sheet is cut off at the edge of the photo. Step back '
+          'a little so the whole sheet is visible.';
+    }
+    if (m.contains('timing marks')) {
+      return 'We could not lock onto the black marks along the sheet edges. '
+          'Flatten the sheet, use even light, and check that this is the sheet '
+          'printed for this exam.\n\n($raw)';
+    }
+    if (m.contains('could not read image')) {
+      return 'The photo could not be opened. Please take it again.';
+    }
+    if (error is SocketException || m.contains('too long')) {
+      return 'Could not reach the server. Check your connection and try again.';
+    }
+    return raw;
   }
 
   // --------------------------------------------------
@@ -103,6 +127,7 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
         isScoring = false;
         scanResult = null;
         scoreResult = null;
+        scanFailure = null;
       });
 
       // ----------------------------------------------
@@ -189,10 +214,8 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
       setState(() {
         isScanning = false;
         isScoring = false;
+        scanFailure = _friendlyError(e);
       });
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
@@ -227,26 +250,23 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
             const SizedBox(height: 20),
 
             // ------------------------------------------
-            // SELECT IMAGE
+            // SELECT/CAPTURE IMAGE BUTTONS
             // ------------------------------------------
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: isScanning || isScoring ? null : takePicture,
-                    icon: const Icon(Icons.camera_alt),
-                    label: const Text('Take Picture'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: isScanning || isScoring ? null : pickImage,
-                    icon: const Icon(Icons.image),
-                    label: const Text('Choose Image'),
-                  ),
-                ),
-              ],
+            FilledButton.icon(
+              onPressed: isScanning || isScoring ? null : _openCamera,
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Scan with camera'),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+            ),
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              onPressed: isScanning || isScoring
+                  ? null
+                  : () => _getImage(ImageSource.gallery),
+              icon: const Icon(Icons.photo_library),
+              label: const Text('Choose from gallery'),
             ),
 
             const SizedBox(height: 16),
@@ -292,6 +312,14 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
             const SizedBox(height: 24),
 
             // ------------------------------------------
+            // FAILURE + RETAKE
+            // ------------------------------------------
+            if (scanFailure != null) ...[
+              _buildFailureCard(),
+              const SizedBox(height: 24),
+            ],
+
+            // ------------------------------------------
             // RAW OMR RESULT
             // ------------------------------------------
             if (scanResult != null) ...[
@@ -305,6 +333,40 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
 
               _buildScanResultCard(),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFailureCard() {
+    return Card(
+      color: Colors.red.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red.shade700),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    "Couldn't read this sheet",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(scanFailure!),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: isScanning || isScoring ? null : _openCamera,
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Retake with camera'),
+            ),
           ],
         ),
       ),

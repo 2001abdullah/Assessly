@@ -1,10 +1,10 @@
+import 'package:assessly/providers/auth_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/services/exam_service.dart';
 import 'package:assessly/themes/app_colors.dart';
 import 'package:assessly/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:assessly/providers/auth_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -66,12 +66,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<AuthProvider>().user;
+    final firstName = user?.firstName ?? '';
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Assessly"),
         actions: [
           IconButton(
-            onPressed: () => _showAccountMenu(context),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.profile),
+            tooltip: 'Profile',
             icon: const Icon(Icons.person_outline),
           ),
         ],
@@ -87,7 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
               // Welcome
               // --------------------------------------------------
 
-              Text("Welcome Back👋", style: AppTextStyles.title),
+              Text(
+                firstName.isEmpty
+                    ? "Welcome Back👋"
+                    : "Welcome back, $firstName👋",
+                style: AppTextStyles.title,
+              ),
 
               const SizedBox(height: 8),
 

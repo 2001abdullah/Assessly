@@ -1,8 +1,12 @@
 const express = require('express');
 const crypto = require('crypto');
 const pool = require('../config/db');
+const { examParam } = require('../middleware/ownership');
 
 const router = express.Router();
+
+// Every route with :id first checks the signed-in user owns that exam.
+router.param('id', examParam);
 
 
 // ========================================
@@ -41,9 +45,10 @@ router.post('/', async (req, res) => {
           id,
           title,
           subject,
-          total_questions
+          total_questions,
+          user_id
         )
-        VALUES ($1, $2, $3, $4)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING *
       `,
       [
@@ -51,6 +56,7 @@ router.post('/', async (req, res) => {
         title,
         subject || null,
         Number(total_questions),
+        req.user.id,
       ],
     );
 
@@ -83,8 +89,10 @@ router.get('/', async (req, res) => {
           total_questions,
           created_at
         FROM exams
+        WHERE user_id = $1
         ORDER BY created_at DESC
-      `
+      `,
+      [req.user.id],
     );
 
     return res.status(200).json({

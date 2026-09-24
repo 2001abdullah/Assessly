@@ -10,18 +10,22 @@ const answerKeyRoutes = require('./routes/answerKeys');
 const scoringRoutes = require('./routes/scoring');
 const resultRoutes = require('./routes/results');
 const scoringRulesRoutes = require('./routes/scoringRules');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 
 app.use(express.json());
-app.use('/api/auth/',authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/auth', loginRoutes);
-app.use('/api/omr', omrRoutes);
-app.use('/api/exam', examRoutes);
-app.use('/api/answer-key',answerKeyRoutes);
-app.use('/api/scoring',scoringRoutes);
-app.use('/api/results', resultRoutes);
-app.use('/api/scoring-rules', scoringRulesRoutes);
+
+// Everything below requires a signed-in user; each router then limits access
+// to that user's own exams (see middleware/ownership.js).
+app.use('/api/omr', authMiddleware, omrRoutes);
+app.use('/api/exam', authMiddleware, examRoutes);
+app.use('/api/answer-key', authMiddleware, answerKeyRoutes);
+app.use('/api/scoring', authMiddleware, scoringRoutes);
+app.use('/api/results', authMiddleware, resultRoutes);
+app.use('/api/scoring-rules', authMiddleware, scoringRulesRoutes);
 
 app.get('/', (_req, res) => {
   res.json({
@@ -53,7 +57,7 @@ pool.on('error', (error) => {
   console.error('Unexpected PostgreSQL pool error:', error);
 });
 
-const server = app.listen(port, () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Assessly server running on port ${port}`);
 });
 

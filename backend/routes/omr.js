@@ -8,6 +8,7 @@ const multer = require('multer');
 const pool = require('../config/db');
 
 const router = express.Router();
+const { userOwnsExam } = require('../middleware/ownership');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -180,17 +181,10 @@ router.post(
     // Verify that the exam exists
     // ------------------------------------------------------------
 
-    const examResult =
-      await pool.query(
-        `
-          SELECT id
-          FROM exams
-          WHERE id = $1
-        `,
-        [exam_id],
-      );
+    // Only the exam's owner may upload scans for it (404 for anyone else).
+    const ownsExam = await userOwnsExam(exam_id, req.user.id);
 
-    if (examResult.rows.length === 0) {
+    if (!ownsExam) {
       return res.status(404).json({
         message: 'Exam not found',
       });

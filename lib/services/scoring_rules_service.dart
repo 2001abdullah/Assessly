@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
+import 'authed_http.dart';
 
 class ScoringRulesService {
-  static const String baseUrl = 'http://10.0.2.2:5000';
+  static const String baseUrl = 'http://192.168.0.105:5000';
 
   Future<Map<String, dynamic>> saveScoringRules({
     required String examId,
@@ -13,11 +14,9 @@ class ScoringRulesService {
     required String ambiguousAs,
     required bool clampNegativeTotal,
   }) async {
-    final response = await http.put(
+    final response = await AuthedHttp.put(
       Uri.parse('$baseUrl/api/scoring-rules/$examId'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'marks_correct': marksCorrect,
         'marks_wrong': marksWrong,
@@ -31,27 +30,21 @@ class ScoringRulesService {
     final data = jsonDecode(response.body);
 
     if (response.statusCode != 200) {
-      throw Exception(
-        data['message'] ?? 'Failed to save scoring rules',
-      );
+      throw Exception(data['message'] ?? 'Failed to save scoring rules');
     }
 
     return data['scoring_rules'];
   }
 
-  Future<Map<String, dynamic>> getScoringRules({
-    required String examId,
-  }) async {
-    final response = await http.get(
+  Future<Map<String, dynamic>> getScoringRules({required String examId}) async {
+    final response = await AuthedHttp.get(
       Uri.parse('$baseUrl/api/scoring-rules/$examId'),
     );
 
     final data = jsonDecode(response.body);
 
     if (response.statusCode != 200) {
-      throw Exception(
-        data['message'] ?? 'Failed to load scoring rules',
-      );
+      throw Exception(data['message'] ?? 'Failed to load scoring rules');
     }
 
     return data['scoring_rules'];

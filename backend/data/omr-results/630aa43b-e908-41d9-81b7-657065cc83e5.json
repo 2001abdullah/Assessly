@@ -1,0 +1,29 @@
+{
+  "ok": false,
+  "template_id": "tpl_660009f7db0f",
+  "source": "2.jpeg",
+  "roll": null,
+  "registration": null,
+  "answers": [],
+  "quality": {
+    "sharpness": 59.3891,
+    "contrast": 0,
+    "reprojection_error_px": 0,
+    "fiducials_found": 4,
+    "timing_marks_found": 0,
+    "timing_marks_expected": 0,
+    "ink_threshold": 0,
+    "fill_threshold": 0,
+    "skew_deg": 0,
+    "grade": "poor",
+    "score": 0
+  },
+  "warnings": [],
+  "errors": [
+    "could not lock onto the sheet's timing marks (1/50 found) - the sheet may be creased, cropped, badly lit, or not this template"
+  ],
+  "qr_payload": "",
+  "elapsed_ms": 124.02,
+  "needs_review": true,
+  "debug_image_path": ""
+}

@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+
+import '../utils/image_optimizer.dart';
+import 'authed_http.dart';
 
 class OmrService {
   static String get baseUrl {
@@ -11,39 +15,66 @@ class OmrService {
     }
 
     return Platform.isAndroid
-        ? 'http://10.0.2.2:5000'
+        ? 'http://192.168.0.105:5000'
         : 'http://127.0.0.1:5000';
   }
+
+  /// Upload + server-side scan can take a few seconds; never hang forever.
+  static const Duration _timeout = Duration(seconds: 90);
 
   Future<Map<String, dynamic>> scanOmr({
     required File image,
     required String examId,
   }) async {
+    // Big gallery photos are shrunk first (camera captures pass through).
+    final File upload = await ImageOptimizer.prepareForUpload(image);
+
     final request = http.MultipartRequest(
       'POST',
       Uri.parse('$baseUrl/api/omr/scan'),
     );
 
+    request.headers.addAll(await AuthedHttp.authHeaders());
     request.fields['exam_id'] = examId;
 
-    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+    request.files.add(await http.MultipartFile.fromPath('image', upload.path));
 
-    final streamedResponse = await request.send();
+    try {
+      final streamedResponse = await request.send().timeout(_timeout);
 
-    final response = await http.Response.fromStream(streamedResponse);
+      final response = await http.Response.fromStream(streamedResponse)
+          .timeout(_timeout);
 
-    final dynamic decodedBody = jsonDecode(response.body);
-    final data = decodedBody is Map<String, dynamic>
-        ? decodedBody
-        : <String, dynamic>{};
+      AuthedHttp.notifyIfUnauthorized(response.statusCode);
 
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+      dynamic decodedBody;
+      try {
+        decodedBody = jsonDecode(response.body);
+      } on FormatException {
+        decodedBody = null;
+      }
+      final data = decodedBody is Map<String, dynamic>
+          ? decodedBody
+          : <String, dynamic>{};
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw Exception(
+          data['message']?.toString() ??
+              'Failed to scan OMR (HTTP ${response.statusCode})',
+        );
+      }
+
+      return data;
+    } on TimeoutException {
       throw Exception(
-        data['message']?.toString() ??
-            'Failed to scan OMR (HTTP ${response.statusCode})',
+        'The server took too long to respond. Check your connection and try again.',
       );
+    } finally {
+      if (upload.path != image.path) {
+        try {
+          await upload.delete();
+        } catch (_) {}
+      }
     }
-
-    return data;
   }
 }
