@@ -4,7 +4,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 const pool = require('../config/db');
 
-const PYTHON_PATH = path.join(
+const BUNDLED_PYTHON = path.join(
   __dirname,
   '..',
   'omr',
@@ -12,6 +12,24 @@ const PYTHON_PATH = path.join(
   'Scripts',
   'python.exe'
 );
+
+function resolvePythonPath({
+  env = process.env,
+  platform = process.platform,
+  existsSync = fs.existsSync,
+} = {}) {
+  if (env.OMR_PYTHON && env.OMR_PYTHON.trim()) {
+    return env.OMR_PYTHON.trim();
+  }
+
+  if (platform === 'win32') {
+    return existsSync(BUNDLED_PYTHON)
+      ? BUNDLED_PYTHON
+      : 'python';
+  }
+
+  return 'python3';
+}
 
 const SCORING_SCRIPT = path.join(
   __dirname,
@@ -156,7 +174,7 @@ function runPythonScorer(
         }
 
         const python = spawn(
-          PYTHON_PATH,
+          resolvePythonPath(),
           args,
           {
             windowsHide: true,
@@ -491,6 +509,7 @@ async function scoreScan({
 
 module.exports = {
   buildPythonAnswerKey,
+  resolvePythonPath,
   runPythonScorer,
   scoreScan,
 };
