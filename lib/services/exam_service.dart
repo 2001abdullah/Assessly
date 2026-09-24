@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
+import 'authed_http.dart';
 
 class ExamService {
-  static const String baseUrl = 'http://10.0.2.2:5000';
+  static const String baseUrl = 'http://192.168.0.105:5000';
 
   // --------------------------------------------------
   // Create Exam
@@ -13,11 +14,9 @@ class ExamService {
     required String subject,
     required int totalQuestions,
   }) async {
-    final response = await http.post(
+    final response = await AuthedHttp.post(
       Uri.parse('$baseUrl/api/exam'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'title': title,
         'subject': subject,
@@ -31,9 +30,7 @@ class ExamService {
       return data;
     }
 
-    throw Exception(
-      data['message'] ?? 'Failed to create exam',
-    );
+    throw Exception(data['message'] ?? 'Failed to create exam');
   }
 
   // --------------------------------------------------
@@ -41,30 +38,22 @@ class ExamService {
   // --------------------------------------------------
 
   Future<List<Map<String, dynamic>>> getExams() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/exam'),
-    );
-
-
+    final response = await AuthedHttp.get(Uri.parse('$baseUrl/api/exam'));
 
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return List<Map<String, dynamic>>.from(
-        data['exams'],
-      );
+      return List<Map<String, dynamic>>.from(data['exams']);
     }
 
-    throw Exception(
-      data['message'] ?? 'Failed to load exams',
-    );
+    throw Exception(data['message'] ?? 'Failed to load exams');
   }
   // --------------------------------------------------
-// Delete Exam
-// --------------------------------------------------
+  // Delete Exam
+  // --------------------------------------------------
 
   Future<void> deleteExam(String examId) async {
-    final response = await http.delete(
+    final response = await AuthedHttp.delete(
       Uri.parse('$baseUrl/api/exam/$examId'),
     );
 
@@ -74,8 +63,6 @@ class ExamService {
       return;
     }
 
-    throw Exception(
-      data['message'] ?? 'Failed to delete exam',
-    );
+    throw Exception(data['message'] ?? 'Failed to delete exam');
   }
 }

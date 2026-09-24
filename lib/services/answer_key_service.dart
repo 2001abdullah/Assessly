@@ -1,46 +1,36 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
+import 'authed_http.dart';
 
 class AnswerKeyService {
-  static const String baseUrl = 'http://10.0.2.2:5000';
+  static const String baseUrl = 'http://192.168.0.105:5000';
 
   Future<void> saveAnswerKey({
     required String examId,
     required List<Map<String, dynamic>> answers,
   }) async {
-    final response = await http.post(
+    final response = await AuthedHttp.post(
       Uri.parse('$baseUrl/api/answer-key/batch'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'exam_id': examId,
-        'answers': answers,
-      }),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'exam_id': examId, 'answers': answers}),
     );
 
     final data = jsonDecode(response.body);
 
     if (response.statusCode != 200) {
-      throw Exception(
-        data['message'] ?? 'Failed to save answer key',
-      );
+      throw Exception(data['message'] ?? 'Failed to save answer key');
     }
   }
 
-  Future<List<dynamic>> getAnswerKeys({
-    required String examId,
-  }) async {
-    final response = await http.get(
+  Future<List<dynamic>> getAnswerKeys({required String examId}) async {
+    final response = await AuthedHttp.get(
       Uri.parse('$baseUrl/api/answer-key/exam/$examId'),
     );
 
     final data = jsonDecode(response.body);
 
     if (response.statusCode != 200) {
-      throw Exception(
-        data['message'] ?? 'Failed to load answer key',
-      );
+      throw Exception(data['message'] ?? 'Failed to load answer key');
     }
 
     return data['answer_keys'];

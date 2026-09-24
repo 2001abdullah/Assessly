@@ -2,6 +2,9 @@ const express = require('express');
 const pool = require('../config/db');
 
 const router = express.Router();
+const { examParam } = require('../middleware/ownership');
+
+router.param('exam_id', examParam);
 
 
 // ========================================

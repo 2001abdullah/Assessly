@@ -3,6 +3,9 @@ const crypto = require('crypto');
 const pool = require('../config/db');
 
 const router = express.Router();
+const { examParam, requireExamInBody } = require('../middleware/ownership');
+
+router.param('exam_id', examParam);
 
 
 // ========================================
@@ -118,7 +121,7 @@ const createAnswerKey = async (req, res) => {
   }
 };
 
-router.post('/', createAnswerKey);
+router.post('/', requireExamInBody, createAnswerKey);
 
 
 // ========================================
@@ -126,7 +129,7 @@ router.post('/', createAnswerKey);
 // POST /api/answer-key/batch
 // ========================================
 
-router.post('/batch', async (req, res) => {
+router.post('/batch', requireExamInBody, async (req, res) => {
   const { exam_id, answers } = req.body;
 
   // -----------------------------

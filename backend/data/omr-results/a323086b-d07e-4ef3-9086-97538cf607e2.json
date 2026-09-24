@@ -1,0 +1,29 @@
+{
+  "ok": false,
+  "template_id": "tpl_660009f7db0f",
+  "source": "39af107a-365d-4074-a224-08a2dfc66f2b4205414672223460680.jpg",
+  "roll": null,
+  "registration": null,
+  "answers": [],
+  "quality": {
+    "sharpness": 28.0099,
+    "contrast": 0,
+    "reprojection_error_px": 0,
+    "fiducials_found": 0,
+    "timing_marks_found": 0,
+    "timing_marks_expected": 0,
+    "ink_threshold": 0,
+    "fill_threshold": 0,
+    "skew_deg": 0,
+    "grade": "poor",
+    "score": 0
+  },
+  "warnings": [],
+  "errors": [
+    "corner registration markers not found (0/4) - make sure all four corners of the sheet are inside the frame"
+  ],
+  "qr_payload": "",
+  "elapsed_ms": 120.7,
+  "needs_review": true,
+  "debug_image_path": ""
+}

@@ -1,70 +1,74 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
+/// Thrown when the server rejects the saved token (expired, invalid, user gone).
+class SessionExpiredException implements Exception {
+  const SessionExpiredException();
+
+  @override
+  String toString() => 'Your session has expired. Please sign in again.';
+}
+
 class ApiService {
-  static const String baseUrl= 'http://10.0.2.2:5000/api';
-  static Future<Map<String,dynamic>> login(
-      String email,
-      String password
-      )  async
-  {
-    final response=await http.post(
+  static const String baseUrl = 'http://192.168.0.105:5000/api';
+  static Future<Map<String, dynamic>> login(
+    String email,
+    String password,
+  ) async {
+    final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
-      headers: {
-        'Content-Type' : "application/json"
-      },
-      body: jsonEncode(
-        {
-          'email':email,
-          'password': password
-        }
-      ),
+      headers: {'Content-Type': "application/json"},
+      body: jsonEncode({'email': email, 'password': password}),
     );
-    final data=jsonDecode(response.body);
-    if(response.statusCode==200)
-      {
-        return data;
-      }
-    else
-      {
-        throw Exception(data["message"]);
-      }
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return data;
+    } else {
+      throw Exception(data["message"]);
+    }
   }
-  static Future<Map<String,dynamic>> register(
-      String name,
-      String email,
-      String password
-      ) async
-  {
-    final response=await http.post(
+
+  static Future<Map<String, dynamic>> register(
+    String name,
+    String email,
+    String password,
+  ) async {
+    final response = await http.post(
       Uri.parse('$baseUrl/auth/register'),
-      headers: {
-        'Content-Type': "application/json",
-      },
-      body: jsonEncode({
-        'name':name,
-        'email':email,
-        'password':password
-      })
+      headers: {'Content-Type': "application/json"},
+      body: jsonEncode({'name': name, 'email': email, 'password': password}),
     );
-    final data=jsonDecode(response.body);
-    if(response.statusCode==201)
-      {
-        return data;
-      }
-    else{
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      return data;
+    } else {
       throw Exception(data['message']);
     }
   }
 
-static Future<void> testAuthenticatedConnection(String token) async{
-  final response=await http.get(
-    Uri.parse('$baseUrl/auth/me'),
-    headers: {
-      'Authorization': 'Bearer $token'
+  /// The profile (id, name, email) of the user this token belongs to.
+  static Future<Map<String, dynamic>> getProfile(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/auth/me'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401 || response.statusCode == 404) {
+      throw const SessionExpiredException();
     }
-  );
-  print(response.statusCode);
-  print(response.body);
-}
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200 && data['user'] is Map) {
+      return Map<String, dynamic>.from(data['user'] as Map);
+    }
+    throw Exception(data['message'] ?? 'Could not load profile');
+  }
+
+  static Future<void> testAuthenticatedConnection(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/auth/me'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    print(response.statusCode);
+    print(response.body);
+  }
 }

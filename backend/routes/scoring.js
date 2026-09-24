@@ -3,9 +3,11 @@ const crypto = require('crypto');
 const { scoreScan } = require('../services/scoring');
 const pool = require('../config/db');
 
+const { requireExamAndScanInBody } = require('../middleware/ownership');
+
 const router = express.Router();
 
-router.post('/score', async (req, res) => {
+router.post('/score', requireExamAndScanInBody, async (req, res) => {
   const {
     exam_id,
     scan_id,

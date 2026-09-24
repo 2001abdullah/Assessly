@@ -15,6 +15,7 @@ that space, which is why the sampling code never has to think about perspective.
 
 from __future__ import annotations
 
+import itertools
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -189,14 +190,24 @@ def locate_fiducials(
     return hits
 
 
-def hunt_fiducials(
-    gray: np.ndarray, template: OMRTemplate, cfg: EngineConfig
-) -> Dict[str, FiducialHit]:
+def hunt_fiducial_sets(
+    gray: np.ndarray, template: OMRTemplate, cfg: EngineConfig, limit: int = 3
+) -> List[Dict[str, FiducialHit]]:
     """
-    Global fallback: find every square-ish dark blob of a plausible size and keep
-    the four that sit furthest into the corners.
+    Global fallback: find every square-ish dark blob of a plausible size, then
+    return the ``limit`` most plausible *sets of four* (best first).
 
-    Used when page detection fails outright (e.g. white sheet on a white desk).
+    Used when page detection fails outright (e.g. a white sheet on pale floor
+    tiles).  Earlier versions simply kept the blobs that sat furthest into each
+    image corner, which is fooled by any dark clutter near the frame edge (a
+    sleeve, a shadow, a phone case): the clutter beats the real marker.  Here
+    every 4-combination is scored on geometry the printed sheet guarantees --
+    a convex quad with the fiducial span's aspect ratio, made of similarly
+    sized squares -- so clutter loses to the real markers.
+
+    Hits are named in *image* order (tl, tr, br, bl clockwise).  A sheet that
+    was photographed rotated is corrected later, when the timing marks
+    validate the assignment.
     """
     h, w = gray.shape[:2]
     k_est = min(w / template.page_w_mm, h / template.page_h_mm)
@@ -227,22 +238,92 @@ def hunt_fiducials(
         cands.append((cx, cy, area))
 
     if len(cands) < 4:
-        return {}
+        return []
+    return _rank_corner_quads(cands, template, w, h, limit)
 
-    pts = np.array([[c[0], c[1]] for c in cands], dtype=np.float64)
-    s, d = pts[:, 0] + pts[:, 1], pts[:, 0] - pts[:, 1]
-    picks = {
-        "tl": int(np.argmin(s)),
-        "br": int(np.argmax(s)),
-        "tr": int(np.argmax(d)),
-        "bl": int(np.argmin(d)),
-    }
-    if len(set(picks.values())) != 4:
-        return {}
-    return {
-        name: FiducialHit(name, float(pts[i][0]), float(pts[i][1]), cands[i][2], 1.0, True)
-        for name, i in picks.items()
-    }
+
+def hunt_fiducials(
+    gray: np.ndarray, template: OMRTemplate, cfg: EngineConfig
+) -> Dict[str, FiducialHit]:
+    """Best single set from :func:`hunt_fiducial_sets` (``{}`` when none)."""
+    sets = hunt_fiducial_sets(gray, template, cfg, limit=1)
+    return sets[0] if sets else {}
+
+
+def _rank_corner_quads(
+    cands: List[Tuple[float, float, float]], template: OMRTemplate,
+    w: int, h: int, limit: int,
+) -> List[Dict[str, FiducialHit]]:
+    # Combinatorics stay tiny if we only consider the biggest, most
+    # marker-like blobs; real markers are among the largest square blobs.
+    pool = sorted(cands, key=lambda c: -c[2])[:10]
+    f0, f1, f3 = template.fiducial("tl"), template.fiducial("tr"), template.fiducial("bl")
+    span_w = max(abs(f1.x_mm - f0.x_mm), 1e-6)
+    span_h = max(abs(f3.y_mm - f0.y_mm), 1e-6)
+    target = span_w / span_h  # width / height of the marker rectangle
+    frame_area = float(max(w * h, 1))
+
+    ranked: List[Tuple[float, Dict[str, FiducialHit]]] = []
+    for combo in itertools.combinations(range(len(pool)), 4):
+        pts = np.array([[pool[i][0], pool[i][1]] for i in combo], dtype=np.float64)
+        areas = np.array([pool[i][2] for i in combo], dtype=np.float64)
+        # clockwise order around the centroid, starting from the top-left-most
+        cen = pts.mean(axis=0)
+        ang = np.arctan2(pts[:, 1] - cen[1], pts[:, 0] - cen[0])
+        order = np.argsort(ang)  # image y points down, so this runs clockwise
+        pts, areas = pts[order], areas[order]
+        first = int(np.argmin(pts[:, 0] + pts[:, 1]))
+        pts, areas = np.roll(pts, -first, axis=0), np.roll(areas, -first)
+
+        # convex: all turns have the same sign
+        cross = []
+        for a in range(4):
+            p, q, r = pts[a], pts[(a + 1) % 4], pts[(a + 2) % 4]
+            cross.append((q[0] - p[0]) * (r[1] - q[1]) - (q[1] - p[1]) * (r[0] - q[0]))
+        if not (all(c > 0 for c in cross) or all(c < 0 for c in cross)):
+            continue
+
+        side = [float(np.linalg.norm(pts[(a + 1) % 4] - pts[a])) for a in range(4)]
+        top, right, bottom, left = side
+        if min(side) < 1.0:
+            continue
+        ratio = (top + bottom) / max(left + right, 1e-6)
+        # allow the sheet to be turned a quarter turn: ratio or its inverse
+        aspect_pen = min(abs(np.log(ratio / target)), abs(np.log(ratio * target)))
+        if aspect_pen > 0.32:
+            continue
+        size_pen = float(np.log(areas.max() / max(areas.min(), 1.0)))
+        if size_pen > 1.6:
+            continue
+        quad_area = 0.5 * abs(
+            np.dot(pts[:, 0], np.roll(pts[:, 1], -1)) - np.dot(pts[:, 1], np.roll(pts[:, 0], -1))
+        )
+        penalty = 3.0 * aspect_pen + 0.6 * size_pen - 0.8 * (quad_area / frame_area)
+        hits = {
+            name: FiducialHit(name, float(pts[i, 0]), float(pts[i, 1]),
+                              float(areas[i]), 1.0, True)
+            for i, name in enumerate(CORNER_ORDER)
+        }
+        ranked.append((penalty, hits))
+
+    ranked.sort(key=lambda t: t[0])
+    return [hits for _, hits in ranked[:max(1, limit)]]
+
+
+def _relabel_hits(hits: Dict[str, FiducialHit], shift: int) -> Dict[str, FiducialHit]:
+    """Cyclically reassign which physical marker plays which page corner."""
+    if shift % 4 == 0:
+        return hits
+    pts = [hits[n] for n in CORNER_ORDER]
+    pts = pts[shift % 4:] + pts[:shift % 4]
+    return {n: FiducialHit(n, p.x, p.y, p.area, p.squareness, p.confident)
+            for n, p in zip(CORNER_ORDER, pts)}
+
+
+def _same_hits(a: Dict[str, FiducialHit], b: Dict[str, FiducialHit], tol: float = 6.0) -> bool:
+    if set(a) != set(b):
+        return False
+    return all(abs(a[n].x - b[n].x) <= tol and abs(a[n].y - b[n].y) <= tol for n in a)
 
 
 # --------------------------------------------------------------------------- #
@@ -538,15 +619,48 @@ def align_sheet(img_bgr: np.ndarray, template: OMRTemplate,
         rc = measure_timing(canon, template, k, estimate_ink_level(canon), cfg)
         lock = rc.found / max(rc.expected, 1)
         if rc.expected and lock < 0.30:
-            return Alignment(
-                ok=False, canonical=canon, raw_canonical=canon_raw, k=k, H=H,
-                fiducials=hits, method=method,
-                errors=[
-                    "could not lock onto the sheet's timing marks "
-                    f"({rc.found}/{rc.expected} found) - the sheet may be creased, "
-                    "cropped, badly lit, or not this template"
-                ],
-            )
+            # The first guess did not lock.  Two real-world causes are handled
+            # before giving up: (1) the sheet was photographed a quarter turn
+            # (phone held sideways) so the corner *names* are rotated, and
+            # (2) a marker was confused with clutter.  Both are cheap to test
+            # and the timing marks arbitrate between the candidates.
+            best = (lock, hits, H, canon_raw, canon, rc, "")
+            pool = [hits] + [s for s in hunt_fiducial_sets(gray, template, cfg, limit=3)
+                             if not _same_hits(s, hits)]
+            done = False
+            for si, cand in enumerate(pool):
+                for shift in (0, 1):
+                    if si == 0 and shift == 0:
+                        continue  # already measured above
+                    hs = _relabel_hits(cand, shift)
+                    Hc, rawc, canc = _warp(hs)
+                    rcc = measure_timing(canc, template, k, estimate_ink_level(canc), cfg)
+                    lockc = rcc.found / max(rcc.expected, 1)
+                    if lockc > best[0]:
+                        note = ""
+                        if shift:
+                            note = "sheet was rotated 90 degrees; corrected automatically"
+                        elif si:
+                            note = "corner markers re-detected"
+                        best = (lockc, hs, Hc, rawc, canc, rcc, note)
+                    if lockc >= cfg.timing_min_hits_frac:
+                        done = True
+                        break
+                if done:
+                    break
+            lock, hits, H, canon_raw, canon, rc, note = best
+            if note:
+                warnings.append(note)
+            if lock < 0.30:
+                return Alignment(
+                    ok=False, canonical=canon, raw_canonical=canon_raw, k=k, H=H,
+                    fiducials=hits, method=method,
+                    errors=[
+                        "could not lock onto the sheet's timing marks "
+                        f"({rc.found}/{rc.expected} found) - the sheet may be creased, "
+                        "cropped, badly lit, or not this template"
+                    ],
+                )
 
     # -- orientation ------------------------------------------------------ #
     rotated = is_upside_down(canon, template, k)

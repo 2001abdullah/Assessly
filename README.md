@@ -219,12 +219,12 @@ For OMR scanning, the API accepts a multipart image upload at
 `POST /api/omr/scan`. The scan is associated with an exam and returns a
 structured result that can then be passed to the scoring workflow.
 
-The scan screen now supports both **Take Picture** and **Choose Image**. The
-provided analyzer is intentionally platform-independent: it accepts luminance
-frames through `LumaFrame`, so a future live-camera preview can feed frames to
-`OmrFrameAnalyzer` without coupling detection logic to Flutter or a camera
-plugin. The current capture flow takes a high-quality still image and sends it
-through the existing backend OMR pipeline.
+The scan screen supports both **Take Photo** and **Gallery**. The reusable
+analyzer in `lib/services/omr_frame_analyzer.dart` is platform-independent
+and accepts luminance frames through `LumaFrame`, so live-camera coaching can
+be connected without coupling detection logic to Flutter or a camera plugin.
+The current capture flow takes a high-quality still image and sends it through
+the existing backend OMR pipeline.
 
 ## Account status
 

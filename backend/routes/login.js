@@ -48,13 +48,18 @@ const token=jwt.sign(
     },
     process.env.JWT_SECRET,
     {
-        expiresIn: '1h'
+        expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     }
 );
 return res.json(
     {
         message: "login successful",
-        token:token
+        token:token,
+        user:{
+            id:user.id,
+            name:user.name,
+            email:user.email
+        }
     }
 );
 
@@ -70,15 +75,28 @@ catch(error){
 }
 })
 
-router.get('/me',authMiddleware,(req,res)=>
+router.get('/me',authMiddleware,async (req,res)=>
 {
-    res.json(
+    try{
+        const result=await pool.query(
+            'SELECT id,name,email,created_at FROM users where id=$1',
+            [req.user.id]
+        );
+        if(result.rows.length===0)
         {
-            message:"authenticated user",
-            user: req.user
+            return res.status(404).json({message:"user not found"});
         }
-    );
-
+        res.json(
+            {
+                message:"authenticated user",
+                user: result.rows[0]
+            }
+        );
+    }
+    catch(error){
+        console.error('profile error',error.message);
+        res.status(500).json({message:"could not load profile"});
+    }
 });
 
 module.exports=router;
