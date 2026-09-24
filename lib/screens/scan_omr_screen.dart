@@ -380,9 +380,9 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
   Widget _buildScanResultCard() {
     final result = scanResult!;
 
-    final roll = result['roll']?.toString() ?? '-';
+    final roll = _formatIdentifier(result['roll']);
 
-    final registration = result['registration']?.toString() ?? '-';
+    final registration = _formatIdentifier(result['registration']);
 
     final answers = result['answers'];
 
@@ -420,6 +420,23 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
         ),
       ),
     );
+  }
+
+  String _formatIdentifier(dynamic field) {
+    if (field is Map) {
+      final value = field['value']?.toString().trim();
+      if (value != null && value.isNotEmpty) return value;
+
+      final digits = field['digits'];
+      if (digits is List && digits.any((digit) => digit != null)) {
+        return digits.map((digit) => digit?.toString() ?? '?').join();
+      }
+
+      return '-';
+    }
+
+    final value = field?.toString().trim();
+    return value == null || value.isEmpty ? '-' : value;
   }
 
   Widget _resultMessages(String label, dynamic messages, Color color) {
