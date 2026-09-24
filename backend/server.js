@@ -41,6 +41,7 @@ app.get('/health', async (_req, res) => {
     return res.status(200).json({
       status: 'ok',
       database: 'connected',
+      version: process.env.RENDER_GIT_COMMIT || 'development',
     });
   } catch (error) {
     console.error('Health check database error:', error);
