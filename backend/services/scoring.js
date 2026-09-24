@@ -31,6 +31,32 @@ function resolvePythonPath({
   return 'python3';
 }
 
+function formatDetectedIdentifier(field, fallback = null) {
+  const exact = fallback ?? field?.value;
+  if (exact !== null && exact !== undefined && String(exact).trim()) {
+    return String(exact).trim();
+  }
+
+  if (!Array.isArray(field?.digits)) {
+    return null;
+  }
+
+  const hasDetectedDigit = field.digits.some(
+    (digit) => digit !== null && digit !== undefined,
+  );
+  if (!hasDetectedDigit) {
+    return null;
+  }
+
+  return field.digits
+    .map((digit) =>
+      digit === null || digit === undefined
+        ? '?'
+        : String(digit),
+    )
+    .join('');
+}
+
 const SCORING_SCRIPT = path.join(
   __dirname,
   '..',
@@ -405,6 +431,21 @@ async function scoreScan({
       [scanId]
     );
 
+  const rawResult =
+    scanRow.raw_result && typeof scanRow.raw_result === 'object'
+      ? scanRow.raw_result
+      : {};
+
+  const rawRoll =
+    rawResult.roll && typeof rawResult.roll === 'object'
+      ? rawResult.roll
+      : null;
+
+  const rawRegistration =
+    rawResult.registration && typeof rawResult.registration === 'object'
+      ? rawResult.registration
+      : null;
+
   const scanData = {
 
     ok:
@@ -416,21 +457,28 @@ async function scoreScan({
     source:
       scanRow.source_name || '',
 
-    roll:
-      scanRow.roll_number
+    roll: rawRoll
+      ? {
+          ...rawRoll,
+          value: scanRow.roll_number || rawRoll.value || null,
+        }
+      : scanRow.roll_number
         ? {
             name: 'roll',
-            value:
-              scanRow.roll_number,
+            value: scanRow.roll_number,
           }
         : null,
 
-    registration:
-      scanRow.registration_number
+    registration: rawRegistration
+      ? {
+          ...rawRegistration,
+          value:
+            scanRow.registration_number || rawRegistration.value || null,
+        }
+      : scanRow.registration_number
         ? {
             name: 'registration',
-            value:
-              scanRow.registration_number,
+            value: scanRow.registration_number,
           }
         : null,
 
@@ -493,7 +541,7 @@ async function scoreScan({
       scoringRules
     );
 
-  return runPythonScorer(
+  const scoredResult = await runPythonScorer(
     scanData,
     answerKeyData,
     {
@@ -505,10 +553,22 @@ async function scoreScan({
       name,
     }
   );
+
+  scoredResult.roll = formatDetectedIdentifier(
+    rawRoll,
+    scoredResult.roll || scanRow.roll_number,
+  );
+  scoredResult.registration = formatDetectedIdentifier(
+    rawRegistration,
+    scoredResult.registration || scanRow.registration_number,
+  );
+
+  return scoredResult;
 }
 
 module.exports = {
   buildPythonAnswerKey,
+  formatDetectedIdentifier,
   resolvePythonPath,
   runPythonScorer,
   scoreScan,
