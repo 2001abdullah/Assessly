@@ -198,9 +198,19 @@ flutter pub get
 flutter run
 ```
 
-Configure the API base URL in the Flutter client for the device or emulator
-being used. Android emulators commonly reach a host machine using
-`10.0.2.2` instead of `localhost`.
+The Flutter client defaults to `http://10.0.2.2:5000` on Android emulators
+because that address points to the host computer from the emulator. A
+physical Android phone cannot use `10.0.2.2`; connect the phone and computer
+to the same network and start the app with the computer's LAN IPv4 address:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://192.168.1.123:5000
+```
+
+Replace `192.168.1.123` with the computer's actual LAN address. The backend
+must be running on port `5000`, and the computer firewall must allow inbound
+TCP connections to that port. Verify connectivity from the phone browser
+using `http://192.168.1.123:5000/health` before trying to register or log in.
 
 ## API overview
 

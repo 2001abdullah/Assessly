@@ -1,19 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'api_config.dart';
 import 'authed_http.dart';
 
 class ScoringService {
-  static String get baseUrl {
-    const configuredUrl = String.fromEnvironment('API_BASE_URL');
-    if (configuredUrl.isNotEmpty) {
-      return configuredUrl;
-    }
-
-    return Platform.isAndroid
-        ? 'http://192.168.0.105:5000'
-        : 'http://127.0.0.1:5000';
-  }
+  static String get baseUrl => ApiConfig.baseUrl;
 
   Future<Map<String, dynamic>> scoreScan({
     required String examId,
