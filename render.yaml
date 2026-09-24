@@ -1,0 +1,26 @@
+databases:
+  - name: assessly-db
+    plan: free
+
+services:
+  - type: web
+    name: assessly-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: assessly-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: OMR_PYTHON
+        value: /opt/assessly-venv/bin/python
