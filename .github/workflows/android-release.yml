@@ -1,0 +1,45 @@
+name: Android Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: Backend API URL, for example https://assessly-api.onrender.com
+        required: true
+        type: string
+      release_tag:
+        description: Optional release tag. Leave empty for an artifact-only build.
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build release APK
+        run: flutter build apk --release --dart-define=API_BASE_URL=${{ inputs.api_base_url }}
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: assessly-android-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create GitHub release
+        if: ${{ inputs.release_tag != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          generate_release_notes: true
+          files: build/app/outputs/flutter-apk/app-release.apk

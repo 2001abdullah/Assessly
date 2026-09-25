@@ -539,5 +539,42 @@ router.get('/exam/:exam_id', async (req, res) => {
   }
 });
 
+router.get('/exam/:exam_id/export.csv', async (req, res) => {
+  const { exam_id: examId } = req.params;
+
+  try {
+    const result = await pool.query(
+      `
+        SELECT roll_number, registration_number, correct, wrong, blank,
+               ambiguous, marks, max_marks, percentage, grade, passed,
+               needs_review, created_at
+        FROM exam_results
+        WHERE exam_id = $1
+        ORDER BY created_at ASC
+      `,
+      [examId],
+    );
+
+    const escape = (value) => {
+      const text = value === null || value === undefined ? '' : String(value);
+      return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    };
+    const headers = [
+      'roll_number', 'registration_number', 'correct', 'wrong', 'blank',
+      'ambiguous', 'marks', 'max_marks', 'percentage', 'grade', 'passed',
+      'needs_review', 'created_at',
+    ];
+    const rows = result.rows.map((row) => headers.map((header) => escape(row[header])).join(','));
+    const csv = [headers.join(','), ...rows].join('\r\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="exam-${examId}-results.csv"`);
+    return res.send(csv);
+  } catch (error) {
+    console.error('Export exam results error:', error.message);
+    return res.status(500).json({ message: 'Could not export exam results' });
+  }
+});
+
 
 module.exports = router;

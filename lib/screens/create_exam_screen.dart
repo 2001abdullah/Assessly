@@ -2,7 +2,6 @@ import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/services/exam_service.dart';
 import 'package:flutter/material.dart';
 import 'package:assessly/themes/app_text_styles.dart';
-import 'package:assessly/screens/exam_details_screen.dart';
 
 class CreateExamScreen extends StatefulWidget {
   const CreateExamScreen({super.key});
@@ -16,7 +15,8 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
 
   final titleController=TextEditingController();
   final subjectController=TextEditingController();
-  final totalQuestionController=TextEditingController();
+  final totalQuestionController = TextEditingController(text: '25');
+  int selectedQuestionCount = 25;
 
   final ExamService _examService=ExamService();
   bool isLoading=false;
@@ -33,9 +33,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
       final result = await _examService.createExam(
         title: titleController.text.trim(),
         subject: subjectController.text.trim(),
-        totalQuestions: int.parse(
-          totalQuestionController.text.trim(),
-        ),
+        totalQuestions: selectedQuestionCount,
 
       );
       debugPrint('CREATE EXAM RESPONSE: $result');
@@ -122,24 +120,18 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
                   ),
                   const SizedBox(height: 16,),
 
-                  TextFormField(
-                    controller: totalQuestionController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: "Total Questions",
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Total questions is required';
-                      }
-
-                      final total = int.tryParse(value);
-
-                      if (total == null || total <= 0) {
-                        return 'Enter a valid number';
-                      }
-
-                      return null;
+                  DropdownButtonFormField<int>(
+                    initialValue: selectedQuestionCount,
+                    decoration: const InputDecoration(labelText: 'Total Questions'),
+                    items: const [25, 50, 75, 100]
+                        .map((count) => DropdownMenuItem(value: count, child: Text('$count questions')))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value == null) return;
+                      setState(() {
+                        selectedQuestionCount = value;
+                        totalQuestionController.text = value.toString();
+                      });
                     },
                   ),
                   SizedBox(height: 24,),

@@ -69,4 +69,28 @@ class OmrService {
       }
     }
   }
+
+  Future<Map<String, dynamic>> scanBatch({
+    required List<File> images,
+    required String examId,
+  }) async {
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/api/omr/batch'),
+    );
+    request.headers.addAll(await AuthedHttp.authHeaders());
+    request.fields['exam_id'] = examId;
+    for (final image in images) {
+      request.files.add(await http.MultipartFile.fromPath('images', image.path));
+    }
+
+    final streamed = await request.send().timeout(_timeout);
+    final response = await http.Response.fromStream(streamed);
+    AuthedHttp.notifyIfUnauthorized(response.statusCode);
+    final decoded = jsonDecode(response.body);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception(decoded is Map ? decoded['message'] : 'Batch scan failed');
+    }
+    return Map<String, dynamic>.from(decoded as Map);
+  }
 }
