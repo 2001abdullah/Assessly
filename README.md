@@ -232,6 +232,15 @@ in `api_base_url`, and download the `assessly-android-release` artifact. If a
 release tag is supplied, the workflow also attaches the APK to a GitHub
 release.
 
+### iOS release
+
+Open **Actions > iOS Release > Run workflow**, enter the Render API URL, and
+download the `assessly-ios-unsigned` artifact. This workflow runs on a macOS
+runner and verifies the iOS build, but the IPA is unsigned. Installing an IPA
+on a physical iPhone or publishing to the App Store requires an Apple
+Developer account, a registered bundle ID, and signing certificates/profiles.
+The current iOS bundle ID is `com.example.assessly`.
+
 ## API overview
 
 The backend currently exposes endpoints for:
