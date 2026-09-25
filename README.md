@@ -9,9 +9,19 @@ and a Python-based optical mark recognition (OMR) pipeline.
 
 [Download Assessly v1.0.0 Beta 2 for Android](https://github.com/2001abdullah/Assessly/releases/download/v1.0.0-beta.2/Assessly-v1.0.0-beta.2.apk)
 
+[Download the latest Android APK release](https://github.com/2001abdullah/Assessly/releases/latest)
+
+[Build/download an Android release with GitHub Actions](https://github.com/2001abdullah/Assessly/actions/workflows/android-release.yml)
+
+[Build/download the iOS archive with GitHub Actions](https://github.com/2001abdullah/Assessly/actions/workflows/ios-release.yml)
+
 Open the link on an Android device, download the APK, and allow installation
 from the browser or file manager if Android prompts you. This beta is intended
 for testing and is distributed outside Google Play.
+
+The iOS workflow currently provides an unsigned Xcode archive for testing and
+validation. A directly installable iPhone release requires Apple Developer
+signing and provisioning.
 
 ## The problem
 
