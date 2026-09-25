@@ -27,11 +27,8 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Install CocoaPods dependencies
-        run: |
-          flutter pub get
-          cd ios
-          pod install
+      - name: Resolve Flutter dependencies
+        run: flutter pub get
 
       - name: Build unsigned iOS IPA
         run: flutter build ipa --release --no-codesign --dart-define=API_BASE_URL=${{ inputs.api_base_url }}
