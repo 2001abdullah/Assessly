@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:assessly/screens/scan_omr_screen.dart';
 import 'package:assessly/screens/result_screen.dart';
 import 'package:assessly/screens/exam_list_screen.dart';
+import 'package:assessly/screens/student_results_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -29,6 +30,7 @@ class AppRoutes {
   static const String result = '/result';
   static const String exams = '/exams';
   static const String profile = '/profile';
+  static const String studentResults = '/studentResults';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -86,6 +88,10 @@ class AppRoutes {
 
       case exams:
         return MaterialPageRoute(builder: (_) => const ExamListScreen());
+
+      case studentResults:
+        final exam = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) => StudentResultsScreen(exam: exam));
 
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());

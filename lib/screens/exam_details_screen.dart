@@ -1,11 +1,29 @@
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:assessly/services/exam_service.dart';
 
 
 class ExamDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> exam;
   const ExamDetailsScreen({super.key, required this.exam});
+
+  Future<void> _generateSheet(BuildContext context) async {
+    try {
+      final bytes = await ExamService().downloadOmrSheet(exam['id'].toString());
+      final path = await FilePicker.saveFile(
+        dialogTitle: 'Save OMR sheet',
+        fileName: '${exam['title']}-omr.pdf',
+        bytes: bytes,
+      );
+      if (context.mounted && path != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved to $path')));
+      }
+    } catch (error) {
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +110,30 @@ class ExamDetailsScreen extends StatelessWidget {
                   },
                   icon: const Icon(Icons.document_scanner_outlined),
                   label: const Text('Scan OMR'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton.icon(
+                  onPressed: () => _generateSheet(context),
+                  icon: const Icon(Icons.picture_as_pdf_outlined),
+                  label: const Text('Generate OMR Sheet'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton.icon(
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.studentResults,
+                    arguments: exam,
+                  ),
+                  icon: const Icon(Icons.groups_outlined),
+                  label: const Text('Student Results'),
                 ),
               ),
               // Results

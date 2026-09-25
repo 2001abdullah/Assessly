@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'api_config.dart';
 import 'authed_http.dart';
@@ -65,5 +66,15 @@ class ExamService {
     }
 
     throw Exception(data['message'] ?? 'Failed to delete exam');
+  }
+
+  Future<Uint8List> downloadOmrSheet(String examId) async {
+    final response = await AuthedHttp.get(
+      Uri.parse('$baseUrl/api/omr/exam/$examId/sheet'),
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to generate OMR sheet');
+    }
+    return response.bodyBytes;
   }
 }

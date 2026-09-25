@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 import '../services/omr_service.dart';
 import 'camera_scan_screen.dart';
@@ -219,6 +220,30 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
     }
   }
 
+  Future<void> _scanBatch() async {
+    final selection = await FilePicker.pickFiles(
+      type: FileType.image,
+    );
+    if (selection.isEmpty || !mounted) return;
+    try {
+      setState(() => isScanning = true);
+      final result = await _omrService.scanBatch(
+        images: selection.where((file) => file.path != null).map((file) => File(file.path!)).toList(),
+        examId: widget.exam['id'].toString(),
+      );
+      if (!mounted) return;
+      final results = result['results'] as List? ?? const [];
+      final successful = results.where((item) => item is Map && item['ok'] == true).length;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Processed $successful of ${results.length} sheets.')),
+      );
+    } catch (error) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+    } finally {
+      if (mounted) setState(() => isScanning = false);
+    }
+  }
+
   // --------------------------------------------------
   // BUILD
   // --------------------------------------------------
@@ -267,6 +292,12 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
                   : () => _getImage(ImageSource.gallery),
               icon: const Icon(Icons.photo_library),
               label: const Text('Choose from gallery'),
+            ),
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              onPressed: isScanning || isScoring ? null : _scanBatch,
+              icon: const Icon(Icons.library_add_check_outlined),
+              label: const Text('Scan multiple sheets'),
             ),
 
             const SizedBox(height: 16),
@@ -426,12 +457,6 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
     if (field is Map) {
       final value = field['value']?.toString().trim();
       if (value != null && value.isNotEmpty) return value;
-
-      final digits = field['digits'];
-      if (digits is List && digits.any((digit) => digit != null)) {
-        return digits.map((digit) => digit?.toString() ?? '?').join();
-      }
-
       return '-';
     }
 

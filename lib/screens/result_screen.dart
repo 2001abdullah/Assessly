@@ -24,12 +24,6 @@ class ResultScreen extends StatelessWidget {
     if (field is Map) {
       final value = field['value']?.toString().trim();
       if (value != null && value.isNotEmpty) return value;
-
-      final digits = field['digits'];
-      if (digits is List && digits.any((digit) => digit != null)) {
-        return digits.map((digit) => digit?.toString() ?? '?').join();
-      }
-
       return '-';
     }
 

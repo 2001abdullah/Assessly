@@ -220,6 +220,18 @@ must be running on port `5000`, and the computer firewall must allow inbound
 TCP connections to that port. Verify connectivity from the phone browser
 using `http://192.168.1.123:5000/health` before trying to register or log in.
 
+To build a phone APK against the deployed Render backend locally:
+
+```bash
+flutter build apk --release --dart-define=API_BASE_URL=https://assessly-api.onrender.com
+```
+
+You can also build it from GitHub without changing source code. Open
+**Actions > Android Release > Run workflow**, enter the current Render API URL
+in `api_base_url`, and download the `assessly-android-release` artifact. If a
+release tag is supplied, the workflow also attaches the APK to a GitHub
+release.
+
 ## API overview
 
 The backend currently exposes endpoints for:
