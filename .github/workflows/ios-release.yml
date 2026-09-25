@@ -30,14 +30,19 @@ jobs:
       - name: Resolve Flutter dependencies
         run: flutter pub get
 
-      - name: Build unsigned iOS IPA
+      - name: Build unsigned iOS archive
         run: flutter build ipa --release --no-codesign --dart-define=API_BASE_URL=${{ inputs.api_base_url }}
 
-      - name: Upload unsigned IPA artifact
+      - name: Package unsigned iOS archive
+        run: |
+          mkdir -p build/ios/artifact
+          ditto -c -k --sequesterRsrc --keepParent build/ios/archive/Runner.xcarchive build/ios/artifact/assessly-ios-unsigned-xcarchive.zip
+
+      - name: Upload unsigned iOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: assessly-ios-unsigned
-          path: build/ios/ipa/*.ipa
+          path: build/ios/artifact/assessly-ios-unsigned-xcarchive.zip
 
       - name: Create GitHub release
         if: ${{ inputs.release_tag != '' }}
@@ -45,4 +50,4 @@ jobs:
         with:
           tag_name: ${{ inputs.release_tag }}
           generate_release_notes: true
-          files: build/ios/ipa/*.ipa
+          files: build/ios/artifact/assessly-ios-unsigned-xcarchive.zip
