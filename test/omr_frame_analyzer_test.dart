@@ -7,7 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// timing tracks) into an upright 720x1280 image, then stores it the way a
 /// phone camera would hand it over: a landscape 1280x720 sensor frame that
 /// must be rotated 90 degrees clockwise to be upright.
-LumaFrame syntheticFrame({double widthFrac = 0.90, bool withSheet = true}) {
+LumaFrame syntheticFrame({
+  double widthFrac = 0.90,
+  bool withSheet = true,
+  SheetProfile sheet = const SheetProfile(),
+}) {
   const dw = 720;
   const dh = 1280;
   final disp = Uint8List(dw * dh)..fillRange(0, dw * dh, 60); // dark desk
@@ -39,8 +43,9 @@ LumaFrame syntheticFrame({double widthFrac = 0.90, bool withSheet = true}) {
       rect(c[0], c[1], 6, 6, 30); // corner squares
     }
     for (final x in const [17.0, 193.0]) {
-      for (var i = 0; i < 25; i++) {
-        rect(x, 105.413 + i * 7.126, 4, 2.6, 30); // timing marks
+      for (var i = 0; i < sheet.trackRows; i++) {
+        // timing marks
+        rect(x, sheet.trackFirstYmm + i * sheet.trackPitchMm, 4, 2.6, 30);
       }
     }
   }
@@ -110,5 +115,42 @@ void main() {
     expect(result.found, isTrue);
     expect(result.turn, SheetTurn.sideways);
     expect(result.hint, ScanHint.sideways);
+  });
+
+  group('SheetProfile.forExam', () {
+    // (questions, rows, first mark y, pitch) as produced by the backend's
+    // build_template() in omr_engine/layout.py.
+    const pythonLayouts = [
+      [25, 13, 108.702, 13.704],
+      [50, 17, 107.090, 10.479],
+      [75, 19, 106.538, 9.376],
+      [100, 25, 105.413, 7.126],
+    ];
+
+    for (final l in pythonLayouts) {
+      test('matches the backend layout for ${l[0]} questions', () {
+        final p = SheetProfile.forExam(questions: l[0] as int);
+        expect(p.trackRows, l[1]);
+        expect(p.trackFirstYmm, closeTo(l[2] as double, 0.001));
+        expect(p.trackPitchMm, closeTo(l[3] as double, 0.001));
+      });
+    }
+
+    for (final q in const [25, 50, 75, 100]) {
+      test('camera finds a $q-question sheet', () {
+        final sheet = SheetProfile.forExam(questions: q);
+        final result = OmrFrameAnalyzer(
+          profile: sheet,
+        ).analyze(syntheticFrame(sheet: sheet));
+        expect(result.found, isTrue);
+        expect(result.turn, SheetTurn.upright);
+        expect(result.lock, greaterThan(0.9));
+      });
+    }
+
+    test('falls back to the default sheet without a question count', () {
+      final p = SheetProfile.forExamJson(const {'title': 'x'});
+      expect(p.trackRows, 25);
+    });
   });
 }

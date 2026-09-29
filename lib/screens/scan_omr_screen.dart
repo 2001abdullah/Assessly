@@ -62,7 +62,7 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
   Future<void> _openCamera() async {
     final File? shot = await Navigator.of(context).push<File>(
       MaterialPageRoute(
-        builder: (_) => const CameraScanScreen(),
+        builder: (_) => CameraScanScreen(exam: widget.exam),
         fullscreenDialog: true,
       ),
     );

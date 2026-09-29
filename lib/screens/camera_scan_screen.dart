@@ -20,9 +20,13 @@ import '../utils/omr_frame_analyzer.dart';
 /// the background [BatchScanProvider] queue and the next sheet can be placed
 /// right away. Auto-capture re-arms once the previous sheet leaves the frame,
 /// so the same sheet is not captured twice.
+///
+/// [exam] (or [batchExam]) decides where the sheet's timing marks are; the
+/// live detector only recognises sheets printed for that exam's layout.
 class CameraScanScreen extends StatefulWidget {
-  const CameraScanScreen({super.key, this.batchExam});
+  const CameraScanScreen({super.key, this.exam, this.batchExam});
 
+  final Map<String, dynamic>? exam;
   final Map<String, dynamic>? batchExam;
 
   @override
@@ -40,7 +44,9 @@ class _CameraScanScreenState extends State<CameraScanScreen>
   static const int _analysisIntervalMs = 110;
 
   CameraController? _controller;
-  final OmrFrameAnalyzer _analyzer = OmrFrameAnalyzer();
+  late final OmrFrameAnalyzer _analyzer = OmrFrameAnalyzer(
+    profile: SheetProfile.forExamJson(widget.batchExam ?? widget.exam),
+  );
 
   SheetAnalysis _analysis = SheetAnalysis.none;
   String? _error;

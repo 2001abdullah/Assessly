@@ -18,9 +18,10 @@
 //      glare, focus, steadiness.
 //
 // The geometry constants in [SheetProfile] describe the printed sheet and must
-// match the template the sheets were printed from (defaults: the backend's
-// sample_template.json). Timing marks are matched with a few mm of tolerance
-// so small printer offsets do not matter.
+// match the layout the sheet was printed with. The default is the 100-question
+// sheet; use [SheetProfile.forExam] for any other question count, because the
+// timing marks (one per question row) move. Timing marks are matched with a
+// few mm of tolerance so small printer offsets do not matter.
 
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -83,6 +84,74 @@ class SheetProfile {
 
   double get aspect => fiducialSpanWidthMm / fiducialSpanHeightMm;
   double get fiducialToWidth => fiducialSizeMm / fiducialSpanWidthMm;
+
+  /// The profile of the sheet the backend generates for an exam with
+  /// [questions] questions and [options] answer options per question.
+  ///
+  /// The corner markers are fixed, but there is one timing mark per question
+  /// ROW, and the row count and spacing depend on the question count (the
+  /// default profile is the 100-question sheet: 4 columns x 25 rows). This is
+  /// a port of `solve_question_grid` and the timing-track placement in
+  /// `backend/omr/omr_engine/layout.py`; keep the two in sync.
+  factory SheetProfile.forExam({required int questions, int options = 4}) {
+    // Fixed A4 geometry from layout.py (millimetres).
+    const pageW = 210.0;
+    const pageH = 297.0;
+    const fiducialInset = 10.0;
+    const fiducialSize = 6.0;
+    const contentInset = 22.0;
+    const minRowPitch = 3.9;
+    const minOptPitch = 4.2;
+    const questionLabelW = 7.5;
+    const columnGap = 5.0;
+    const qHeaderH = 3.6;
+    // Bottom of the ID digit grid: 35 + 4 + 7 + 3 + 9 * 4.6 + 1.85.
+    const idGridBottom = 92.25;
+
+    final qTop = math.max(idGridBottom + 6.0, 95.0);
+    const qBottom = pageH - fiducialInset - fiducialSize / 2 - 4.0;
+    final availH = qBottom - (qTop + qHeaderH);
+    const availW = pageW - 2 * contentInset;
+
+    // Pick the column count whose smaller pitch is largest.
+    int? bestRows;
+    double? bestRowPitch;
+    double bestScore = -1;
+    for (var columns = 1; columns <= 10; columns++) {
+      final rows = (questions / columns).ceil();
+      final rowPitch = availH / rows;
+      final colW = (availW - columnGap * (columns - 1)) / columns;
+      final optSpan = colW - questionLabelW;
+      if (optSpan <= 0) continue;
+      final optPitch = optSpan / options;
+      if (rowPitch < minRowPitch || optPitch < minOptPitch) continue;
+      final score = math.min(rowPitch, optPitch);
+      if (score > bestScore) {
+        bestScore = score;
+        bestRows = rows;
+        bestRowPitch = rowPitch;
+      }
+    }
+    // Layouts the backend cannot print either: fall back to the default.
+    if (bestRows == null || bestRowPitch == null) return const SheetProfile();
+
+    return SheetProfile(
+      trackFirstYmm: qTop + qHeaderH + bestRowPitch / 2,
+      trackPitchMm: bestRowPitch,
+      trackRows: bestRows,
+      // Rows closer than the default tolerance would let a mark match the
+      // neighbouring row; stay under half a pitch.
+      trackTolYmm: math.min(2.6, bestRowPitch * 0.4),
+    );
+  }
+
+  /// Profile for an exam map from the API (`total_questions`), falling back
+  /// to the default sheet when the count is missing.
+  factory SheetProfile.forExamJson(Map<String, dynamic>? exam) {
+    final questions = int.tryParse('${exam?['total_questions'] ?? ''}');
+    if (questions == null || questions < 1) return const SheetProfile();
+    return SheetProfile.forExam(questions: questions);
+  }
 }
 
 /// Tunable thresholds. Defaults were chosen on synthetic and real photos;

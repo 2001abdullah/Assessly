@@ -191,9 +191,12 @@ These settings live in `lib/utils/omr_frame_analyzer.dart` (`AnalyzerConfig`,
   shutter always works.
 - The camera resolution preset (`veryHigh`, 1080p): use `high` on slow
   phones.
-- `SheetProfile`: the physical positions of the corner and timing marks. They
-  match sheets from `generate.py`. If you print from another template,
-  update them.
+- `SheetProfile`: the physical positions of the corner and timing marks.
+  There is one timing mark per question row, and the row count depends on
+  the question count, so the camera builds the profile for each exam with
+  `SheetProfile.forExam`. That is a Dart copy of the grid solver in
+  `omr_engine/layout.py`, and the two must stay in sync (a unit test checks
+  it against known backend layouts).
 
 ## Where to find things
 

@@ -330,7 +330,10 @@ def build_template(
             qno += 1
 
     # --- timing marks --------------------------------------------------- #
-    row_ys = [first_row_y + r * row_pitch for r in range(grid.rows)]
+    # NOTE: the app's live camera detector recomputes these positions
+    # (SheetProfile.forExam in lib/utils/omr_frame_analyzer.dart). If you
+    # change the grid solver or any geometry above, update it there too.
+    row_ys =[first_row_y + r * row_pitch for r in range(grid.rows)]
     mark_h = max(1.6, min(2.6, row_pitch * 0.42))
     timing_tracks = [
         TimingTrack("left", TIMING_X_INSET_MM, TIMING_W_MM, mark_h, list(row_ys)),
