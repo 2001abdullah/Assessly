@@ -18,6 +18,7 @@ class ExamService {
     required int totalQuestions,
     required int rollDigits,
     required int registrationDigits,
+    String? classId,
   }) async {
     final response = await AuthedHttp.post(
       Uri.parse('$baseUrl/api/exam'),
@@ -28,6 +29,7 @@ class ExamService {
         'total_questions': totalQuestions,
         'roll_digits': rollDigits,
         'registration_digits': registrationDigits,
+        'class_id': classId,
       }),
     );
 
@@ -62,6 +64,15 @@ class ExamService {
 
     final data = decodeJsonObject(response.body);
     throw Exception(data['message'] ?? 'Failed to delete exam');
+  }
+
+  /// Makes the results visible to the exam's class and notifies students.
+  /// Returns the new `results_published_at` (null after unpublishing).
+  Future<String?> setPublished(String examId, bool published) async {
+    final data = await AuthedHttp.postJson(
+      '/api/exam/$examId/${published ? 'publish' : 'unpublish'}',
+    );
+    return (data['exam'] as Map?)?['results_published_at']?.toString();
   }
 
   /// PDF bytes of the answer sheet generated for this exam's layout.

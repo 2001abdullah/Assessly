@@ -38,6 +38,32 @@ Color scoreColor(double percentage, {bool? passed}) {
   return AppColors.error;
 }
 
+const _months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+/// "Tue, 30 Sep 2026" (or without the weekday / year).
+String formatDate(DateTime d, {bool weekday = true, bool year = true}) =>
+    '${weekday ? '${_weekdays[d.weekday - 1]}, ' : ''}${d.day} ${_months[d.month - 1]}${year ? ' ${d.year}' : ''}';
+
+/// Short label for chart axes: "30 Sep".
+String shortDate(dynamic value) {
+  final d = DateTime.tryParse(value?.toString() ?? '')?.toLocal();
+  return d == null ? '' : '${d.day} ${_months[d.month - 1]}';
+}
+
 String timeAgo(dynamic value) {
   final date = DateTime.tryParse(value?.toString() ?? '')?.toLocal();
   if (date == null) return '';

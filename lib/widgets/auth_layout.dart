@@ -1,11 +1,15 @@
 import 'package:assessly/themes/app_colors.dart';
+import 'package:assessly/widgets/brand.dart';
 import 'package:flutter/material.dart';
 
+/// Shared frame for the login / register screens: logo, optional role badge,
+/// title and a white card holding the form.
 class AuthLayout extends StatelessWidget {
   const AuthLayout({
     required this.title,
     required this.subtitle,
     required this.child,
+    this.badge,
     super.key,
   });
 
@@ -13,15 +17,23 @@ class AuthLayout extends StatelessWidget {
   final String subtitle;
   final Widget child;
 
+  /// e.g. "Student" chip under the logo.
+  final String? badge;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Navigator.canPop(context)
+          ? AppBar(backgroundColor: Colors.transparent)
+          : null,
+      extendBodyBehindAppBar: true,
       body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFF0F7FF), Color(0xFFF8FAFC)],
+            colors: [AppColors.primarySoft, AppColors.background],
+            stops: [0, 0.45],
           ),
         ),
         child: SafeArea(
@@ -44,7 +56,31 @@ class AuthLayout extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const _BrandMark(),
+                        const Center(child: BrandLockup(size: 44)),
+                        if (badge != null) ...[
+                          const SizedBox(height: 12),
+                          Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Text(
+                                badge!,
+                                style: const TextStyle(
+                                  color: AppColors.primaryDark,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                         SizedBox(height: compact ? 20 : 30),
                         Text(
                           title,
@@ -71,7 +107,7 @@ class AuthLayout extends StatelessWidget {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),
-                            side: const BorderSide(color: Color(0xFFE2E8F0)),
+                            side: const BorderSide(color: AppColors.border),
                           ),
                           child: Padding(
                             padding: EdgeInsets.all(
@@ -155,30 +191,5 @@ class GoogleAuthButton extends StatelessWidget {
         ],
       ),
     ),
-  );
-}
-
-class _BrandMark extends StatelessWidget {
-  const _BrandMark();
-
-  @override
-  Widget build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          gradient: AppColors.heroGradient,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: const Icon(Icons.fact_check_outlined, color: Colors.white),
-      ),
-      const SizedBox(width: 12),
-      const Text(
-        'Assessly',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
-      ),
-    ],
   );
 }

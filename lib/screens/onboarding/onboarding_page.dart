@@ -1,3 +1,4 @@
+import 'package:assessly/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// One slide of the onboarding carousel.
@@ -18,52 +19,46 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(26, 110, 26, 30),
+      padding: const EdgeInsets.fromLTRB(26, 24, 26, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Spacer(flex: 6),
-          Container(
-            width: 58,
-            height: 58,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-            ),
-            child: Icon(icon, color: Colors.white, size: 29),
+          Row(
+            children: [
+              Icon(icon, color: AppColors.primary, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                eyebrow.toUpperCase(),
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.4,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 22),
-          Text(
-            eyebrow.toUpperCase(),
-            style: const TextStyle(
-              color: Color(0xFF8DE8FF),
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.7,
-            ),
-          ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Text(
             title,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 34,
-              height: 1.08,
+              fontSize: 30,
+              height: 1.12,
               fontWeight: FontWeight.w800,
-              letterSpacing: -1.1,
+              letterSpacing: -0.8,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
           Text(
             description,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.76),
-              fontSize: 16,
+              color: Colors.white.withValues(alpha: 0.72),
+              fontSize: 15.5,
               height: 1.5,
             ),
           ),
-          const Spacer(flex: 2),
         ],
       ),
     );

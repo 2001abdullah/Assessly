@@ -1,12 +1,15 @@
+import 'package:assessly/models/user_model.dart';
 import 'package:assessly/providers/auth_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/widgets/auth_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Creates a password account, then returns to Login.
+/// Creates a password account with [role], then returns to Login.
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+  const RegistrationScreen({super.key, this.role = UserRole.teacher});
+
+  final UserRole role;
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -39,7 +42,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Future<void> _googleRegister() async {
     try {
-      await context.read<AuthProvider>().loginWithGoogle();
+      await context.read<AuthProvider>().loginWithGoogle(widget.role);
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
     } catch (error) {
@@ -54,6 +57,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         nameController.text.trim(),
         emailController.text.trim(),
         passwordController.text,
+        widget.role,
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,9 +72,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     final loading = context.watch<AuthProvider>().isLoading;
+    final student = widget.role == UserRole.student;
     return AuthLayout(
+      badge: student ? 'Student account' : 'Teacher account',
       title: 'Create your account',
-      subtitle: 'Start building exams and grading answer sheets in minutes.',
+      subtitle: student
+          ? 'Then join your class with the code your teacher gives you.'
+          : 'Set up classes, exams and grading in minutes.',
       child: AutofillGroup(
         child: Form(
           key: formKey,
@@ -166,10 +174,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   TextButton(
                     onPressed: loading
                         ? null
-                        : () => Navigator.pushNamedAndRemoveUntil(
+                        : () => Navigator.pushReplacementNamed(
                             context,
                             AppRoutes.login,
-                            (_) => false,
+                            arguments: widget.role,
                           ),
                     child: const Text('Sign in'),
                   ),

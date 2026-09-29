@@ -1,6 +1,8 @@
+import 'package:assessly/models/user_model.dart';
 import 'package:assessly/providers/auth_provider.dart';
 import 'package:assessly/screens/auth/login_screen.dart';
 import 'package:assessly/screens/auth/registration_screen.dart';
+import 'package:assessly/screens/auth/role_select_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,18 @@ void main() {
       await tester.pumpWidget(testApp(const RegistrationScreen()));
       expect(tester.takeException(), isNull);
       expect(find.text('Create your account'), findsOneWidget);
+
+      await tester.pumpWidget(
+        testApp(const LoginScreen(role: UserRole.student)),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.text('Student sign in'), findsOneWidget);
+      expect(find.text('Email or username'), findsOneWidget);
+
+      await tester.pumpWidget(testApp(const RoleSelectScreen()));
+      expect(tester.takeException(), isNull);
+      expect(find.text("I'm a teacher"), findsOneWidget);
+      expect(find.text("I'm a student"), findsOneWidget);
     });
   }
 }

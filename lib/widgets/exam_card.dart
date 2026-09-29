@@ -23,12 +23,17 @@ class ExamCard extends StatelessWidget {
     final title = exam['title']?.toString() ?? 'Untitled exam';
     final subject = exam['subject']?.toString() ?? 'No subject';
     final questions = exam['total_questions']?.toString() ?? '0';
+    final className = exam['class_name']?.toString();
+    final published = exam['results_published_at'] != null;
 
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () =>
-            Navigator.pushNamed(context, AppRoutes.examDetails, arguments: exam),
+        onTap: () => Navigator.pushNamed(
+          context,
+          AppRoutes.examDetails,
+          arguments: exam,
+        ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(14, 14, 8, 14),
           child: Row(
@@ -51,17 +56,30 @@ class ExamCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$subject • $questions questions',
+                      [?className, subject, '$questions questions'].join(' • '),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodySecondary,
                     ),
-                    if (gradedCount != null && gradedCount! > 0) ...[
+                    if ((gradedCount ?? 0) > 0 || published) ...[
                       const SizedBox(height: 6),
-                      StatusBadge(
-                        label: '$gradedCount graded',
-                        icon: Icons.check_circle_outline,
-                        color: AppColors.success,
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: [
+                          if ((gradedCount ?? 0) > 0)
+                            StatusBadge(
+                              label: '$gradedCount graded',
+                              icon: Icons.check_circle_outline,
+                              color: AppColors.success,
+                            ),
+                          if (published)
+                            const StatusBadge(
+                              label: 'Published',
+                              icon: Icons.visibility_outlined,
+                              color: AppColors.info,
+                            ),
+                        ],
                       ),
                     ],
                   ],

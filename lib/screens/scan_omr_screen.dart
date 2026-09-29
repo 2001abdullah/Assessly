@@ -52,9 +52,8 @@ class _ScanOmrScreenState extends State<ScanOmrScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to acquire image: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to acquire image: $e')));
     }
   }
 

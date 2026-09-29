@@ -42,15 +42,13 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
         bytes: bytes,
       );
       if (mounted && path != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Saved to $path')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Saved to $path')));
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error.toString())));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error.toString())));
       }
     } finally {
       if (mounted) setState(() => _generating = false);
@@ -111,7 +109,9 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
     final count = results?.length ?? 0;
     final avg = count == 0
         ? 0.0
-        : results!.map((r) => asDouble(r['percentage'])).reduce((a, b) => a + b) /
+        : results!
+                  .map((r) => asDouble(r['percentage']))
+                  .reduce((a, b) => a + b) /
               count;
     final passed = results?.where((r) => r['passed'] == true).length ?? 0;
 
@@ -154,8 +154,11 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${exam['subject'] ?? 'No subject'} • '
-                  '${exam['total_questions'] ?? 0} questions',
+                  [
+                    if (exam['class_name'] != null) exam['class_name'],
+                    exam['subject'] ?? 'No subject',
+                    '${exam['total_questions'] ?? 0} questions',
+                  ].join(' • '),
                   style: TextStyle(color: Colors.white.withValues(alpha: 0.85)),
                 ),
                 const SizedBox(height: 20),
@@ -222,6 +225,8 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                 : '$count graded • ranking and per-question detail',
             onTap: () => _open(AppRoutes.studentResults),
           ),
+          const SizedBox(height: 8),
+          _PublishTile(examId: _examId, fallback: exam),
         ],
       ),
     );
@@ -302,6 +307,83 @@ class _PrimaryAction extends StatelessWidget {
               const Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Publish / hide the results for the exam's class. Only exams that belong
+/// to a class can be published (the class decides who sees them).
+class _PublishTile extends StatefulWidget {
+  const _PublishTile({required this.examId, required this.fallback});
+
+  final String examId;
+  final Map<String, dynamic> fallback;
+
+  @override
+  State<_PublishTile> createState() => _PublishTileState();
+}
+
+class _PublishTileState extends State<_PublishTile> {
+  bool _busy = false;
+
+  Future<void> _toggle(bool publish) async {
+    setState(() => _busy = true);
+    try {
+      await context.read<ExamProvider>().setPublished(widget.examId, publish);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            publish
+                ? 'Published. Students have been notified.'
+                : 'Hidden from students',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final exam =
+        context.watch<ExamProvider>().byId(widget.examId) ?? widget.fallback;
+    final inClass = exam['class_id'] != null;
+    final published = exam['results_published_at'] != null;
+
+    return Material(
+      color: published ? AppColors.infoSoft : AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: AppColors.border),
+      ),
+      child: SwitchListTile(
+        value: published,
+        onChanged: !inClass || _busy ? null : _toggle,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        secondary: IconBadge(
+          icon: published
+              ? Icons.visibility_outlined
+              : Icons.visibility_off_outlined,
+          color: AppColors.info,
+        ),
+        title: const Text('Publish to students', style: AppTextStyles.subtitle),
+        subtitle: Text(
+          !inClass
+              ? 'Add this exam to a class to share results'
+              : published
+              ? 'Students can see their marks, rank and class average'
+              : 'Only you can see these results',
+          style: AppTextStyles.bodySecondary,
         ),
       ),
     );

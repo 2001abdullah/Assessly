@@ -34,14 +34,19 @@ class ApiService {
     );
   }
 
-  /// Returns `{token, user: {id, name, email}}`.
+  /// Returns `{token, user: {id, name, email, role, ...}}`. [login] is an
+  /// email or, for teacher-created student accounts, a username. [role] is
+  /// the portal the user chose; the server refuses the other role's accounts
+  /// with a message saying which portal to use.
   static Future<Map<String, dynamic>> login(
-    String email,
-    String password,
-  ) async {
+    String login,
+    String password, {
+    required String role,
+  }) async {
     final response = await _postJson('/auth/login', {
-      'email': email,
+      'email': login,
       'password': password,
+      'role': role,
     });
     final data = decodeJsonObject(response.body);
     if (response.statusCode == 200) return data;
@@ -49,9 +54,15 @@ class ApiService {
   }
 
   /// Exchanges a Google ID token for an Assessly session (same shape as
-  /// [login]).
-  static Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
-    final response = await _postJson('/auth/google', {'id_token': idToken});
+  /// [login]). A first Google sign-in creates an account with [role].
+  static Future<Map<String, dynamic>> loginWithGoogle(
+    String idToken, {
+    required String role,
+  }) async {
+    final response = await _postJson('/auth/google', {
+      'id_token': idToken,
+      'role': role,
+    });
     final data = decodeJsonObject(response.body);
     if (response.statusCode == 200) return data;
     throw Exception(data['message'] ?? 'Google sign-in failed');
@@ -60,12 +71,14 @@ class ApiService {
   static Future<Map<String, dynamic>> register(
     String name,
     String email,
-    String password,
-  ) async {
+    String password, {
+    required String role,
+  }) async {
     final response = await _postJson('/auth/register', {
       'name': name,
       'email': email,
       'password': password,
+      'role': role,
     });
     final data = decodeJsonObject(response.body);
     if (response.statusCode == 201) return data;
@@ -75,9 +88,7 @@ class ApiService {
   /// Emails a 6-digit reset code. The server answers the same way whether or
   /// not the account exists.
   static Future<void> requestPasswordReset(String email) async {
-    final response = await _postJson('/auth/forgot-password', {
-      'email': email,
-    });
+    final response = await _postJson('/auth/forgot-password', {'email': email});
     if (response.statusCode == 202) return;
     final data = decodeJsonObject(response.body);
     throw Exception(data['message'] ?? 'Could not request password reset');

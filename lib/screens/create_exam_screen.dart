@@ -1,3 +1,4 @@
+import 'package:assessly/providers/class_provider.dart';
 import 'package:assessly/providers/exam_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/themes/app_colors.dart';
@@ -5,9 +6,12 @@ import 'package:assessly/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Form for a new exam: title, subject, question count and ID digit counts.
+/// Form for a new exam: class, title, subject, question count and ID digit
+/// counts. Opened from a class, that class is preselected.
 class CreateExamScreen extends StatefulWidget {
-  const CreateExamScreen({super.key});
+  const CreateExamScreen({super.key, this.classData});
+
+  final Map<String, dynamic>? classData;
 
   @override
   State<CreateExamScreen> createState() => _CreateExamScreenState();
@@ -17,12 +21,23 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final titleController = TextEditingController();
-  final subjectController = TextEditingController();
+  late final subjectController = TextEditingController(
+    text: widget.classData?['subject']?.toString(),
+  );
   int selectedQuestionCount = 25;
   int selectedRollDigits = 7;
   int selectedRegistrationDigits = 10;
+  late String? selectedClassId = widget.classData?['id']?.toString();
 
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<ClassProvider>().load(),
+    );
+  }
 
   Future<void> createExam() async {
     if (!_formKey.currentState!.validate()) return;
@@ -37,6 +52,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
         totalQuestions: selectedQuestionCount,
         rollDigits: selectedRollDigits,
         registrationDigits: selectedRegistrationDigits,
+        classId: selectedClassId,
       );
 
       if (!mounted) return;
@@ -85,6 +101,35 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
                   style: AppTextStyles.bodySecondary,
                 ),
                 const SizedBox(height: 28),
+                Builder(
+                  builder: (context) {
+                    final classes = context.watch<ClassProvider>().classes;
+                    final ids = classes.map((c) => c['id'].toString()).toSet();
+                    return DropdownButtonFormField<String?>(
+                      initialValue: ids.contains(selectedClassId)
+                          ? selectedClassId
+                          : null,
+                      decoration: const InputDecoration(
+                        labelText: 'Class',
+                        helperText: 'Results are matched to the class students by roll number',
+                        prefixIcon: Icon(Icons.groups_2_outlined),
+                      ),
+                      items: [
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text('No class'),
+                        ),
+                        for (final c in classes)
+                          DropdownMenuItem<String?>(
+                            value: c['id'].toString(),
+                            child: Text(c['name'].toString()),
+                          ),
+                      ],
+                      onChanged: (v) => setState(() => selectedClassId = v),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: titleController,
                   textCapitalization: TextCapitalization.sentences,

@@ -43,15 +43,13 @@ class _StudentResultsScreenState extends State<StudentResultsScreen> {
         bytes: bytes,
       );
       if (mounted && path != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Saved to $path')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Saved to $path')));
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error.toString())));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error.toString())));
       }
     }
   }
@@ -95,9 +93,8 @@ class _StudentResultsScreenState extends State<StudentResultsScreen> {
               ? results
               : results.where((r) {
                   final roll = formatIdentifier(r['roll_number']).toLowerCase();
-                  final reg = formatIdentifier(
-                    r['registration_number'],
-                  ).toLowerCase();
+                  final reg = formatIdentifier(r['registration_number'])
+                      .toLowerCase();
                   return roll.contains(q) || reg.contains(q);
                 }).toList();
 

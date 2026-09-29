@@ -139,9 +139,8 @@ void main() {
     for (final q in const [25, 50, 75, 100]) {
       test('camera finds a $q-question sheet', () {
         final sheet = SheetProfile.forExam(questions: q);
-        final result = OmrFrameAnalyzer(
-          profile: sheet,
-        ).analyze(syntheticFrame(sheet: sheet));
+        final result = OmrFrameAnalyzer(profile: sheet)
+            .analyze(syntheticFrame(sheet: sheet));
         expect(result.found, isTrue);
         expect(result.turn, SheetTurn.upright);
         expect(result.lock, greaterThan(0.9));

@@ -50,7 +50,8 @@ class GoogleAuthService {
       case GoogleSignInExceptionCode.clientConfigurationError:
       case GoogleSignInExceptionCode.providerConfigurationError:
         return 'Google sign-in is misconfigured (check the OAuth client IDs '
-            'and SHA-1 fingerprints). ${e.description ?? ''}'.trim();
+                'and SHA-1 fingerprints). ${e.description ?? ''}'
+            .trim();
       case GoogleSignInExceptionCode.uiUnavailable:
         return 'Google sign-in could not open on this device. Make sure '
             'Google Play services is installed and up to date.';

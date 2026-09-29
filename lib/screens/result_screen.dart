@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/results_provider.dart';
+import '../services/student_service.dart';
 import '../themes/app_colors.dart';
 import '../themes/app_text_styles.dart';
 import '../widgets/app_widgets.dart';
 
 /// Full result for one student: score summary plus every question with the
 /// student's answer, the correct answer and whether it was right or wrong.
+///
+/// With [forStudent], it loads through the student API (only the student's
+/// own published results) and adds their rank and the class average.
 class ResultScreen extends StatefulWidget {
-  const ResultScreen({super.key, required this.resultId, this.exam});
+  const ResultScreen({
+    super.key,
+    required this.resultId,
+    this.exam,
+    this.forStudent = false,
+  });
 
   final String resultId;
 
   /// Optional; the details endpoint also returns the exam.
   final Map<String, dynamic>? exam;
+  final bool forStudent;
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -26,19 +36,18 @@ class _ResultScreenState extends State<ResultScreen> {
   late Future<Map<String, dynamic>> _future;
   _Filter _filter = _Filter.all;
 
+  Future<Map<String, dynamic>> _load({bool force = false}) => widget.forStudent
+      ? const StudentService().resultDetails(widget.resultId)
+      : context.read<ResultsProvider>().details(widget.resultId, force: force);
+
   @override
   void initState() {
     super.initState();
-    _future = context.read<ResultsProvider>().details(widget.resultId);
+    _future = _load();
   }
 
   void _reload() {
-    setState(() {
-      _future = context.read<ResultsProvider>().details(
-        widget.resultId,
-        force: true,
-      );
-    });
+    setState(() => _future = _load(force: true));
   }
 
   @override
@@ -100,6 +109,10 @@ class _ResultScreenState extends State<ResultScreen> {
                     student['registration_number'],
                   ),
                 ),
+                if (data['rank'] != null) ...[
+                  const SizedBox(height: 12),
+                  _ClassContext(data: data, summary: summary),
+                ],
                 const SizedBox(height: 16),
                 _StatsRow(summary: summary),
                 const SizedBox(height: 16),
@@ -153,7 +166,8 @@ class _ResultScreenState extends State<ResultScreen> {
               sliver: SliverList.separated(
                 itemCount: visible.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemBuilder: (context, i) => _QuestionTile(question: visible[i]),
+                itemBuilder: (context, i) =>
+                    _QuestionTile(question: visible[i]),
               ),
             ),
         ],
@@ -375,9 +389,7 @@ class _SummaryHero extends StatelessWidget {
                         StatusBadge(
                           label: passed ? 'PASSED' : 'FAILED',
                           icon: passed ? Icons.verified : Icons.cancel,
-                          color: passed
-                              ? AppColors.success
-                              : AppColors.error,
+                          color: passed ? AppColors.success : AppColors.error,
                           background: Colors.white,
                         ),
                         if (needsReview)
@@ -445,6 +457,61 @@ class _SummaryHero extends StatelessWidget {
   );
 }
 
+/// Student view only: rank and how the class did, without other names.
+class _ClassContext extends StatelessWidget {
+  const _ClassContext({required this.data, required this.summary});
+
+  final Map<String, dynamic> data;
+  final Map summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final mine = asDouble(summary['percentage']);
+    final avg = asDouble(data['class_average']);
+    final diff = mine - avg;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.emoji_events_outlined, color: AppColors.primaryDark),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Rank ${asInt(data['rank'])} of ${asInt(data['out_of'])}',
+              style: AppTextStyles.subtitle.copyWith(
+                color: AppColors.primaryDark,
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Class avg ${formatNumber(avg)}%',
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.primaryDark,
+                ),
+              ),
+              Text(
+                '${diff >= 0 ? '+' : ''}${formatNumber(diff)} pts vs avg',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: diff >= 0 ? AppColors.success : AppColors.error,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _StatsRow extends StatelessWidget {
   const _StatsRow({required this.summary});
 
@@ -503,7 +570,10 @@ class _DistributionBar extends StatelessWidget {
         child: Row(
           children: [
             for (final p in parts)
-              Expanded(flex: p.$1, child: ColoredBox(color: p.$2)),
+              Expanded(
+                flex: p.$1,
+                child: ColoredBox(color: p.$2),
+              ),
           ],
         ),
       ),
@@ -538,8 +608,7 @@ class _AnswerMap extends StatelessWidget {
                   builder: (_) {
                     final style = _StatusStyle.of(q['status']?.toString());
                     return Tooltip(
-                      message:
-                          'Q${q['question_number']}: ${style.label}',
+                      message: 'Q${q['question_number']}: ${style.label}',
                       child: Container(
                         width: 34,
                         height: 34,
@@ -674,11 +743,7 @@ class _QuestionTile extends StatelessWidget {
                           : AppColors.neutral,
                     ),
                     if (status != 'correct')
-                      _answerChip(
-                        'Correct',
-                        correct ?? '—',
-                        AppColors.success,
-                      ),
+                      _answerChip('Correct', correct ?? '—', AppColors.success),
                   ],
                 ),
               ],
@@ -716,10 +781,7 @@ class _QuestionTile extends StatelessWidget {
           ),
           child: Text(
             value,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w800,
-            ),
+            style: TextStyle(color: color, fontWeight: FontWeight.w800),
           ),
         ),
       ],

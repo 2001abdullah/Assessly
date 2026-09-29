@@ -1,21 +1,33 @@
+import 'dart:io';
+
 import 'package:assessly/models/user_model.dart';
 import 'package:assessly/services/api_service.dart';
 import 'package:assessly/services/auth_service.dart';
 import 'package:assessly/services/google_auth_service.dart';
+import 'package:assessly/services/profile_service.dart';
 import 'package:flutter/material.dart';
 
 /// Who is signed in, and the actions that change it.
 ///
 /// Lifecycle: [restoreSession] runs on the splash screen; [login],
-/// [loginWithGoogle] and [register] run from the auth screens; [logout] runs
-/// from the profile screen or automatically when any API call returns 401
-/// (see main.dart). Signing out also clears the other providers' caches.
+/// [loginWithGoogle] and [register] run from the auth screens with the role
+/// chosen on the role screen; [logout] runs from the profile screen or
+/// automatically when any API call returns 401 (see main.dart). Signing out
+/// also clears the other providers' caches.
 class AuthProvider extends ChangeNotifier {
+  AuthProvider({ProfileService? profile})
+    : _profile = profile ?? const ProfileService();
+
+  final ProfileService _profile;
+
   bool isLoading = false;
   bool isLoggedIn = false;
 
   /// The signed-in user (null when signed out).
   UserModel? user;
+
+  UserRole get role => user?.role ?? UserRole.teacher;
+  bool get isStudent => user?.isStudent ?? false;
 
   void setLoading(bool value) {
     isLoading = value;
@@ -27,21 +39,21 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String login, String password, UserRole role) async {
     try {
       setLoading(true);
-      final result = await ApiService.login(email, password);
+      final result = await ApiService.login(login, password, role: role.name);
       await _saveSession(result);
     } finally {
       setLoading(false);
     }
   }
 
-  Future<void> loginWithGoogle() async {
+  Future<void> loginWithGoogle(UserRole role) async {
     try {
       setLoading(true);
       final idToken = await GoogleAuthService.signIn();
-      final result = await ApiService.loginWithGoogle(idToken);
+      final result = await ApiService.loginWithGoogle(idToken, role: role.name);
       await _saveSession(result);
     } finally {
       setLoading(false);
@@ -58,14 +70,23 @@ class AuthProvider extends ChangeNotifier {
     await AuthService.saveToken(token);
     final profile = result['user'];
     if (profile is Map) {
-      final data = Map<String, dynamic>.from(profile);
-      user = UserModel.fromJson(data);
-      await AuthService.saveUser(data);
+      _setUser(Map<String, dynamic>.from(profile));
+      await AuthService.saveUser(user!.toJson());
     } else {
       user = null;
+    }
+    // The login response is minimal; fetch the full profile when possible.
+    try {
       await loadProfile();
+    } catch (_) {
+      if (user == null) rethrow;
     }
     setLogIn(true);
+  }
+
+  void _setUser(Map<String, dynamic> json) {
+    user = UserModel.fromJson(json);
+    notifyListeners();
   }
 
   /// Fetches the profile of whoever the saved token belongs to.
@@ -73,9 +94,8 @@ class AuthProvider extends ChangeNotifier {
     final token = await AuthService.getToken();
     if (token == null || token.isEmpty) return;
     final profile = await ApiService.getProfile(token);
-    user = UserModel.fromJson(profile);
-    await AuthService.saveUser(profile);
-    notifyListeners();
+    _setUser(profile);
+    await AuthService.saveUser(user!.toJson());
   }
 
   /// Called at app start: is the saved token still valid, and whose is it?
@@ -103,6 +123,37 @@ class AuthProvider extends ChangeNotifier {
     return true;
   }
 
+  Future<void> updateProfile({
+    required String name,
+    String? phone,
+    String? institution,
+    String? bio,
+  }) async {
+    final json = await _profile.update(
+      name: name,
+      phone: phone,
+      institution: institution,
+      bio: bio,
+    );
+    _setUser(json);
+    await AuthService.saveUser(user!.toJson());
+  }
+
+  Future<void> changePassword({String? current, required String next}) async {
+    await _profile.changePassword(current: current, next: next);
+    await loadProfile();
+  }
+
+  Future<void> setAvatar(File image) async {
+    _setUser(await _profile.uploadAvatar(image));
+    await AuthService.saveUser(user!.toJson());
+  }
+
+  Future<void> removeAvatar() async {
+    _setUser(await _profile.removeAvatar());
+    await AuthService.saveUser(user!.toJson());
+  }
+
   Future<void> logout() async {
     try {
       await GoogleAuthService.signOut();
@@ -119,11 +170,15 @@ class AuthProvider extends ChangeNotifier {
     await logout();
   }
 
-  Future<void> register(String name, String email, String password) async {
+  Future<void> register(
+    String name,
+    String email,
+    String password,
+    UserRole role,
+  ) async {
     try {
       setLoading(true);
-
-      await ApiService.register(name, email, password);
+      await ApiService.register(name, email, password, role: role.name);
     } finally {
       setLoading(false);
     }

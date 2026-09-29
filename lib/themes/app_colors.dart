@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
+/// Slate + teal palette. Screens use these names, never raw hex values, so
+/// the whole app re-themes from here.
 class AppColors {
   AppColors._();
 
   // Brand
-  static const Color primary = Color(0xFF4F46E5);
-  static const Color primaryDark = Color(0xFF312E81);
-  static const Color secondary = Color(0xFF7C3AED);
-  static const Color primarySoft = Color(0xFFEEF2FF);
+  static const Color primary = Color(0xFF0D9488); // teal 600
+  static const Color primaryDark = Color(0xFF134E4A); // teal 900
+  static const Color secondary = Color(0xFF0891B2); // cyan 600
+  static const Color primarySoft = Color(0xFFE6F6F4);
+
+  /// Deep slate used for headers and the splash screen.
+  static const Color ink = Color(0xFF0F172A); // slate 900
+  static const Color inkSoft = Color(0xFF1E293B); // slate 800
 
   // Surfaces
-  static const Color background = Color(0xFFF6F7FB);
+  static const Color background = Color(0xFFF6F8FA);
   static const Color surface = Colors.white;
   static const Color surfaceMuted = Color(0xFFF1F5F9);
 
@@ -33,10 +39,21 @@ class AppColors {
 
   static const Color border = Color(0xFFE2E8F0);
 
-  /// Header gradient used on hero sections across the app.
+  /// Chart series colours, in order.
+  static const List<Color> chart = [
+    primary,
+    Color(0xFF6366F1), // indigo
+    Color(0xFFF59E0B), // amber
+    Color(0xFFEC4899), // pink
+    Color(0xFF22C55E), // green
+    Color(0xFF64748B), // slate
+  ];
+
+  /// Header gradient used on hero sections across the app: slate into teal.
   static const LinearGradient heroGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primaryDark, primary, secondary],
+    colors: [ink, primaryDark, primary],
+    stops: [0.0, 0.55, 1.0],
   );
 }

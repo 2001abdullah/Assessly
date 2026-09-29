@@ -1,9 +1,11 @@
 import 'package:assessly/routes/app_routes.dart';
+import 'package:assessly/themes/app_colors.dart';
+import 'package:assessly/widgets/brand.dart';
 import 'package:flutter/material.dart';
 
 import 'onboarding_page.dart';
 
-/// Intro carousel shown to signed-out users; ends at Login / Register.
+/// Intro carousel shown to signed-out users; ends at the role chooser.
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -17,22 +19,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const pages = [
     OnboardingPage(
-      eyebrow: 'Build with confidence',
-      icon: Icons.assignment_outlined,
-      title: 'Exams, organized from the start.',
-      description: 'Create an assessment, define its answer key, and keep every scoring rule in one focused workspace.',
+      eyebrow: 'For teachers',
+      icon: Icons.groups_2_outlined,
+      title: 'Your classes, organised.',
+      description: 'Create classes, enrol students with a code, take attendance and post announcements.',
     ),
     OnboardingPage(
-      eyebrow: 'Scan with precision',
+      eyebrow: 'Scan & grade',
       icon: Icons.document_scanner_outlined,
-      title: 'Turn marked sheets into results.',
-      description: 'Capture OMR sheets with guided scanning and let Assessly handle identification, answers, and scoring.',
+      title: 'Paper sheets to results in seconds.',
+      description: 'Print an answer sheet for each exam, scan it with your phone and Assessly marks it for you.',
     ),
     OnboardingPage(
-      eyebrow: 'Understand outcomes',
+      eyebrow: 'For students',
       icon: Icons.insights_outlined,
-      title: 'Make every result actionable.',
-      description: 'Review performance clearly, catch sheets that need attention, and move from paper to insight faster.',
+      title: 'See how you are doing.',
+      description: 'Get your results the moment they are published, track your progress and your attendance.',
     ),
   ];
 
@@ -42,128 +44,92 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  void _finish() =>
+      Navigator.pushReplacementNamed(context, AppRoutes.roleSelect);
+
   void _continue() {
     if (currentPage < pages.length - 1) {
       pageController.nextPage(
-        duration: const Duration(milliseconds: 420),
+        duration: const Duration(milliseconds: 380),
         curve: Curves.easeOutCubic,
       );
     } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      _finish();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final last = currentPage == pages.length - 1;
     return Scaffold(
-      backgroundColor: const Color(0xFF080D34),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset('assets/images/assessly_hero.png', fit: BoxFit.cover),
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0x22040A2A),
-                  Color(0x55040A2A),
-                  Color(0xF2070B2C),
-                ],
-                stops: [0, 0.42, 0.76],
-              ),
-            ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 14, 14, 0),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.fact_check_outlined,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'Assessly',
+      backgroundColor: AppColors.ink,
+      body: InkBackdrop(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 12, 12, 0),
+                child: Row(
+                  children: [
+                    const BrandLockup(onDark: true, size: 34),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: _finish,
+                      child: Text(
+                        'Skip',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.4,
+                          color: Colors.white.withValues(alpha: 0.7),
                         ),
                       ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () => Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.login,
-                        ),
-                        child: Text(
-                          'Skip',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.78),
-                          ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              const SheetIllustration(width: 150),
+              Expanded(
+                child: PageView(
+                  controller: pageController,
+                  onPageChanged: (index) => setState(() => currentPage = index),
+                  children: pages,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Row(
+                  children: [
+                    for (int index = 0; index < pages.length; index++)
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        margin: const EdgeInsets.only(right: 6),
+                        width: currentPage == index ? 24 : 7,
+                        height: 7,
+                        decoration: BoxDecoration(
+                          color: currentPage == index
+                              ? AppColors.primary
+                              : Colors.white.withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: PageView(
-                    controller: pageController,
-                    onPageChanged: (index) =>
-                        setState(() => currentPage = index),
-                    children: pages,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(26, 0, 26, 28),
-                  child: Row(
-                    children: [
-                      for (int index = 0; index < pages.length; index++)
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          margin: const EdgeInsets.only(right: 7),
-                          width: currentPage == index ? 28 : 7,
-                          height: 7,
-                          decoration: BoxDecoration(
-                            color: currentPage == index
-                                ? const Color(0xFF75E6FF)
-                                : Colors.white.withValues(alpha: 0.28),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      const Spacer(),
-                      FilledButton.icon(
-                        onPressed: _continue,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF161A54),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                        ),
-                        icon: Icon(
-                          currentPage == pages.length - 1
-                              ? Icons.login_rounded
-                              : Icons.arrow_forward_rounded,
-                        ),
-                        label: Text(
-                          currentPage == pages.length - 1
-                              ? 'Get started'
-                              : 'Continue',
-                        ),
+                    const Spacer(),
+                    FilledButton.icon(
+                      onPressed: _continue,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
                       ),
-                    ],
-                  ),
+                      icon: Icon(
+                        last
+                            ? Icons.login_rounded
+                            : Icons.arrow_forward_rounded,
+                      ),
+                      label: Text(last ? 'Get started' : 'Next'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

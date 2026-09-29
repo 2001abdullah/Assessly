@@ -97,7 +97,8 @@ class _ResultsHubScreenState extends State<ResultsHubScreen> {
               for (final exam in exams) ...[
                 _ExamResultsCard(
                   exam: exam,
-                  results: results.resultsFor(exam['id'].toString()) ?? const [],
+                  results:
+                      results.resultsFor(exam['id'].toString()) ?? const [],
                 ),
                 const SizedBox(height: 10),
               ],
@@ -120,7 +121,9 @@ class _OverviewHero extends StatelessWidget {
     final count = results.length;
     final avg = count == 0
         ? 0.0
-        : results.map((r) => asDouble(r['percentage'])).reduce((a, b) => a + b) /
+        : results
+                  .map((r) => asDouble(r['percentage']))
+                  .reduce((a, b) => a + b) /
               count;
     final passed = results.where((r) => r['passed'] == true).length;
     final passRate = count == 0 ? 0.0 : passed * 100 / count;
@@ -241,7 +244,9 @@ class _ExamResultsCard extends StatelessWidget {
     final count = results.length;
     final avg = count == 0
         ? 0.0
-        : results.map((r) => asDouble(r['percentage'])).reduce((a, b) => a + b) /
+        : results
+                  .map((r) => asDouble(r['percentage']))
+                  .reduce((a, b) => a + b) /
               count;
     final passed = results.where((r) => r['passed'] == true).length;
 

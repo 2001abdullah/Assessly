@@ -1,12 +1,16 @@
+import 'package:assessly/models/user_model.dart';
 import 'package:assessly/providers/auth_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/widgets/auth_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Email/password and Google sign-in.
+/// Email/password and Google sign-in for the chosen [role]. Students can
+/// also use the username a teacher created for them.
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.role = UserRole.teacher});
+
+  final UserRole role;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -29,7 +33,13 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await authenticate();
       if (!mounted) return;
+      final mustChange =
+          context.read<AuthProvider>().user?.mustChangePassword ?? false;
       Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
+      // Teacher-issued temporary password: ask for a new one right away.
+      if (mustChange) {
+        Navigator.pushNamed(context, AppRoutes.changePassword, arguments: true);
+      }
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,19 +56,25 @@ class _LoginScreenState extends State<LoginScreen> {
       () => context.read<AuthProvider>().login(
         emailController.text.trim(),
         passwordController.text,
+        widget.role,
       ),
     );
   }
 
   Future<void> _googleLogin() =>
-      _finish(context.read<AuthProvider>().loginWithGoogle);
+      _finish(() => context.read<AuthProvider>().loginWithGoogle(widget.role));
+
+  bool get _student => widget.role == UserRole.student;
 
   @override
   Widget build(BuildContext context) {
     final loading = context.watch<AuthProvider>().isLoading;
     return AuthLayout(
+      badge: _student ? 'Student sign in' : 'Teacher sign in',
       title: 'Welcome back',
-      subtitle: 'Sign in securely to manage exams and grade answer sheets.',
+      subtitle: _student
+          ? 'Sign in to see your results, progress and attendance.'
+          : 'Sign in to manage your classes, exams and results.',
       child: AutofillGroup(
         child: Form(
           key: formKey,
@@ -77,15 +93,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 enabled: !loading,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
-                autofillHints: const [AutofillHints.email],
-                decoration: const InputDecoration(
-                  labelText: 'Email address',
-                  prefixIcon: Icon(Icons.email_outlined),
+                autofillHints: const [
+                  AutofillHints.email,
+                  AutofillHints.username,
+                ],
+                decoration: InputDecoration(
+                  labelText: _student ? 'Email or username' : 'Email address',
+                  helperText: _student
+                      ? 'Use the username from your teacher if you were given one'
+                      : null,
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
                 validator: (value) {
-                  final email = value?.trim() ?? '';
-                  if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
-                    return 'Enter a valid email address';
+                  final login = value?.trim() ?? '';
+                  // Teacher-created student logins are usernames, not emails.
+                  if (_student && login.isNotEmpty && !login.contains('@')) {
+                    return null;
+                  }
+                  if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(login)) {
+                    return _student
+                        ? 'Enter your email or username'
+                        : 'Enter a valid email address';
                   }
                   return null;
                 },
@@ -157,8 +185,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextButton(
                     onPressed: loading
                         ? null
-                        : () =>
-                              Navigator.pushNamed(context, AppRoutes.register),
+                        : () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.register,
+                            arguments: widget.role,
+                          ),
                     child: const Text('Create account'),
                   ),
                 ],

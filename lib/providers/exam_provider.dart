@@ -51,6 +51,7 @@ class ExamProvider extends ChangeNotifier {
     required int totalQuestions,
     required int rollDigits,
     required int registrationDigits,
+    String? classId,
   }) async {
     final response = await _service.createExam(
       title: title,
@@ -58,6 +59,7 @@ class ExamProvider extends ChangeNotifier {
       totalQuestions: totalQuestions,
       rollDigits: rollDigits,
       registrationDigits: registrationDigits,
+      classId: classId,
     );
     final exam = response['exam'];
     if (exam is Map) {
@@ -85,6 +87,22 @@ class ExamProvider extends ChangeNotifier {
       rethrow;
     }
   }
+
+  /// Publishes or hides an exam's results for its class's students.
+  Future<void> setPublished(String examId, bool published) async {
+    final publishedAt = await _service.setPublished(examId, published);
+    _exams = [
+      for (final e in _exams)
+        e['id']?.toString() == examId
+            ? {...e, 'results_published_at': publishedAt}
+            : e,
+    ];
+    notifyListeners();
+  }
+
+  /// Exams of one class, from the cached list.
+  List<Map<String, dynamic>> forClass(String classId) =>
+      _exams.where((e) => e['class_id']?.toString() == classId).toList();
 
   void reset() {
     _exams = [];

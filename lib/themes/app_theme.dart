@@ -149,5 +149,46 @@ class AppTheme {
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.primary,
     ),
+
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: AppColors.surface,
+      surfaceTintColor: Colors.transparent,
+      indicatorColor: AppColors.primarySoft,
+      elevation: 0,
+      height: 68,
+      shadowColor: Colors.transparent,
+      labelTextStyle: WidgetStateProperty.resolveWith(
+        (states) => TextStyle(
+          fontSize: 12,
+          fontWeight: states.contains(WidgetState.selected)
+              ? FontWeight.w700
+              : FontWeight.w500,
+          color: states.contains(WidgetState.selected)
+              ? AppColors.primaryDark
+              : AppColors.textSecondary,
+        ),
+      ),
+      iconTheme: WidgetStateProperty.resolveWith(
+        (states) => IconThemeData(
+          color: states.contains(WidgetState.selected)
+              ? AppColors.primaryDark
+              : AppColors.textSecondary,
+        ),
+      ),
+    ),
+
+    tabBarTheme: const TabBarThemeData(
+      labelColor: AppColors.primaryDark,
+      unselectedLabelColor: AppColors.textSecondary,
+      indicatorColor: AppColors.primary,
+      dividerColor: AppColors.border,
+      labelStyle: TextStyle(fontWeight: FontWeight.w700),
+      tabAlignment: TabAlignment.start,
+    ),
+
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: AppColors.primary,
+      foregroundColor: Colors.white,
+    ),
   );
 }
