@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "9250952528",
+    "project_id": "horizontal-ward-510113-e5",
+    "storage_bucket": "horizontal-ward-510113-e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9250952528:android:3f2b95d0ecdab37dd58855",
+        "android_client_info": {
+          "package_name": "com.abdullah.assessly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "9250952528-rlkued2nqiu2tve8dn6nkhiqs6l65pt2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJL9rt53sUP6KONaz_qhqQD3MGKTPreSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "9250952528-rlkued2nqiu2tve8dn6nkhiqs6l65pt2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

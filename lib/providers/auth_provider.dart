@@ -5,6 +5,7 @@ import 'package:assessly/services/api_service.dart';
 import 'package:assessly/services/auth_service.dart';
 import 'package:assessly/services/google_auth_service.dart';
 import 'package:assessly/services/profile_service.dart';
+import 'package:assessly/services/push_service.dart';
 import 'package:flutter/material.dart';
 
 /// Who is signed in, and the actions that change it.
@@ -155,6 +156,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    // Needs the session still in place to tell the backend.
+    if (isLoggedIn) await PushService.unregister();
     try {
       await GoogleAuthService.signOut();
     } catch (_) {

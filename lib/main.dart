@@ -13,16 +13,21 @@ import 'package:assessly/providers/results_provider.dart';
 import 'package:assessly/providers/student_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/services/authed_http.dart';
+import 'package:assessly/services/push_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'themes/app_theme.dart';
 
-/// Lets non-widget code (the 401 handler below) navigate without a context.
+/// Lets non-widget code (the 401 and push handlers below) navigate without a
+/// context.
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<ScaffoldMessengerState> messengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await PushService.init();
 
   final auth = AuthProvider();
   final classes = ClassProvider();
@@ -88,11 +93,38 @@ class _AssesslyAppState extends State<AssesslyApp> {
       );
       _signingOut = false;
     };
+
+    // Push while the app is open: the system shows nothing, so refresh the
+    // inbox and show a banner.
+    PushService.onForeground = (message) {
+      if (!mounted || !context.read<AuthProvider>().isLoggedIn) return;
+      context.read<NotificationProvider>().refresh();
+      final title = message.notification?.title;
+      if (title == null) return;
+      messengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text(title),
+          action: SnackBarAction(
+            label: 'View',
+            onPressed: () =>
+                navigatorKey.currentState?.pushNamed(AppRoutes.notifications),
+          ),
+        ),
+      );
+    };
+    // Tapped push: open the notification centre.
+    PushService.onOpened = (_) {
+      if (!mounted || !context.read<AuthProvider>().isLoggedIn) return;
+      context.read<NotificationProvider>().refresh();
+      navigatorKey.currentState?.pushNamed(AppRoutes.notifications);
+    };
   }
 
   @override
   void dispose() {
     AuthedHttp.onUnauthorized = null;
+    PushService.onForeground = null;
+    PushService.onOpened = null;
     super.dispose();
   }
 
@@ -100,6 +132,7 @@ class _AssesslyAppState extends State<AssesslyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
+      scaffoldMessengerKey: messengerKey,
       debugShowCheckedModeBanner: false,
       title: 'Assessly',
       theme: AppTheme.lightTheme,

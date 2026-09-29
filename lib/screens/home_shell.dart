@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../providers/notification_provider.dart';
+import '../services/push_service.dart';
 import 'exam_list_screen.dart';
 import 'profile_screen.dart';
 import 'results_hub_screen.dart';
@@ -104,7 +105,12 @@ class _HomeShellState extends State<HomeShell> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<NotificationProvider>().start();
+      if (!mounted) return;
+      context.read<NotificationProvider>().start();
+      // Signed in from here on: register this phone for push, and open the
+      // notification centre if a tapped push launched the app.
+      PushService.register();
+      PushService.handleLaunchMessage();
     });
   }
 

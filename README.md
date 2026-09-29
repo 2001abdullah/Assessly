@@ -154,6 +154,11 @@ CI runs all of these on every push (`.github/workflows/quality.yml`).
   deliberately fails without them. In GitHub, **Actions → Android Release**
   builds a signed APK and AAB, and pushing a `v*` tag publishes them as a
   GitHub release.
+- **Push notifications (Android):** the app reads
+  `android/app/google-services.json` (Firebase project, committed; not a
+  secret). The backend sends pushes only when `FIREBASE_SERVICE_ACCOUNT`
+  holds the Firebase service-account key (secret, set on Render only).
+  Without it, notifications stay in the in-app notification centre.
 - **iOS:** **Actions → iOS Release** produces an unsigned archive. Installing
   on devices or shipping to the App Store needs an Apple Developer account and
   signing. The bundle ID is still `com.example.assessly` and must be changed

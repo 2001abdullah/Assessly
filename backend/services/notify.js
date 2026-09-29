@@ -59,7 +59,12 @@ async function sendPush(userIds, { title, body, data }) {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: { token, notification: { title, body }, data: stringData },
+        message: {
+          token,
+          notification: { title, body },
+          data: stringData,
+          android: { priority: 'high' },
+        },
       }),
     });
     // 404/400 UNREGISTERED: the app was uninstalled or the token rotated.
