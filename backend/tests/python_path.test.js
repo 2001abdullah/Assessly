@@ -54,4 +54,22 @@ assert.strictEqual(
   null,
 );
 
+// Columns the student left empty at either end are unused, not unread.
+assert.strictEqual(
+  formatDetectedIdentifier({
+    digits: ['1', '2', '3', null, null],
+    statuses: ['marked', 'marked', 'marked', 'blank', 'blank'],
+  }),
+  '123',
+);
+assert.strictEqual(
+  formatDetectedIdentifier({
+    digits: [null, '4', null, '2', null],
+    statuses: ['blank', 'marked', 'multi', 'marked', 'blank'],
+  }),
+  '4?2',
+);
+
+console.log('Identifier formatting checks passed');
+
 console.log('Python path resolution checks passed');

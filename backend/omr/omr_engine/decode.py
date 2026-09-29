@@ -14,10 +14,11 @@ def decode_field(template: OMRTemplate, field_name: str,
     """
     Build a numeric field from its digit columns.
 
-    Leading blank columns are tolerated: an 8-digit registration number written
-    into a 10-column grid leaves the first two columns empty, which is normal
-    operator behaviour rather than an error.  A blank in the *middle* or at the
-    *end* of the number is a real problem and sends the sheet to review.
+    Blank columns at either end are tolerated: a 5-digit roll number written
+    into a 7-column grid leaves the unused columns empty, on the left or the
+    right depending on how the student aligned it, which is normal rather than
+    an error.  A blank in the *middle* of the number, or a column that is faint
+    or double-marked, is a real problem and sends the sheet to review.
     """
     spec = template.fields.get(field_name)
     if spec is None:
@@ -40,11 +41,15 @@ def decode_field(template: OMRTemplate, field_name: str,
     note = ""
     needs_review = False
 
-    # strip a run of leading blanks
+    # strip runs of unused (truly blank) columns at both ends
     lead = 0
     while lead < len(digits) and digits[lead] is None and statuses[lead] == BLANK:
         lead += 1
-    body = digits[lead:]
+    end = len(digits)
+    while end > lead and digits[end - 1] is None and statuses[end - 1] == BLANK:
+        end -= 1
+    body = digits[lead:end]
+    unused = lead + (len(digits) - end)
 
     if lead == len(digits):
         value = None
@@ -52,8 +57,8 @@ def decode_field(template: OMRTemplate, field_name: str,
         note = "no digits marked"
     elif all(d is not None for d in body):
         value = "".join(d for d in body if d is not None)  # type: ignore[arg-type]
-        if lead:
-            note = f"{lead} leading column(s) left blank"
+        if unused:
+            note = f"{unused} unused column(s) left blank"
     else:
         value = None
         needs_review = True

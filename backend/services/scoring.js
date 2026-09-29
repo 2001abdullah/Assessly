@@ -95,7 +95,10 @@ function runPythonJson(script, args, { parseJson = true } = {}) {
 /**
  * Turns a detected roll/registration field into display text. An exact value
  * wins; otherwise the per-digit readings are joined with '?' for unread
- * digits ([2, 6, null] -> "26?"). Returns null when nothing was read.
+ * digits ([2, null, 6] -> "2?6"). Columns the student left completely empty
+ * at either end are unused, not unread, and are dropped (with statuses
+ * ['marked', 'marked', 'blank'], [2, 6, null] -> "26"). Returns null when
+ * nothing was read.
  */
 function formatDetectedIdentifier(field, fallback = null) {
   const exact = fallback ?? field?.value;
@@ -106,7 +109,18 @@ function formatDetectedIdentifier(field, fallback = null) {
 
   const isRead = (digit) => digit !== null && digit !== undefined;
   if (!field.digits.some(isRead)) return null;
-  return field.digits.map((digit) => (isRead(digit) ? String(digit) : '?')).join('');
+
+  const statuses = Array.isArray(field.statuses) ? field.statuses : [];
+  const isUnused = (i) => !isRead(field.digits[i]) && statuses[i] === 'blank';
+  let start = 0;
+  let end = field.digits.length;
+  while (start < end && isUnused(start)) start++;
+  while (end > start && isUnused(end - 1)) end--;
+
+  return field.digits
+    .slice(start, end)
+    .map((digit) => (isRead(digit) ? String(digit) : '?'))
+    .join('');
 }
 
 /**
