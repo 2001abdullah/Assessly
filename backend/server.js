@@ -12,7 +12,13 @@
 //   /api/scoring-rules  JWT                       routes/scoringRules.js
 //   /api/scoring        JWT                       routes/scoring.js
 //   /api/results        JWT                       routes/results.js
+//   /api/classes        JWT                       routes/classes.js
+//   /api/student        JWT, student role         routes/student.js
+//   /api/profile        JWT, any role             routes/profile.js
+//   /api/notifications  JWT, any role             routes/notifications.js
 //   /health             public, checks PostgreSQL
+//
+// Every router except auth/profile/notifications/student is teacher-only.
 //   /metrics            Prometheus; requires Bearer METRICS_TOKEN (404 otherwise)
 //
 // Every JWT router additionally restricts access to the caller's own exams
@@ -36,6 +42,11 @@ const answerKeyRoutes = require('./routes/answerKeys');
 const scoringRoutes = require('./routes/scoring');
 const resultRoutes = require('./routes/results');
 const scoringRulesRoutes = require('./routes/scoringRules');
+const classRoutes = require('./routes/classes');
+const studentRoutes = require('./routes/student');
+const profileRoutes = require('./routes/profile');
+const notificationRoutes = require('./routes/notifications');
+const { requireRole } = require('./middleware/roles');
 
 const app = express();
 
@@ -57,13 +68,19 @@ app.use((_req, res, next) => {
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: 'draft-8', legacyHeaders: false });
 const uploadLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 60, standardHeaders: 'draft-8', legacyHeaders: false });
 
+const teacher = [authMiddleware, requireRole('teacher')];
+
 app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/omr', uploadLimiter, authMiddleware, omrRoutes);
-app.use('/api/exam', authMiddleware, examRoutes);
-app.use('/api/answer-key', authMiddleware, answerKeyRoutes);
-app.use('/api/scoring', authMiddleware, scoringRoutes);
-app.use('/api/results', authMiddleware, resultRoutes);
-app.use('/api/scoring-rules', authMiddleware, scoringRulesRoutes);
+app.use('/api/omr', uploadLimiter, ...teacher, omrRoutes);
+app.use('/api/exam', ...teacher, examRoutes);
+app.use('/api/answer-key', ...teacher, answerKeyRoutes);
+app.use('/api/scoring', ...teacher, scoringRoutes);
+app.use('/api/results', ...teacher, resultRoutes);
+app.use('/api/scoring-rules', ...teacher, scoringRulesRoutes);
+app.use('/api/classes', ...teacher, classRoutes);
+app.use('/api/student', authMiddleware, requireRole('student'), studentRoutes);
+app.use('/api/profile', authMiddleware, profileRoutes);
+app.use('/api/notifications', authMiddleware, notificationRoutes);
 
 app.get('/', (_req, res) => {
   res.json({ status: 'ok', service: 'Assessly backend' });

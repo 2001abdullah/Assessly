@@ -5,7 +5,13 @@
 // Render's managed database uses a certificate Node does not trust by default;
 // supply the provider's CA here if you move to a network you do not control.
 
-const { Pool } = require('pg');
+const { Pool, types } = require('pg');
+
+// Return DATE columns (attendance days) as 'YYYY-MM-DD' strings. The default
+// converts them to a JS Date at local midnight, which shifts the day in any
+// timezone east or west of UTC.
+const DATE_OID = 1082;
+types.setTypeParser(DATE_OID, (value) => value);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || undefined,

@@ -48,6 +48,13 @@ function userOwnsScanOfExam(scanId, examId, userId) {
   );
 }
 
+function userOwnsClass(classId, userId) {
+  return ownsQuery(
+    'SELECT 1 FROM classes WHERE id = $1 AND teacher_id = $2',
+    [classId, userId],
+  );
+}
+
 function notFound(res, what) {
   return res.status(404).json({ message: `${what} not found` });
 }
@@ -67,6 +74,17 @@ async function examParam(req, res, next, value) {
 async function resultParam(req, res, next, value) {
   try {
     if (!(await userOwnsResult(value, req.user.id))) return notFound(res, 'result');
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+}
+
+// For router.param('class_id', classParam): the caller must be the class's
+// teacher.
+async function classParam(req, res, next, value) {
+  try {
+    if (!(await userOwnsClass(value, req.user.id))) return notFound(res, 'class');
     return next();
   } catch (error) {
     return next(error);
@@ -103,6 +121,8 @@ async function requireExamAndScanInBody(req, res, next) {
 }
 
 module.exports = {
+  classParam,
+  userOwnsClass,
   userOwnsExam,
   userOwnsResult,
   userOwnsScanOfExam,

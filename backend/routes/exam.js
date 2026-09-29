@@ -6,6 +6,12 @@
 //   PUT    /:id          update title / subject / question and digit counts
 //   DELETE /:id          delete (cascades to answer keys, rules, scans, results)
 //   GET    /:id/summary  pass/fail counts and mark statistics
+//   POST   /:id/publish    make results visible to the class's students (notifies them)
+//   POST   /:id/unpublish  hide them again
+//
+// An exam may belong to one of the teacher's classes (class_id); its results
+// are then matched to students by roll number, and stay private until
+// published.
 //
 // roll_digits / registration_digits control how many ID bubble columns the
 // generated answer sheet has, so changing them after printing sheets makes
@@ -14,12 +20,49 @@
 const express = require('express');
 const crypto = require('crypto');
 const pool = require('../config/db');
-const { examParam } = require('../middleware/ownership');
+const { examParam, userOwnsClass } = require('../middleware/ownership');
+const { classStudentUserIds, notify } = require('../services/notify');
 
 const router = express.Router();
 
 // Every route with :id first checks the signed-in user owns that exam.
 router.param('id', examParam);
+
+// class_id from the body: null/'' for no class; otherwise must be the caller's.
+async function resolveClassId(req, res) {
+  const raw = req.body?.class_id;
+  if (raw === undefined || raw === null || raw === '') return { ok: true, classId: null };
+  if (!(await userOwnsClass(raw, req.user.id))) {
+    res.status(404).json({ message: 'class not found' });
+    return { ok: false };
+  }
+  return { ok: true, classId: raw };
+}
+
+router.post('/:id/publish', async (req, res) => {
+  const exam = (await pool.query(
+    `UPDATE exams SET results_published_at = COALESCE(results_published_at, now())
+      WHERE id = $1 RETURNING id, title, class_id, results_published_at`,
+    [req.params.id],
+  )).rows[0];
+  if (exam.class_id) {
+    notify(await classStudentUserIds(exam.class_id), {
+      type: 'results_published',
+      title: `Results are out: ${exam.title}`,
+      body: 'Open Assessly to see your marks.',
+      data: { exam_id: exam.id, class_id: exam.class_id },
+    });
+  }
+  return res.json({ message: 'Results published', exam });
+});
+
+router.post('/:id/unpublish', async (req, res) => {
+  const exam = (await pool.query(
+    'UPDATE exams SET results_published_at = NULL WHERE id = $1 RETURNING id, results_published_at',
+    [req.params.id],
+  )).rows[0];
+  return res.json({ message: 'Results hidden from students', exam });
+});
 
 
 // ========================================
@@ -63,6 +106,9 @@ router.post('/', async (req, res) => {
     });
   }
 
+  const { ok, classId } = await resolveClassId(req, res);
+  if (!ok) return undefined;
+
   const examId = crypto.randomUUID();
 
   try {
@@ -75,9 +121,10 @@ router.post('/', async (req, res) => {
           total_questions,
           user_id,
           roll_digits,
-          registration_digits
+          registration_digits,
+          class_id
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *
       `,
       [
@@ -88,6 +135,7 @@ router.post('/', async (req, res) => {
         req.user.id,
         rollDigits,
         registrationDigits,
+        classId,
       ],
     );
 
@@ -114,16 +162,20 @@ router.get('/', async (req, res) => {
     const result = await pool.query(
       `
         SELECT
-          id,
-          title,
-          subject,
-          total_questions,
-          roll_digits,
-          registration_digits,
-          created_at
-        FROM exams
-        WHERE user_id = $1
-        ORDER BY created_at DESC
+          e.id,
+          e.title,
+          e.subject,
+          e.total_questions,
+          e.roll_digits,
+          e.registration_digits,
+          e.created_at,
+          e.class_id,
+          e.results_published_at,
+          c.name AS class_name
+        FROM exams e
+        LEFT JOIN classes c ON c.id = e.class_id
+        WHERE e.user_id = $1
+        ORDER BY e.created_at DESC
       `,
       [req.user.id],
     );
@@ -221,6 +273,11 @@ router.put('/:id', async (req, res) => {
     return res.status(400).json({ message: 'Invalid roll or registration digit count' });
   }
 
+  // class_id is only changed when the request includes it.
+  const changeClass = Object.prototype.hasOwnProperty.call(req.body, 'class_id');
+  const { ok, classId } = changeClass ? await resolveClassId(req, res) : { ok: true, classId: null };
+  if (!ok) return undefined;
+
   try {
     const result = await pool.query(
       `
@@ -231,6 +288,7 @@ router.put('/:id', async (req, res) => {
           total_questions = $3
           , roll_digits = $4
           , registration_digits = $5
+          , class_id = CASE WHEN $7 THEN $8::uuid ELSE class_id END
         WHERE id = $6
         RETURNING *
       `,
@@ -241,6 +299,8 @@ router.put('/:id', async (req, res) => {
         rollDigits,
         registrationDigits,
         id,
+        changeClass,
+        classId,
       ],
     );
 

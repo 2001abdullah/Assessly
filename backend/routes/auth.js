@@ -1,12 +1,17 @@
 // Account routes, mounted at /api/auth (public, rate-limited in server.js).
 //
-//   POST   /register         create a password account
-//   POST   /login            email + password  -> { token, user }
-//   POST   /google           Google ID token   -> { token, user }
+//   POST   /register         create a password account { name, email, password, role? }
+//   POST   /login            { email (or username), password, role? } -> { token, user }
+//   POST   /google           { id_token, role? }                      -> { token, user }
 //   POST   /forgot-password  email a 6-digit reset code (always 202)
 //   POST   /reset-password   email + code + new password
 //   GET    /me               profile of the token's user        (JWT required)
 //   DELETE /me               delete the account and all its data (JWT required)
+//
+// Roles: 'teacher' (default) or 'student'. The app sends the role of the
+// portal the user chose; signing in to the wrong portal gets a 403 that says
+// which one to use. A student account created by a teacher has a username
+// (e.g. "ab12cd-15") instead of an email.
 //
 // Emails are stored lower-cased and compared case-insensitively.
 
@@ -18,6 +23,7 @@ const { OAuth2Client } = require('google-auth-library');
 const pool = require('../config/db');
 const authMiddleware = require('../middleware/authMiddleware');
 const { sendPasswordResetCode } = require('../services/email');
+const { loadProfile } = require('./profile');
 
 const router = express.Router();
 const googleClient = new OAuth2Client();
@@ -34,8 +40,25 @@ const genericResetMessage = {
 };
 const invalidCredentials = { message: 'Invalid email or password' };
 
+const ROLES = ['teacher', 'student'];
+
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
+}
+
+// Undefined when the client did not say (older app versions: teacher).
+function requestedRole(body) {
+  const role = String(body?.role || '').toLowerCase();
+  return ROLES.includes(role) ? role : undefined;
+}
+
+function wrongPortal(res, actualRole) {
+  return res.status(403).json({
+    message: actualRole === 'student'
+      ? 'This is a student account. Go back and choose "I\'m a student".'
+      : 'This is a teacher account. Go back and choose "I\'m a teacher".',
+    role: actualRole,
+  });
 }
 
 function hashResetCode(code) {
@@ -45,15 +68,23 @@ function hashResetCode(code) {
 // Signs a JWT for the user. The payload is what authMiddleware exposes as
 // req.user on later requests.
 function createSession(user) {
+  const role = user.role || 'teacher';
   const token = jwt.sign(
-    { id: user.id, email: user.email, name: user.name },
+    { id: user.id, email: user.email, name: user.name, role },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' },
   );
   return {
     message: 'login successful',
     token,
-    user: { id: user.id, name: user.name, email: user.email },
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      username: user.username || null,
+      role,
+      must_change_password: Boolean(user.must_change_password),
+    },
   };
 }
 
@@ -75,10 +106,10 @@ router.post('/register', async (req, res) => {
   try {
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const insertResult = await pool.query(
-      `INSERT INTO users (name, email, password_hash)
-       VALUES ($1, $2, $3)
-       RETURNING id, name, email, created_at`,
-      [name.slice(0, 100), email, passwordHash],
+      `INSERT INTO users (name, email, password_hash, role)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, name, email, role, created_at`,
+      [name.slice(0, 100), email, passwordHash, requestedRole(req.body) || 'teacher'],
     );
     return res.status(201).json({
       message: 'user registered successfully',
@@ -96,16 +127,18 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const email = normalizeEmail(req.body?.email);
+  // "email" may also be a username issued by a teacher (no "@").
+  const login = normalizeEmail(req.body?.email || req.body?.username);
   const password = String(req.body?.password || '');
-  if (!email || !password) {
+  if (!login || !password) {
     return res.status(400).json({ message: 'email and password are required' });
   }
 
   try {
     const result = await pool.query(
-      'SELECT id, name, email, password_hash FROM users WHERE lower(email) = $1',
-      [email],
+      `SELECT id, name, email, username, role, must_change_password, password_hash
+         FROM users WHERE ${login.includes('@') ? 'lower(email)' : 'lower(username)'} = $1`,
+      [login],
     );
     const user = result.rows[0];
     // Unknown email and wrong password get the same 401 so the endpoint does
@@ -117,6 +150,9 @@ router.post('/login', async (req, res) => {
     if (!(await bcrypt.compare(password, user.password_hash))) {
       return res.status(401).json(invalidCredentials);
     }
+    // Checked only after the password, so it reveals nothing to a stranger.
+    const role = requestedRole(req.body);
+    if (role && role !== user.role) return wrongPortal(res, user.role);
     return res.status(200).json(createSession(user));
   } catch (error) {
     console.error('login error', error.message);
@@ -142,21 +178,25 @@ router.post('/google', async (req, res) => {
 
     const name = String(payload.name || payload.email.split('@')[0]).slice(0, 100);
     const email = normalizeEmail(payload.email);
+    // The requested role only applies when this creates the account.
+    const role = requestedRole(req.body);
     const userResult = await pool.query(
-      `INSERT INTO users (name, email, google_subject)
-       VALUES ($1, $2, $3)
+      `INSERT INTO users (name, email, google_subject, role)
+       VALUES ($1, $2, $3, $4)
        ON CONFLICT (email) DO UPDATE
          SET google_subject = COALESCE(users.google_subject, EXCLUDED.google_subject),
              name = CASE WHEN users.name = '' THEN EXCLUDED.name ELSE users.name END
        WHERE users.google_subject IS NULL
           OR users.google_subject = EXCLUDED.google_subject
-       RETURNING id, name, email`,
-      [name, email, payload.sub],
+       RETURNING id, name, email, username, role, must_change_password`,
+      [name, email, payload.sub, role || 'teacher'],
     );
-    if (!userResult.rows[0]) {
+    const user = userResult.rows[0];
+    if (!user) {
       return res.status(409).json({ message: 'Google account does not match the linked account' });
     }
-    return res.status(200).json(createSession(userResult.rows[0]));
+    if (role && role !== user.role) return wrongPortal(res, user.role);
+    return res.status(200).json(createSession(user));
   } catch (error) {
     console.error('Google login error', error.message);
     return res.status(401).json({ message: 'Google sign-in failed' });
@@ -234,14 +274,11 @@ router.post('/reset-password', async (req, res) => {
 
 router.get('/me', authMiddleware, async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT id, name, email, created_at FROM users WHERE id = $1',
-      [req.user.id],
-    );
-    if (result.rows.length === 0) {
+    const user = await loadProfile(req.user.id);
+    if (!user) {
       return res.status(404).json({ message: 'user not found' });
     }
-    return res.json({ message: 'authenticated user', user: result.rows[0] });
+    return res.json({ message: 'authenticated user', user });
   } catch (error) {
     console.error('profile error', error.message);
     return res.status(500).json({ message: 'could not load profile' });
@@ -256,6 +293,12 @@ router.delete('/me', authMiddleware, async (req, res) => {
   try {
     await client.query('BEGIN');
     await client.query('DELETE FROM exams WHERE user_id = $1', [req.user.id]);
+    // A student's pending join requests go; approved roster entries stay with
+    // the teacher's class (unlinked from the deleted account).
+    await client.query(
+      `DELETE FROM class_students WHERE user_id = $1 AND status = 'pending'`,
+      [req.user.id],
+    );
     const deleted = await client.query(
       'DELETE FROM users WHERE id = $1 RETURNING id',
       [req.user.id],
