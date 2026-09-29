@@ -27,14 +27,31 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Build release APK
-        run: flutter build apk --release --dart-define=API_BASE_URL=${{ inputs.api_base_url }}
+      - name: Configure Play upload signing
+        env:
+          PLAY_UPLOAD_KEYSTORE_BASE64: ${{ secrets.PLAY_UPLOAD_KEYSTORE_BASE64 }}
+          PLAY_UPLOAD_STORE_PASSWORD: ${{ secrets.PLAY_UPLOAD_STORE_PASSWORD }}
+          PLAY_UPLOAD_KEY_ALIAS: ${{ secrets.PLAY_UPLOAD_KEY_ALIAS }}
+          PLAY_UPLOAD_KEY_PASSWORD: ${{ secrets.PLAY_UPLOAD_KEY_PASSWORD }}
+        run: |
+          test -n "$PLAY_UPLOAD_KEYSTORE_BASE64"
+          echo "$PLAY_UPLOAD_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=upload-keystore.jks\n' \
+            "$PLAY_UPLOAD_STORE_PASSWORD" \
+            "$PLAY_UPLOAD_KEY_PASSWORD" \
+            "$PLAY_UPLOAD_KEY_ALIAS" > android/key.properties
 
-      - name: Upload APK artifact
+      - name: Build Play Store app bundle
+        run: >-
+          flutter build appbundle --release
+          --dart-define=API_BASE_URL=${{ inputs.api_base_url }}
+          --dart-define=GOOGLE_WEB_CLIENT_ID=${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+
+      - name: Upload app bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: assessly-android-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: assessly-android-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
 
       - name: Create GitHub release
         if: ${{ inputs.release_tag != '' }}
@@ -42,4 +59,4 @@ jobs:
         with:
           tag_name: ${{ inputs.release_tag }}
           generate_release_notes: true
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: build/app/outputs/bundle/release/app-release.aab

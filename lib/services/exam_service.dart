@@ -15,6 +15,8 @@ class ExamService {
     required String title,
     required String subject,
     required int totalQuestions,
+    required int rollDigits,
+    required int registrationDigits,
   }) async {
     final response = await AuthedHttp.post(
       Uri.parse('$baseUrl/api/exam'),
@@ -23,6 +25,8 @@ class ExamService {
         'title': title,
         'subject': subject,
         'total_questions': totalQuestions,
+        'roll_digits': rollDigits,
+        'registration_digits': registrationDigits,
       }),
     );
 

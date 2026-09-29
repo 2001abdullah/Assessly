@@ -1,6 +1,6 @@
 import 'package:assessly/routes/app_routes.dart';
-import 'package:assessly/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+
 import 'onboarding_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -11,102 +11,159 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController pageController = PageController();
+  int currentPage = 0;
 
-  final PageController pageController=PageController();
-  int currentPage=0;
+  static const pages = [
+    OnboardingPage(
+      eyebrow: 'Build with confidence',
+      icon: Icons.assignment_outlined,
+      title: 'Exams, organized from the start.',
+      description: 'Create an assessment, define its answer key, and keep every scoring rule in one focused workspace.',
+    ),
+    OnboardingPage(
+      eyebrow: 'Scan with precision',
+      icon: Icons.document_scanner_outlined,
+      title: 'Turn marked sheets into results.',
+      description: 'Capture OMR sheets with guided scanning and let Assessly handle identification, answers, and scoring.',
+    ),
+    OnboardingPage(
+      eyebrow: 'Understand outcomes',
+      icon: Icons.insights_outlined,
+      title: 'Make every result actionable.',
+      description: 'Review performance clearly, catch sheets that need attention, and move from paper to insight faster.',
+    ),
+  ];
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  void _continue() {
+    if (currentPage < pages.length - 1) {
+      pageController.nextPage(
+        duration: const Duration(milliseconds: 420),
+        curve: Curves.easeOutCubic,
+      );
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: const Color(0xFF080D34),
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          Expanded(
-            child: PageView(
-              controller: pageController,
-              onPageChanged: (index){
-                setState(() {
-                  currentPage=index;
-                });
-                print(currentPage);
-              },
+          Image.asset('assets/images/assessly_hero.png', fit: BoxFit.cover),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0x22040A2A),
+                  Color(0x55040A2A),
+                  Color(0xF2070B2C),
+                ],
+                stops: [0, 0.42, 0.76],
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Column(
               children: [
-                OnboardingPage(icon: Icons.assignment_outlined,
-                    title: "Create and Manage Exams",
-                    description:   "Create exams, add questions, marks and answer keys easily.",
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 14, 14, 0),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.fact_check_outlined,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Assessly',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.4,
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () => Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.login,
+                        ),
+                        child: Text(
+                          'Skip',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.78),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                OnboardingPage(icon: Icons.document_scanner_outlined,
-                    title: "Scan OMR Sheets",
-                    description:   "Scan student answer sheets and automatically calculate marks.",
+                Expanded(
+                  child: PageView(
+                    controller: pageController,
+                    onPageChanged: (index) =>
+                        setState(() => currentPage = index),
+                    children: pages,
+                  ),
                 ),
-                OnboardingPage(icon: Icons.analytics_outlined,
-                    title: "Analyze Performance",
-                    description:   "Understand student performance, difficult questions and class results.",)
-
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(26, 0, 26, 28),
+                  child: Row(
+                    children: [
+                      for (int index = 0; index < pages.length; index++)
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          margin: const EdgeInsets.only(right: 7),
+                          width: currentPage == index ? 28 : 7,
+                          height: 7,
+                          decoration: BoxDecoration(
+                            color: currentPage == index
+                                ? const Color(0xFF75E6FF)
+                                : Colors.white.withValues(alpha: 0.28),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      const Spacer(),
+                      FilledButton.icon(
+                        onPressed: _continue,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF161A54),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                        ),
+                        icon: Icon(
+                          currentPage == pages.length - 1
+                              ? Icons.login_rounded
+                              : Icons.arrow_forward_rounded,
+                        ),
+                        label: Text(
+                          currentPage == pages.length - 1
+                              ? 'Get started'
+                              : 'Continue',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(3, (index) => Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              height: 8,
-              width: currentPage==index?24:8,
-              decoration: BoxDecoration(
-                color: currentPage==index?
-                    AppColors.primary:AppColors.border,
-                borderRadius: BorderRadius.circular(20)
-              ),
-            ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 30
-                    ),
-            child: SizedBox(
-              height: 55,
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: (){
-                    if(currentPage<2)
-                      {
-                        pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut
-                        );
-                      }
-                    else
-                      {
-                       Navigator.pushReplacementNamed(context,
-                          AppRoutes.login
-                          );
-
-                      }
-                  },
-
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(14)
-                  )
-                ),
-                child: Text(currentPage==2?
-                'Get Started':
-                'next'),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 30,
-          )
-
-
         ],
-      )
+      ),
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:assessly/providers/app_provider.dart';
 import 'package:assessly/providers/auth_provider.dart';
+import 'package:assessly/providers/batch_scan_provider.dart';
+import 'package:assessly/providers/exam_provider.dart';
+import 'package:assessly/providers/results_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
 import 'package:assessly/services/authed_http.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +15,32 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final auth = AuthProvider();
+  final exams = ExamProvider();
+  final results = ResultsProvider();
+  // Each sheet graded in the background refreshes that exam's results.
+  final batch = BatchScanProvider(onResultSaved: results.invalidate);
+
+  // Signing out (manually or on an expired token) clears the previous
+  // user's cached data.
+  var wasLoggedIn = auth.isLoggedIn;
+  auth.addListener(() {
+    if (wasLoggedIn && !auth.isLoggedIn) {
+      exams.reset();
+      results.reset();
+      batch.reset();
+    }
+    wasLoggedIn = auth.isLoggedIn;
+  });
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ((_) => AppProvider())),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider.value(value: auth),
+        ChangeNotifierProvider.value(value: exams),
+        ChangeNotifierProvider.value(value: results),
+        ChangeNotifierProvider.value(value: batch),
       ],
       child: const AssesslyApp(),
     ),

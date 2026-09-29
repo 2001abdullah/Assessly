@@ -26,7 +26,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.abdullah.assessly"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -53,10 +52,24 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName(
-                if (hasReleaseKeystore) "release" else "debug",
-            )
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            isMinifyEnabled = true
+            isShrinkResources = true
         }
+    }
+}
+
+gradle.taskGraph.whenReady {
+    val releaseRequested = allTasks.any {
+        it.name.contains("Release", ignoreCase = true)
+    }
+    if (releaseRequested && !hasReleaseKeystore) {
+        throw GradleException(
+            "Release signing is not configured. Create android/key.properties " +
+                "and provide a private upload keystore.",
+        )
     }
 }
 

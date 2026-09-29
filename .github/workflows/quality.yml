@@ -1,0 +1,52 @@
+name: Quality checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: assessly
+          POSTGRES_PASSWORD: assessly-test
+          POSTGRES_DB: assessly_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U assessly -d assessly_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://assessly:assessly-test@localhost:5432/assessly_test
+      JWT_SECRET: ci-only-secret-that-is-at-least-32-characters
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run migrate
+      - run: npm run test:db

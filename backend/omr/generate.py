@@ -12,6 +12,8 @@ def main() -> int:
     parser.add_argument("--exam-name", required=True)
     parser.add_argument("--subject", default="")
     parser.add_argument("--questions", required=True, type=int)
+    parser.add_argument("--roll-digits", type=int, default=7)
+    parser.add_argument("--registration-digits", type=int, default=10)
     parser.add_argument("--output", required=True)
     parser.add_argument("--template-output")
     args = parser.parse_args()
@@ -27,6 +29,8 @@ def main() -> int:
         exam_name=args.exam_name,
         subject=args.subject,
         num_questions=args.questions,
+        roll_digits=args.roll_digits,
+        registration_digits=args.registration_digits,
     )
     template = build_template(config, name=args.exam_name)
     generate_sheet_pdf(template, args.output)

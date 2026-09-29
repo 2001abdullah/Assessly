@@ -91,7 +91,9 @@ CREATE TABLE public.exams (
     subject character varying(255),
     total_questions integer NOT NULL,
     created_at timestamp without time zone DEFAULT now(),
-    user_id integer
+    user_id integer,
+    roll_digits integer NOT NULL DEFAULT 7,
+    registration_digits integer NOT NULL DEFAULT 10
 );
 
 
@@ -352,4 +354,3 @@ ALTER TABLE ONLY public.omr_scans
 --
 -- PostgreSQL database dump complete
 --
-

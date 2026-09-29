@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:assessly/providers/exam_provider.dart';
+import 'package:assessly/providers/results_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
-import 'package:assessly/services/exam_service.dart';
 import 'package:assessly/themes/app_colors.dart';
-import 'package:assessly/themes/app_text_styles.dart';
+import 'package:assessly/widgets/app_widgets.dart';
+import 'package:assessly/widgets/exam_card.dart';
 
 class ExamListScreen extends StatefulWidget {
   const ExamListScreen({super.key});
@@ -13,137 +16,62 @@ class ExamListScreen extends StatefulWidget {
 }
 
 class _ExamListScreenState extends State<ExamListScreen> {
-  final ExamService _examService = ExamService();
-
-  List<Map<String, dynamic>> exams = [];
-
-  bool isLoading = true;
-  String? errorMessage;
-
   @override
   void initState() {
     super.initState();
-    _loadExams();
-  }
-
-  // --------------------------------------------------
-  // Load Exams
-  // --------------------------------------------------
-
-  Future<void> _loadExams() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
-
-    try {
-      final loadedExams = await _examService.getExams();
-
-      if (!mounted) return;
-
-      setState(() {
-        exams = loadedExams;
-        isLoading = false;
-      });
-    } catch (error) {
-      if (!mounted) return;
-
-      setState(() {
-        isLoading = false;
-        errorMessage = error.toString();
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<ExamProvider>().load(force: true),
+    );
   }
 
   // --------------------------------------------------
   // Confirm Delete
   // --------------------------------------------------
 
-  Future<void> _confirmDeleteExam(
-      Map<String, dynamic> exam,
-      ) async {
+  Future<void> _confirmDeleteExam(Map<String, dynamic> exam) async {
     final examId = exam['id']?.toString();
+    if (examId == null || examId.isEmpty) return;
 
-    if (examId == null || examId.isEmpty) {
-      return;
-    }
+    final title = exam['title']?.toString() ?? 'this exam';
 
-    final title =
-        exam['title']?.toString() ?? 'this exam';
-
-    // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delete Exam?'),
-
-          content: Text(
-            'Are you sure you want to delete "$title"?\n\n'
-                'This action cannot be undone.',
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.delete_outline, color: AppColors.error),
+        title: const Text('Delete exam?'),
+        content: Text(
+          '"$title" and all of its answer keys and results will be '
+          'permanently deleted.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
           ),
-
-          actions: [
-            // Cancel
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
-              child: const Text('Cancel'),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.error,
+              minimumSize: const Size(0, 44),
             ),
-
-            // Delete
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-              child: const Text(
-                'Delete',
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
 
-    // User cancelled
-    if (confirmed != true) {
-      return;
-    }
+    if (confirmed != true || !mounted) return;
 
-    // --------------------------------------------------
-    // Delete Exam
-    // --------------------------------------------------
-
+    // The provider removes the exam from every screen (home included).
+    final messenger = ScaffoldMessenger.of(context);
+    final results = context.read<ResultsProvider>();
     try {
-      await _examService.deleteExam(examId);
-
-      if (!mounted) return;
-
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '"$title" deleted successfully.',
-          ),
-        ),
-      );
-
-      // Reload exam list
-      await _loadExams();
+      await context.read<ExamProvider>().delete(examId);
+      results.removeExam(examId);
+      messenger.showSnackBar(SnackBar(content: Text('"$title" deleted.')));
     } catch (error) {
-      if (!mounted) return;
-
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Failed to delete exam: $error',
-          ),
-        ),
+      messenger.showSnackBar(
+        SnackBar(content: Text('Failed to delete exam: $error')),
       );
     }
   }
@@ -154,236 +82,65 @@ class _ExamListScreenState extends State<ExamListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<ExamProvider>();
+    final results = context.watch<ResultsProvider>();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Exams'),
+      appBar: AppBar(title: const Text('Your exams')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.pushNamed(context, AppRoutes.createNewExam),
+        icon: const Icon(Icons.add),
+        label: const Text('New exam'),
       ),
-
-      body: _buildBody(),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.pushNamed(
-            context,
-            AppRoutes.createNewExam,
-          );
-
-          // Reload exams after returning
-          _loadExams();
-        },
-        child: const Icon(Icons.add),
-      ),
+      body: _buildBody(provider, results),
     );
   }
 
-  // --------------------------------------------------
-  // Body
-  // --------------------------------------------------
+  Widget _buildBody(ExamProvider provider, ResultsProvider results) {
+    final exams = provider.exams;
 
-  Widget _buildBody() {
-    // --------------------------------------------------
-    // Loading
-    // --------------------------------------------------
-
-    if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+    if (provider.isLoading && exams.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
 
-    // --------------------------------------------------
-    // Error
-    // --------------------------------------------------
-
-    if (errorMessage != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                size: 60,
-              ),
-
-              const SizedBox(height: 16),
-
-              Text(
-                'Failed to load exams',
-                style: AppTextStyles.title,
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 8),
-
-              Text(
-                errorMessage!,
-                style: AppTextStyles.bodySecondary,
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 20),
-
-              ElevatedButton.icon(
-                onPressed: _loadExams,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Try Again'),
-              ),
-            ],
-          ),
-        ),
+    if (provider.error != null && exams.isEmpty) {
+      return ErrorState(
+        message: provider.error!,
+        onRetry: () => provider.load(force: true),
       );
     }
-
-    // --------------------------------------------------
-    // Empty
-    // --------------------------------------------------
 
     if (exams.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.assignment_outlined,
-                size: 64,
-                color: AppColors.textSecondary,
-              ),
-
-              const SizedBox(height: 16),
-
-              Text(
-                'No exams yet',
-                style: AppTextStyles.title,
-              ),
-
-              const SizedBox(height: 8),
-
-              Text(
-                'Create your first exam to get started.',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodySecondary,
-              ),
-
-              const SizedBox(height: 20),
-
-              ElevatedButton.icon(
-                onPressed: () async {
-                  await Navigator.pushNamed(
-                    context,
-                    AppRoutes.createNewExam,
-                  );
-
-                  _loadExams();
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Create Exam'),
-              ),
-            ],
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          EmptyState(
+            icon: Icons.assignment_outlined,
+            title: 'No exams yet',
+            message: 'Create your first exam to get started.',
+            action: FilledButton.icon(
+              onPressed: () =>
+                  Navigator.pushNamed(context, AppRoutes.createNewExam),
+              icon: const Icon(Icons.add),
+              label: const Text('Create exam'),
+            ),
           ),
-        ),
+        ],
       );
     }
 
-    // --------------------------------------------------
-    // Exam List
-    // --------------------------------------------------
-
     return RefreshIndicator(
-      onRefresh: _loadExams,
-
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-
+      onRefresh: () => provider.load(force: true),
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 96),
         itemCount: exams.length,
-
+        separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, index) {
           final exam = exams[index];
-
-          final title =
-              exam['title']?.toString() ?? 'Untitled Exam';
-
-          final subject =
-              exam['subject']?.toString() ?? 'No subject';
-
-          final totalQuestions =
-              exam['total_questions']?.toString() ?? '0';
-
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-
-              // --------------------------------------------------
-              // Exam Icon
-              // --------------------------------------------------
-
-              leading: CircleAvatar(
-                backgroundColor: AppColors.primary,
-                child: const Icon(
-                  Icons.description_outlined,
-                  color: Colors.white,
-                ),
-              ),
-
-              // --------------------------------------------------
-              // Exam Title
-              // --------------------------------------------------
-
-              title: Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              // --------------------------------------------------
-              // Subject + Questions
-              // --------------------------------------------------
-
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text(
-                  '$subject • $totalQuestions questions',
-                ),
-              ),
-
-              // --------------------------------------------------
-              // Delete Button
-              // --------------------------------------------------
-
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: Colors.red,
-                ),
-
-                tooltip: 'Delete exam',
-
-                onPressed: () {
-                  _confirmDeleteExam(exam);
-                },
-              ),
-
-              // --------------------------------------------------
-              // Open Exam Details
-              // --------------------------------------------------
-
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.examDetails,
-                  arguments: exam,
-                );
-              },
-            ),
+          return ExamCard(
+            exam: exam,
+            gradedCount: results.resultsFor(exam['id'].toString())?.length,
+            onDelete: () => _confirmDeleteExam(exam),
           );
         },
       ),
