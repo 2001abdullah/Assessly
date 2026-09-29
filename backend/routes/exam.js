@@ -19,6 +19,8 @@ router.post('/', async (req, res) => {
     title,
     subject,
     total_questions,
+    roll_digits = 7,
+    registration_digits = 10,
   } = req.body;
 
   if (!title || !total_questions) {
@@ -36,6 +38,18 @@ router.post('/', async (req, res) => {
     });
   }
 
+  const rollDigits = Number(roll_digits);
+  const registrationDigits = Number(registration_digits);
+  if (
+    !Number.isInteger(rollDigits) || rollDigits < 1 || rollDigits > 14 ||
+    !Number.isInteger(registrationDigits) || registrationDigits < 0 ||
+    registrationDigits > 16 || rollDigits + registrationDigits > 26
+  ) {
+    return res.status(400).json({
+      message: 'Roll digits must be 1-14, registration digits 0-16, with at most 26 digits combined',
+    });
+  }
+
   const examId = crypto.randomUUID();
 
   try {
@@ -46,9 +60,11 @@ router.post('/', async (req, res) => {
           title,
           subject,
           total_questions,
-          user_id
+          user_id,
+          roll_digits,
+          registration_digits
         )
-        VALUES ($1, $2, $3, $4, $5)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *
       `,
       [
@@ -57,6 +73,8 @@ router.post('/', async (req, res) => {
         subject || null,
         Number(total_questions),
         req.user.id,
+        rollDigits,
+        registrationDigits,
       ],
     );
 
@@ -87,6 +105,8 @@ router.get('/', async (req, res) => {
           title,
           subject,
           total_questions,
+          roll_digits,
+          registration_digits,
           created_at
         FROM exams
         WHERE user_id = $1
@@ -158,6 +178,8 @@ router.put('/:id', async (req, res) => {
     title,
     subject,
     total_questions,
+    roll_digits = 7,
+    registration_digits = 10,
   } = req.body;
 
   if (!title || !total_questions) {
@@ -175,6 +197,17 @@ router.put('/:id', async (req, res) => {
     });
   }
 
+
+  const rollDigits = Number(roll_digits);
+  const registrationDigits = Number(registration_digits);
+  if (
+    !Number.isInteger(rollDigits) || rollDigits < 1 || rollDigits > 14 ||
+    !Number.isInteger(registrationDigits) || registrationDigits < 0 ||
+    registrationDigits > 16 || rollDigits + registrationDigits > 26
+  ) {
+    return res.status(400).json({ message: 'Invalid roll or registration digit count' });
+  }
+
   try {
     const result = await pool.query(
       `
@@ -183,13 +216,17 @@ router.put('/:id', async (req, res) => {
           title = $1,
           subject = $2,
           total_questions = $3
-        WHERE id = $4
+          , roll_digits = $4
+          , registration_digits = $5
+        WHERE id = $6
         RETURNING *
       `,
       [
         title,
         subject || null,
         Number(total_questions),
+        rollDigits,
+        registrationDigits,
         id,
       ],
     );

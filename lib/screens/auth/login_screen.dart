@@ -1,7 +1,6 @@
 import 'package:assessly/providers/auth_provider.dart';
 import 'package:assessly/routes/app_routes.dart';
-import 'package:assessly/themes/app_colors.dart';
-import 'package:assessly/themes/app_text_styles.dart';
+import 'package:assessly/widgets/auth_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,128 +12,160 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool obscurePassword = true;
 
-
- final TextEditingController emailController=TextEditingController();
- final TextEditingController passwordController=TextEditingController();
-
- bool obscurePassword=true;
- bool isLoading=false;
-
- @override
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
+  Future<void> _finish(Future<void> Function() authenticate) async {
+    try {
+      await authenticate();
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceFirst('Exception: ', '')),
+        ),
+      );
+    }
+  }
+
+  Future<void> _login() async {
+    if (!(formKey.currentState?.validate() ?? false)) return;
+    await _finish(
+      () => context.read<AuthProvider>().login(
+        emailController.text.trim(),
+        passwordController.text,
+      ),
+    );
+  }
+
+  Future<void> _googleLogin() =>
+      _finish(context.read<AuthProvider>().loginWithGoogle);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: Padding(
-          padding: EdgeInsetsGeometry.all(24),
+    final loading = context.watch<AuthProvider>().isLoading;
+    return AuthLayout(
+      title: 'Welcome back',
+      subtitle: 'Sign in securely to manage exams and grade answer sheets.',
+      child: AutofillGroup(
+        child: Form(
+          key: formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text("Welcome Back",
-              style: AppTextStyles.heading,),
-              SizedBox(height: 20,),
-              Text("Login to continue using Assessly"),
-              SizedBox(height: 30,),
-
-              TextField(
+              GoogleAuthButton(
+                loading: loading,
+                onPressed: loading ? null : _googleLogin,
+              ),
+              const SizedBox(height: 22),
+              const AuthDivider(),
+              const SizedBox(height: 22),
+              TextFormField(
                 controller: emailController,
+                enabled: !loading,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                 prefixIcon: Icon(Icons.email_outlined,
-                  color: AppColors.primary,)
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.email],
+                decoration: const InputDecoration(
+                  labelText: 'Email address',
+                  prefixIcon: Icon(Icons.email_outlined),
                 ),
+                validator: (value) {
+                  final email = value?.trim() ?? '';
+                  if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
+                    return 'Enter a valid email address';
+                  }
+                  return null;
+                },
               ),
-              SizedBox(height: 20,),
-              TextField(
+              const SizedBox(height: 16),
+              TextFormField(
                 controller: passwordController,
+                enabled: !loading,
                 obscureText: obscurePassword,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.password],
+                onFieldSubmitted: (_) => loading ? null : _login(),
                 decoration: InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
-                      onPressed: (){
-                        setState(() {
-                          obscurePassword =! obscurePassword;
-                        });
-                      },
-                      icon: Icon(obscurePassword==true?
-                      Icons.visibility
-                      :Icons.visibility_off)
+                    tooltip: obscurePassword
+                        ? 'Show password'
+                        : 'Hide password',
+                    onPressed: () =>
+                        setState(() => obscurePassword = !obscurePassword),
+                    icon: Icon(
+                      obscurePassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                    ),
                   ),
-                  prefixIcon: Icon(Icons.lock_outline,
-                  color: AppColors.primary,),
-                  labelText: "Password"
+                ),
+                validator: (value) =>
+                    (value?.isEmpty ?? true) ? 'Enter your password' : null,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: loading
+                      ? null
+                      : () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.forgotPassword,
+                        ),
+                  child: const Text('Forgot password?'),
                 ),
               ),
-              TextButton(
-                  onPressed: (){
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.forgotPassword
-                    );
-
-
-                  },
-                  child: Text('Forgot Password')
-              ),
-              SizedBox(height: 10,),
-              ElevatedButton(onPressed: () async{
-               final authProvider=context.read<AuthProvider>();
-               
-               try{
-                 await authProvider.login(emailController.text.trim(),
-                     passwordController.text);
-
-                 if(!mounted) return;
-
-                 Navigator.pushReplacementNamed(context, AppRoutes.home);
-               }
-               catch(error)
-                {
-                  if(!mounted) return;
-
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
-                }
-              },
-
-                  child: Text("Login"),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(150, 55),
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
+              const SizedBox(height: 8),
+              FilledButton(
+                onPressed: loading ? null : _login,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(54),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(20)
-                  )
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
-              ),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have and account?",
-                  style: AppTextStyles.body,),
-                  TextButton(onPressed: (){
-                    Navigator.pushNamed(context,
-                    AppRoutes.register);
-
-                  },
-                      child: Text(
-                        'Register',
-                         style: AppTextStyles.body,
+                child: loading
+                    ? const SizedBox.square(
+                        dimension: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Colors.white,
+                        ),
                       )
-                  )
+                    : const Text('Sign in'),
+              ),
+              const SizedBox(height: 14),
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  const Text("Don't have an account?"),
+                  TextButton(
+                    onPressed: loading
+                        ? null
+                        : () =>
+                              Navigator.pushNamed(context, AppRoutes.register),
+                    child: const Text('Create account'),
+                  ),
                 ],
-              )
+              ),
             ],
           ),
-      )),
+        ),
+      ),
     );
   }
 }

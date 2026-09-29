@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'api_config.dart';
+import 'authed_http.dart';
 
 /// Thrown when the server rejects the saved token (expired, invalid, user gone).
 class SessionExpiredException implements Exception {
@@ -31,6 +32,19 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/google'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'id_token': idToken}),
+    );
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return Map<String, dynamic>.from(data as Map);
+    }
+    throw Exception(data['message'] ?? 'Google sign-in failed');
+  }
+
   static Future<Map<String, dynamic>> register(
     String name,
     String email,
@@ -49,6 +63,32 @@ class ApiService {
     }
   }
 
+  static Future<void> requestPasswordReset(String email) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/forgot-password'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+    if (response.statusCode == 202) return;
+    final data = jsonDecode(response.body);
+    throw Exception(data['message'] ?? 'Could not request password reset');
+  }
+
+  static Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/reset-password'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'code': code, 'password': password}),
+    );
+    if (response.statusCode == 200) return;
+    final data = jsonDecode(response.body);
+    throw Exception(data['message'] ?? 'Could not reset password');
+  }
+
   /// The profile (id, name, email) of the user this token belongs to.
   static Future<Map<String, dynamic>> getProfile(String token) async {
     final response = await http.get(
@@ -65,12 +105,12 @@ class ApiService {
     throw Exception(data['message'] ?? 'Could not load profile');
   }
 
-  static Future<void> testAuthenticatedConnection(String token) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/auth/me'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-    print(response.statusCode);
-    print(response.body);
+  /// Permanently deletes the signed-in account and all of its exam data.
+  static Future<void> deleteAccount() async {
+    final response = await AuthedHttp.delete(Uri.parse('$baseUrl/auth/me'));
+    if (response.statusCode == 200 || response.statusCode == 404) return;
+
+    final data = jsonDecode(response.body);
+    throw Exception(data['message'] ?? 'Could not delete account');
   }
 }

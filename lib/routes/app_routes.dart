@@ -12,6 +12,7 @@ import 'package:assessly/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:assessly/screens/scan_omr_screen.dart';
 import 'package:assessly/screens/result_screen.dart';
+import 'package:assessly/screens/results_hub_screen.dart';
 import 'package:assessly/screens/exam_list_screen.dart';
 import 'package:assessly/screens/student_results_screen.dart';
 
@@ -28,6 +29,7 @@ class AppRoutes {
   static const String scoringRules = '/scoringRules';
   static const String scanOmr = '/scanOmr';
   static const String result = '/result';
+  static const String results = '/results';
   static const String exams = '/exams';
   static const String profile = '/profile';
   static const String studentResults = '/studentResults';
@@ -78,13 +80,15 @@ class AppRoutes {
       case result:
         final args = settings.arguments as Map<String, dynamic>;
 
-        final exam = args['exam'] as Map<String, dynamic>;
-
-        final scoreResult = args['scoreResult'] as Map<String, dynamic>;
-
         return MaterialPageRoute(
-          builder: (_) => ResultScreen(exam: exam, scoreResult: scoreResult),
+          builder: (_) => ResultScreen(
+            resultId: args['resultId'].toString(),
+            exam: args['exam'] as Map<String, dynamic>?,
+          ),
         );
+
+      case results:
+        return MaterialPageRoute(builder: (_) => const ResultsHubScreen());
 
       case exams:
         return MaterialPageRoute(builder: (_) => const ExamListScreen());

@@ -1,7 +1,6 @@
-
 import 'package:assessly/providers/auth_provider.dart';
-import 'package:assessly/themes/app_colors.dart';
-import 'package:assessly/themes/app_text_styles.dart';
+import 'package:assessly/routes/app_routes.dart';
+import 'package:assessly/widgets/auth_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,160 +12,213 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-
-  final TextEditingController nameController=TextEditingController();
-  final TextEditingController emailController=TextEditingController();
-  final TextEditingController passwordController=TextEditingController();
-  final TextEditingController confirmPasswordController=TextEditingController();
-
-  bool obscurePassword=true;
-  bool obscureConfirmPassword=true;
-  bool isLoading=false;
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmController = TextEditingController();
+  bool obscurePassword = true;
+  bool obscureConfirm = true;
 
   @override
   void dispose() {
-   nameController.dispose();
-   emailController.dispose();
-   passwordController.dispose();
-   confirmPasswordController.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showError(Object error) async {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error.toString().replaceFirst('Exception: ', ''))),
+    );
+  }
+
+  Future<void> _googleRegister() async {
+    try {
+      await context.read<AuthProvider>().loginWithGoogle();
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
+    } catch (error) {
+      await _showError(error);
+    }
+  }
+
+  Future<void> _register() async {
+    if (!(formKey.currentState?.validate() ?? false)) return;
+    try {
+      await context.read<AuthProvider>().register(
+        nameController.text.trim(),
+        emailController.text.trim(),
+        passwordController.text,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account created. Sign in to continue.')),
+      );
+      Navigator.pop(context);
+    } catch (error) {
+      await _showError(error);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      body: SafeArea(child: Padding(
-        padding: const EdgeInsets.all(24,),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Create Account",
-            style: AppTextStyles.heading,),
-            SizedBox(height: 50,),
-            TextField(
-              controller: nameController,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.person_outline),
-                labelText: "Name"
+    final loading = context.watch<AuthProvider>().isLoading;
+    return AuthLayout(
+      title: 'Create your account',
+      subtitle: 'Start building exams and grading answer sheets in minutes.',
+      child: AutofillGroup(
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              GoogleAuthButton(
+                loading: loading,
+                onPressed: loading ? null : _googleRegister,
               ),
-            ),
-            SizedBox(height: 30,),
-
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                suffixIcon: Icon(Icons.email_outlined),
-                  labelText: "email"
+              const SizedBox(height: 22),
+              const AuthDivider(),
+              const SizedBox(height: 22),
+              TextFormField(
+                controller: nameController,
+                enabled: !loading,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.name],
+                decoration: const InputDecoration(
+                  labelText: 'Full name',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
+                validator: (value) => (value?.trim().length ?? 0) < 2
+                    ? 'Enter your full name'
+                    : null,
               ),
-            ),
-            SizedBox(height: 30,),
-            TextField(
-              controller: passwordController,
-              obscureText: obscurePassword,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      onPressed: (){
-                        setState(() {
-                          obscurePassword =! obscurePassword;
-                        });
-                      },
-                      icon: Icon(obscurePassword==true?
-                      Icons.visibility
-                          :Icons.visibility_off)
-                  ),
-                  prefixIcon: Icon(Icons.lock_outline,
-                    color: AppColors.primary),
-                  labelText: "Password"
+              const SizedBox(height: 14),
+              TextFormField(
+                controller: emailController,
+                enabled: !loading,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.email],
+                decoration: const InputDecoration(
+                  labelText: 'Email address',
+                  prefixIcon: Icon(Icons.email_outlined),
+                ),
+                validator: (value) =>
+                    RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
+                        .hasMatch(value?.trim() ?? '')
+                    ? null
+                    : 'Enter a valid email address',
               ),
-            ),
-            SizedBox(height: 30,),
-            TextField(
-              controller: confirmPasswordController,
-              obscureText: obscureConfirmPassword,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      onPressed: (){
-                        setState(() {
-                          obscureConfirmPassword =! obscureConfirmPassword;
-                        });
-                      },
-                      icon: Icon(obscureConfirmPassword==true?
-                      Icons.visibility
-                          :Icons.visibility_off)
-                  ),
-                  prefixIcon: Icon(Icons.lock_outline,
-                      color: AppColors.primary),
-                  labelText: "Confirm Password"
+              const SizedBox(height: 14),
+              _PasswordField(
+                controller: passwordController,
+                label: 'Password (8+ characters)',
+                obscure: obscurePassword,
+                onToggle: () =>
+                    setState(() => obscurePassword = !obscurePassword),
+                validator: (value) => (value?.length ?? 0) < 8
+                    ? 'Use at least 8 characters'
+                    : null,
               ),
-            ),
-            SizedBox(height: 30,),
-            ElevatedButton(onPressed: () async{
-              final authProvider=context.read<AuthProvider>();
-              if(passwordController.text != confirmPasswordController.text)
-              {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("password do not match"))
-                );
-                return ;
-              }
-              try{
-
-               await authProvider.register(nameController.text,
-                    emailController.text.trim(),
-                    passwordController.text);
-
-                if(!mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Registration Successful"),
-                duration: Duration(seconds: 2),));
-
-                await Future.delayed(const Duration(seconds: 2));
-
-                Navigator.pop(context);
-              }
-              catch(error)
-              {
-                if(!mounted) return;
-
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
-              }
-            },
-
-              child: Text("Registration"),
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(150, 55),
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
+              const SizedBox(height: 14),
+              _PasswordField(
+                controller: confirmController,
+                label: 'Confirm password',
+                obscure: obscureConfirm,
+                onToggle: () =>
+                    setState(() => obscureConfirm = !obscureConfirm),
+                validator: (value) => value != passwordController.text
+                    ? 'Passwords do not match'
+                    : null,
+                onSubmitted: (_) => loading ? null : _register(),
+              ),
+              const SizedBox(height: 22),
+              FilledButton(
+                onPressed: loading ? null : _register,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(54),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(20)
-                  )
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: loading
+                    ? const SizedBox.square(
+                        dimension: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('Create account'),
               ),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Already have an account?",
-                  style: AppTextStyles.body,),
-                TextButton(onPressed: (){
-                  Navigator.pop(context);
-
-                },
-                    child: Text(
-                      'login',
-                      style: AppTextStyles.body,
-                    )
-                )
-              ],
-            )
-
-          ],
+              const SizedBox(height: 10),
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  const Text('Already registered?'),
+                  TextButton(
+                    onPressed: loading
+                        ? null
+                        : () => Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.login,
+                            (_) => false,
+                          ),
+                    child: const Text('Sign in'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      )
       ),
     );
   }
+}
+
+class _PasswordField extends StatelessWidget {
+  const _PasswordField({
+    required this.controller,
+    required this.label,
+    required this.obscure,
+    required this.onToggle,
+    required this.validator,
+    this.onSubmitted,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final bool obscure;
+  final VoidCallback onToggle;
+  final String? Function(String?) validator;
+  final ValueChanged<String>? onSubmitted;
+
+  @override
+  Widget build(BuildContext context) => TextFormField(
+    controller: controller,
+    obscureText: obscure,
+    textInputAction: onSubmitted == null
+        ? TextInputAction.next
+        : TextInputAction.done,
+    autofillHints: const [AutofillHints.newPassword],
+    onFieldSubmitted: onSubmitted,
+    decoration: InputDecoration(
+      labelText: label,
+      prefixIcon: const Icon(Icons.lock_outline),
+      suffixIcon: IconButton(
+        tooltip: obscure ? 'Show password' : 'Hide password',
+        onPressed: onToggle,
+        icon: Icon(
+          obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+        ),
+      ),
+    ),
+    validator: validator,
+  );
 }

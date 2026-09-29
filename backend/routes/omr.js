@@ -25,12 +25,6 @@ const defaultTemplate = path.join(
   'sample_template.json',
 );
 
-const resultDirectory = path.join(
-  backendRoot,
-  'data',
-  'omr-results',
-);
-
 const pythonScript = path.join(
   backendRoot,
   'omr',
@@ -152,6 +146,10 @@ function runGenerator(outputPath, exam, templateOutput) {
         String(exam.subject || ''),
         '--questions',
         String(exam.total_questions),
+        '--roll-digits',
+        String(exam.roll_digits ?? 7),
+        '--registration-digits',
+        String(exam.registration_digits ?? 10),
         '--output',
         outputPath,
         ...(templateOutput ? ['--template-output', templateOutput] : []),
@@ -223,7 +221,7 @@ router.post('/batch', upload.array('images', 100), async (req, res) => {
 
   const results = [];
   const examQuery = await pool.query(
-    'SELECT title, subject, total_questions FROM exams WHERE id = $1',
+    'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
     [examId],
   );
   const exam = examQuery.rows[0];
@@ -272,7 +270,7 @@ router.get('/exam/:exam_id/sheet', async (req, res) => {
   }
 
   const examQuery = await pool.query(
-    'SELECT title, subject, total_questions FROM exams WHERE id = $1',
+    'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
     [examId],
   );
   const exam = examQuery.rows[0];
@@ -406,17 +404,6 @@ router.post(
 
 
       // ----------------------------------------------------------
-      // Result JSON path
-      // ----------------------------------------------------------
-
-      const resultPath =
-        path.join(
-          resultDirectory,
-          `${requestId}.json`,
-        );
-
-
-      // ----------------------------------------------------------
       // Save uploaded image
       // ----------------------------------------------------------
 
@@ -437,7 +424,7 @@ router.post(
         );
       } else {
         const examQuery = await pool.query(
-          'SELECT title, subject, total_questions FROM exams WHERE id = $1',
+          'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
           [exam_id],
         );
         await runGenerator(
@@ -630,28 +617,6 @@ router.post(
 
 
       // ----------------------------------------------------------
-      // Save result JSON file
-      // ----------------------------------------------------------
-
-      await fs.promises.mkdir(
-        resultDirectory,
-        {
-          recursive: true,
-        },
-      );
-
-      await fs.promises.writeFile(
-        resultPath,
-        JSON.stringify(
-          result,
-          null,
-          2,
-        ),
-        'utf8',
-      );
-
-
-      // ----------------------------------------------------------
       // Response
       // ----------------------------------------------------------
 
@@ -662,12 +627,6 @@ router.post(
           requestId,
 
         exam_id,
-
-        result_file:
-          path.relative(
-            backendRoot,
-            resultPath,
-          ),
       });
 
     } catch (error) {

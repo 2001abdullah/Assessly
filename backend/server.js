@@ -1,5 +1,9 @@
 require('dotenv').config();
 
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be configured with at least 32 characters');
+}
+
 const express = require('express');
 const pool = require('./config/db');
 const authRoutes = require('./routes/auth');
@@ -11,16 +15,30 @@ const scoringRoutes = require('./routes/scoring');
 const resultRoutes = require('./routes/results');
 const scoringRulesRoutes = require('./routes/scoringRules');
 const authMiddleware = require('./middleware/authMiddleware');
+const { rateLimit } = require('express-rate-limit');
+const { metricsHandler, metricsMiddleware, requestLogger } = require('./middleware/observability');
 
 const app = express();
 
-app.use(express.json());
-app.use('/api/auth', authRoutes);
-app.use('/api/auth', loginRoutes);
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+app.use(express.json({ limit: '1mb' }));
+app.use(requestLogger);
+app.use(metricsMiddleware);
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: 'draft-8', legacyHeaders: false });
+const uploadLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 60, standardHeaders: 'draft-8', legacyHeaders: false });
+app.use('/api/auth', authLimiter, authRoutes, loginRoutes);
 
 // Everything below requires a signed-in user; each router then limits access
 // to that user's own exams (see middleware/ownership.js).
-app.use('/api/omr', authMiddleware, omrRoutes);
+app.use('/api/omr', uploadLimiter, authMiddleware, omrRoutes);
 app.use('/api/exam', authMiddleware, examRoutes);
 app.use('/api/answer-key', authMiddleware, answerKeyRoutes);
 app.use('/api/scoring', authMiddleware, scoringRoutes);
@@ -126,4 +144,12 @@ process.once('uncaughtException', (error) => {
 process.once('unhandledRejection', (reason) => {
   console.error('Unhandled promise rejection; shutting down safely:', reason);
   shutdown('unhandledRejection');
+});
+
+app.get('/metrics', (req, res, next) => {
+  const token = process.env.METRICS_TOKEN;
+  if (!token || req.headers.authorization !== `Bearer ${token}`) {
+    return res.status(404).end();
+  }
+  return metricsHandler(req, res, next);
 });

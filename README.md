@@ -84,9 +84,8 @@ The following items are planned for future iterations:
 - Improved scan review tools for low-confidence or ambiguous responses
 - Role-based access control for teachers, administrators, and students
 - Cloud deployment with managed PostgreSQL and object storage
-- Automated database migrations and seed data
-- Automated unit, integration, and end-to-end test coverage
-- Production observability, rate limiting, and stronger API security
+- Seed data and broader end-to-end test coverage
+- Production alert routing and operational dashboards
 - Polished onboarding, profile management, and account recovery flows
 
 ## Technology stack
@@ -180,7 +179,14 @@ DB_NAME=assessly
 DB_PASSWORD=your_postgres_password
 DB_PORT=5432
 JWT_SECRET=replace_with_a_long_random_secret
+METRICS_TOKEN=replace_with_a_separate_random_secret
 OMR_PYTHON=path_to_your_python_executable
+SMTP_HOST=your_smtp_host
+SMTP_PORT=587
+SMTP_USER=your_smtp_username
+SMTP_PASSWORD=your_smtp_password
+EMAIL_FROM=Assessly <no-reply@example.com>
+GOOGLE_CLIENT_ID=your_google_web_oauth_client_id
 ```
 
 Create the required PostgreSQL database and ensure the schema used by the
@@ -230,6 +236,19 @@ must be running on port `5000`, and the computer firewall must allow inbound
 TCP connections to that port. Verify connectivity from the phone browser
 using `http://192.168.1.123:5000/health` before trying to register or log in.
 
+For Google sign-in, create Android and Web OAuth clients in the same Google
+Cloud project. Register `com.abdullah.assessly` plus the debug and Play App
+Signing SHA-1/SHA-256 fingerprints. Set the Web client ID as
+`GOOGLE_CLIENT_ID` on the backend and pass that same value to Flutter:
+
+```bash
+flutter run \
+  --dart-define=API_BASE_URL=http://192.168.1.123:5000 \
+  --dart-define=GOOGLE_WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
+```
+
+Set the `GOOGLE_WEB_CLIENT_ID` GitHub Actions secret before building a release.
+
 To build a phone APK against the deployed Render backend locally:
 
 ```bash
@@ -268,6 +287,10 @@ For OMR scanning, the API accepts a multipart image upload at
 `POST /api/omr/scan`. The scan is associated with an exam and returns a
 structured result that can then be passed to the scoring workflow.
 
+Scan data and answers are stored in PostgreSQL. Uploaded answer-sheet images,
+generated templates, and PDFs are temporary processing files and are deleted
+after each request. The backend does not retain the original image.
+
 The scan screen supports both **Take Photo** and **Gallery**. The reusable
 analyzer in `lib/services/omr_frame_analyzer.dart` is platform-independent
 and accepts luminance frames through `LumaFrame`, so live-camera coaching can
@@ -277,13 +300,28 @@ the existing backend OMR pipeline.
 
 ## Account status
 
-Registration, JWT login, local token persistence, and token removal on logout
-are implemented. A logout action is available from the account icon on the
-home screen. Per-user data isolation is **not** implemented yet: the exam,
-answer-key, scoring, result, and OMR routes currently do not require the JWT
-or filter records by an owner/user ID. Adding that safely requires the
-database schema/migration for ownership columns and applying the same
-authorization checks consistently across those routes.
+Registration, JWT login, local token persistence, token removal on logout,
+and per-user exam ownership checks are implemented. Protected API routers
+require a valid JWT, and ownership middleware prevents one user from reading
+or changing another user's exams and results. Password recovery uses emailed,
+single-use reset codes that expire after 15 minutes.
+
+Users can permanently delete their account from the Profile screen. This also
+deletes their exams, answer keys, scans, and results through database cascades.
+
+## Verification
+
+Run the same checks expected before a release:
+
+```bash
+flutter analyze
+flutter test
+cd backend
+npm test
+```
+
+See [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md) for the current release
+assessment, known blockers, and deployment checklist.
 
 ## Security
 

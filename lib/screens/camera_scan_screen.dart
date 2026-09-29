@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/batch_scan_provider.dart';
 import '../utils/omr_frame_analyzer.dart';
 
 /// Live OMR camera. Pops with the captured [File], or null if cancelled.
@@ -14,8 +15,15 @@ import '../utils/omr_frame_analyzer.dart';
 /// user what to fix (distance, tilt, light, focus...) and takes the picture
 /// automatically once the sheet is found, sharp and steady. The shutter button
 /// always works as a manual fallback.
+///
+/// With [batchExam] set, the camera stays open: every capture is handed to
+/// the background [BatchScanProvider] queue and the next sheet can be placed
+/// right away. Auto-capture re-arms once the previous sheet leaves the frame,
+/// so the same sheet is not captured twice.
 class CameraScanScreen extends StatefulWidget {
-  const CameraScanScreen({super.key});
+  const CameraScanScreen({super.key, this.batchExam});
+
+  final Map<String, dynamic>? batchExam;
 
   @override
   State<CameraScanScreen> createState() => _CameraScanScreenState();
@@ -42,6 +50,13 @@ class _CameraScanScreenState extends State<CameraScanScreen>
   bool _autoCapture = true;
   bool _torchOn = false;
   int _lastAnalysisMs = 0;
+
+  // Batch mode
+  bool get _batch => widget.batchExam != null;
+  int _batchCount = 0;
+  bool _awaitingNextSheet = false;
+  int _framesWithoutSheet = 0;
+  bool _showCapturedFlash = false;
 
   @override
   void initState() {
@@ -185,8 +200,14 @@ class _CameraScanScreenState extends State<CameraScanScreen>
         ),
       );
       if (!mounted) return;
+      if (_awaitingNextSheet) {
+        // Re-arm auto-capture only after the captured sheet has been taken
+        // away (a few frames with no sheet in view).
+        _framesWithoutSheet = result.found ? 0 : _framesWithoutSheet + 1;
+        if (_framesWithoutSheet >= 3) _awaitingNextSheet = false;
+      }
       setState(() => _analysis = result);
-      if (result.ready && _autoCapture) _capture();
+      if (result.ready && _autoCapture && !_awaitingNextSheet) _capture();
     } catch (e, st) {
       debugPrint('Frame analysis failed: $e\n$st');
     } finally {
@@ -211,6 +232,10 @@ class _CameraScanScreenState extends State<CameraScanScreen>
       HapticFeedback.mediumImpact();
       final XFile shot = await controller.takePicture();
       if (!mounted) return;
+      if (_batch) {
+        await _queueAndContinue(controller, File(shot.path));
+        return;
+      }
       Navigator.of(context).pop(File(shot.path));
     } on CameraException catch (e) {
       if (!mounted) return;
@@ -222,6 +247,32 @@ class _CameraScanScreenState extends State<CameraScanScreen>
       try {
         await controller.startImageStream(_onFrame);
       } catch (_) {}
+    }
+  }
+
+  /// Batch mode: hand the photo to the background queue and resume scanning.
+  Future<void> _queueAndContinue(CameraController controller, File shot) async {
+    context.read<BatchScanProvider>().enqueue(
+      exam: widget.batchExam!,
+      image: shot,
+    );
+    setState(() {
+      _batchCount++;
+      _awaitingNextSheet = true;
+      _framesWithoutSheet = 0;
+      _showCapturedFlash = true;
+      _capturing = false;
+    });
+    _analyzer.reset();
+    Future.delayed(const Duration(milliseconds: 900), () {
+      if (mounted) setState(() => _showCapturedFlash = false);
+    });
+    try {
+      if (!controller.value.isStreamingImages) {
+        await controller.startImageStream(_onFrame);
+      }
+    } catch (e) {
+      debugPrint('Could not restart the camera stream: $e');
     }
   }
 
@@ -257,7 +308,16 @@ class _CameraScanScreenState extends State<CameraScanScreen>
         source: ImageSource.camera,
         imageQuality: 90,
       );
-      if (file != null && mounted) Navigator.of(context).pop(File(file.path));
+      if (file == null || !mounted) return;
+      if (_batch) {
+        context.read<BatchScanProvider>().enqueue(
+          exam: widget.batchExam!,
+          image: File(file.path),
+        );
+        setState(() => _batchCount++);
+        return;
+      }
+      Navigator.of(context).pop(File(file.path));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -298,7 +358,15 @@ class _CameraScanScreenState extends State<CameraScanScreen>
     }
   }
 
+  String _currentHint() {
+    if (_awaitingNextSheet) {
+      return 'Sheet $_batchCount captured. Place the next sheet';
+    }
+    return _hintText(_analysis.hint);
+  }
+
   Color _stateColor() {
+    if (_awaitingNextSheet) return Colors.lightBlueAccent;
     if (_analysis.ready) return Colors.greenAccent;
     if (_analysis.found) return Colors.amberAccent;
     return Colors.white;
@@ -330,9 +398,9 @@ class _CameraScanScreenState extends State<CameraScanScreen>
             tooltip: 'Close',
             onPressed: () => Navigator.of(context).pop(),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Scan OMR sheet',
+              _batch ? 'Batch scan' : 'Scan OMR sheet',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -363,7 +431,6 @@ class _CameraScanScreenState extends State<CameraScanScreen>
       return const Center(child: CircularProgressIndicator());
     }
 
-    final hint = _analysis.hint;
     final color = _stateColor();
 
     return Center(
@@ -385,9 +452,33 @@ class _CameraScanScreenState extends State<CameraScanScreen>
                     left: 12,
                     right: 12,
                     top: 12,
-                    child: _HintPill(text: _hintText(hint), color: color),
+                    child: _HintPill(text: _currentHint(), color: color),
                   ),
+                  if (_batch)
+                    Positioned(
+                      left: 12,
+                      right: 12,
+                      bottom: 12,
+                      child: _BatchStatusBar(
+                        examId: widget.batchExam!['id'].toString(),
+                      ),
+                    ),
                   if (_capturing) const ColoredBox(color: Color(0x66FFFFFF)),
+                  if (_showCapturedFlash)
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(18),
+                        decoration: const BoxDecoration(
+                          color: Color(0xCC16A34A),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 44,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             );
@@ -437,7 +528,21 @@ class _CameraScanScreenState extends State<CameraScanScreen>
               ),
             ),
           ),
-          const SizedBox(width: 96),
+          SizedBox(
+            width: 96,
+            child: _batch
+                ? FilledButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(0, 44),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                    child: Text(
+                      _batchCount == 0 ? 'Done' : 'Done ($_batchCount)',
+                    ),
+                  )
+                : null,
+          ),
         ],
       ),
     );
@@ -464,6 +569,55 @@ class _CameraScanScreenState extends State<CameraScanScreen>
               label: const Text('Use system camera'),
             ),
             TextButton(onPressed: _initCamera, child: const Text('Try again')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Live progress of the background queue for this exam, shown over the
+/// camera preview in batch mode.
+class _BatchStatusBar extends StatelessWidget {
+  const _BatchStatusBar({required this.examId});
+
+  final String examId;
+
+  @override
+  Widget build(BuildContext context) {
+    final jobs = context.watch<BatchScanProvider>().jobsFor(examId);
+    if (jobs.isEmpty) return const SizedBox.shrink();
+    final active = jobs.where((j) => j.isActive).length;
+    final done = jobs.where((j) => j.status == BatchJobStatus.done).length;
+    final failed = jobs.where((j) => j.status == BatchJobStatus.failed).length;
+
+    Widget cell(IconData icon, String text, Color color) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: TextStyle(color: color, fontWeight: FontWeight.w700),
+        ),
+      ],
+    );
+
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Wrap(
+          spacing: 14,
+          children: [
+            if (active > 0)
+              cell(Icons.sync, '$active processing', Colors.lightBlueAccent),
+            cell(Icons.check_circle, '$done saved', Colors.greenAccent),
+            if (failed > 0)
+              cell(Icons.error, '$failed failed', Colors.redAccent),
           ],
         ),
       ),

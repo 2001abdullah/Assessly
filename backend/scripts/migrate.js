@@ -30,6 +30,24 @@ async function migrate() {
       'utf8',
     );
     await client.query(ownershipMigration);
+
+    const identifierDigitsMigration = fs.readFileSync(
+      path.join(__dirname, '..', 'migrations', '002_add_exam_identifier_digits.sql'),
+      'utf8',
+    );
+    await client.query(identifierDigitsMigration);
+
+    const passwordResetMigration = fs.readFileSync(
+      path.join(__dirname, '..', 'migrations', '003_add_password_resets.sql'),
+      'utf8',
+    );
+    await client.query(passwordResetMigration);
+
+    const googleAuthMigration = fs.readFileSync(
+      path.join(__dirname, '..', 'migrations', '004_add_google_auth.sql'),
+      'utf8',
+    );
+    await client.query(googleAuthMigration);
     console.log('Database migrations are up to date');
   } finally {
     client.release();

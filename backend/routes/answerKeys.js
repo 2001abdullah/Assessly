@@ -138,11 +138,10 @@ router.post('/batch', requireExamInBody, async (req, res) => {
 
   if (
     !exam_id ||
-    !Array.isArray(answers) ||
-    answers.length === 0
+    !Array.isArray(answers)
   ) {
     return res.status(400).json({
-      message: 'exam_id and answers are required',
+      message: 'exam_id and an answers array are required',
     });
   }
 
@@ -205,6 +204,13 @@ router.post('/batch', requireExamInBody, async (req, res) => {
     // -----------------------------
 
     await client.query('BEGIN');
+
+    // The submitted list is the complete answer key. Removing existing rows
+    // first means a question can be intentionally returned to a blank state.
+    await client.query(
+      'DELETE FROM answer_keys WHERE exam_id = $1',
+      [exam_id],
+    );
 
     // -----------------------------
     // Insert / update answers

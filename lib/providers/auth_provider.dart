@@ -1,6 +1,7 @@
 import 'package:assessly/models/user_model.dart';
 import 'package:assessly/services/api_service.dart';
 import 'package:assessly/services/auth_service.dart';
+import 'package:assessly/services/google_auth_service.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -44,6 +45,35 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> loginWithGoogle() async {
+    try {
+      setLoading(true);
+      final idToken = await GoogleAuthService.signIn();
+      final result = await ApiService.loginWithGoogle(idToken);
+      await _saveSession(result);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> _saveSession(Map<String, dynamic> result) async {
+    final token = result['token']?.toString();
+    if (token == null || token.isEmpty) {
+      throw StateError('The server did not return a session token.');
+    }
+    await AuthService.saveToken(token);
+    final profile = result['user'];
+    if (profile is Map) {
+      final data = Map<String, dynamic>.from(profile);
+      user = UserModel.fromJson(data);
+      await AuthService.saveUser(data);
+    } else {
+      user = null;
+      await loadProfile();
+    }
+    setLogIn(true);
+  }
+
   /// Fetches the profile of whoever the saved token belongs to.
   Future<void> loadProfile() async {
     final token = await AuthService.getToken();
@@ -80,9 +110,19 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    try {
+      await GoogleAuthService.signOut();
+    } catch (_) {
+      // Local logout must still succeed if Google Play services is unavailable.
+    }
     await AuthService.clearSession();
     user = null;
     setLogIn(false);
+  }
+
+  Future<void> deleteAccount() async {
+    await ApiService.deleteAccount();
+    await logout();
   }
 
   Future<void> register(String name, String email, String password) async {

@@ -19,10 +19,10 @@ curl -X POST http://localhost:5000/api/omr/scan \
   -F "template=@template.json"
 ```
 
-The response is the engine's scan JSON, plus `result_id` and `result_file`.
-The same JSON is saved under `backend/data/omr-results/`. The Flutter app can
-send the captured image and use the response directly; PostgreSQL persistence
-can be added by the caller using that JSON.
+The response is the engine's scan JSON plus `result_id`. The structured scan,
+raw engine output, and detected answers are committed to PostgreSQL in one
+transaction. Uploaded images and generated templates exist only in a temporary
+directory and are removed after each request, including failed scans.
 
 ## Runtime
 

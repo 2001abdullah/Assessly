@@ -530,10 +530,12 @@ class OmrFrameAnalyzer {
   List<_Comp> _fiducialCandidates(List<_Comp> comps, int gw, int gh) {
     final out = <_Comp>[];
     for (final c in comps) {
-      if (c.area < 9 || c.bw < 4 || c.bh < 4 || c.bw > 22 || c.bh > 22)
+      if (c.area < 9 || c.bw < 4 || c.bh < 4 || c.bw > 22 || c.bh > 22) {
         continue;
-      if (c.x <= 0 || c.y <= 0 || c.x + c.bw >= gw || c.y + c.bh >= gh)
+      }
+      if (c.x <= 0 || c.y <= 0 || c.x + c.bw >= gw || c.y + c.bh >= gh) {
         continue;
+      }
       final asp = c.bw / c.bh;
       if (c.fill < 0.68 || asp < 0.7 || asp > 1.45) continue;
       out.add(c);
@@ -609,8 +611,9 @@ class OmrFrameAnalyzer {
     final right = dist(pts[1], pts[2]);
     final bottom = dist(pts[2], pts[3]);
     final left = dist(pts[3], pts[0]);
-    if (math.min(math.min(top, right), math.min(bottom, left)) < 10)
+    if (math.min(math.min(top, right), math.min(bottom, left)) < 10) {
       return null;
+    }
 
     // aspect: allow a quarter turn (ratio or its inverse)
     final ratio = (top + bottom) / (left + right);
