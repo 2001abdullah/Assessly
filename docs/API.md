@@ -101,6 +101,86 @@ An answer's `status` is one of `marked`, `blank`, `faint`, `multi` or
 | GET | `/exam/:exam_id` | `{exam, count, results:[...]}`, highest percentage first |
 | GET | `/exam/:exam_id/export.csv` | `text/csv` download, one row per result |
 
+## Roles
+
+Every account is a `teacher` (the default) or a `student`. Login, register
+and Google sign-in accept a `role`, the portal the user chose. Signing in to
+the wrong portal returns **403** with a message naming the right one. The JWT
+carries the role:
+
+- `/api/omr`, `/api/exam`, `/api/answer-key`, `/api/scoring-rules`,
+  `/api/scoring`, `/api/results` and `/api/classes` are teacher-only.
+- `/api/student` is student-only.
+- `/api/profile` and `/api/notifications` accept either role.
+
+Students a teacher adds with a generated login sign in with a **username**
+(e.g. `ab12cd-15`) in the `email` field, and must change the temporary
+password (`user.must_change_password`).
+
+## Classes: `/api/classes` 🔒 teacher
+
+| Method | Path | Body / result |
+| --- | --- | --- |
+| GET | `/` | `{classes}` with `student_count`, `pending_count`, `exam_count`, `last_attendance` |
+| POST | `/` | `{name, subject?, section?, description?}` → `201 {class}` with a 6-character `join_code` |
+| GET | `/dashboard?date=YYYY-MM-DD` | home-screen numbers: `{summary:{classes, students, pending_requests, exams, attendance_taken_today, unpublished_exams}, classes, recent_exams}` |
+| GET / PUT / DELETE | `/:class_id` | read, update or delete. Deleting keeps the exams, with no class |
+| POST | `/:class_id/join-code` | issue a new code (the old one stops working) |
+| GET | `/:class_id/students` | roster, pending requests first, with `attendance_rate` |
+| POST | `/:class_id/students` | `{name, roll_number, email?, create_login?}` → `{student, credentials?}`. The credentials (username + temporary password) are returned **only here** |
+| PATCH | `/:class_id/students/:id` | `{status:'active'}` approves a request; `{name?, roll_number?}` edits |
+| DELETE | `/:class_id/students/:id` | remove, or decline a request |
+| POST | `/:class_id/students/:id/reset-password` | new temporary password (teacher-created logins only) |
+| GET | `/:class_id/students/:id/report` | the student's results, rank and attendance |
+| GET | `/:class_id/exams` | exams of the class |
+| GET | `/:class_id/attendance` | sessions with present / absent / late / excused counts |
+| GET / PUT | `/:class_id/attendance/:date` | read, or save `{records:[{student_id, status}], note?}`. Newly absent students are notified |
+| GET / POST | `/:class_id/announcements` | list, or post `{title, body}` (notifies students) |
+| DELETE | `/:class_id/announcements/:id` | |
+| GET | `/:class_id/analytics` | `{summary, exams, attendance, grade_distribution, leaderboard, at_risk, students}` |
+| GET | `/:class_id/reports/results.csv`, `/attendance.csv` | CSV downloads |
+
+Results reach students through the class: a result belongs to the roster
+entry whose roll number matches, ignoring leading zeros. Only the latest
+result per roll per exam counts.
+
+## Publishing: `/api/exam/:id/publish` 🔒 teacher
+
+`POST /api/exam/:id/publish` makes the exam's results visible to its class
+and notifies the students. `POST /api/exam/:id/unpublish` hides them again.
+`POST /api/exam` and `PUT /api/exam/:id` accept `class_id`.
+
+## Student: `/api/student` 🔒 student
+
+| Method | Path | Result |
+| --- | --- | --- |
+| GET | `/overview` | `{classes, summary:{exams_taken, average, best, passed, attendance_rate, attendance}, trend, grade_distribution, class_ranks, recent_results}` |
+| GET | `/classes` | my classes with `status` (`pending` / `active`) |
+| POST | `/classes/join` | `{code, roll_number}` → join request; the teacher is notified |
+| DELETE | `/classes/:class_id` | leave |
+| GET | `/results` | my **published** results with `rank`, `out_of`, `class_average`, `class_highest` |
+| GET | `/results/:result_id` | per-question breakdown (own, published results only) |
+| GET | `/attendance` | per class: counts, `rate`, day-by-day `records` |
+| GET | `/announcements` | from my active classes |
+
+A student never sees another student's name or marks.
+
+## Profile: `/api/profile` 🔒 any role
+
+| Method | Path | Body / result |
+| --- | --- | --- |
+| GET / PUT | `/` | `{user}` / update `{name, phone?, institution?, bio?}` |
+| PUT | `/password` | `{current_password, new_password}` |
+| PUT / DELETE | `/avatar` | multipart `avatar` (JPEG or PNG, up to 1 MB) / remove |
+| GET | `/avatar/:user_id` | the image. Only for yourself, your students, or your teachers |
+
+## Notifications: `/api/notifications` 🔒 any role
+
+`GET /` → `{notifications, unread}`; `POST /:id/read`; `POST /read-all`;
+`POST /devices {token, platform}` / `DELETE /devices {token}` register or
+forget a push token. Types: `results_published`, `announcement`,
+`attendance_absent`, `join_request`, `enrolment_approved`.
+
 ## Typical call sequence
 
 ```text

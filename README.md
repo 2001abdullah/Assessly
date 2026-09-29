@@ -34,6 +34,19 @@ before a public launch.
 
 ## Features
 
+- Two roles, chosen after onboarding: **teachers** manage classes and grading;
+  **students** see their own results, progress and attendance
+- Classes with join codes; join requests the teacher approves; students
+  added by hand, with an optional generated login
+- Daily attendance (present, absent, late, excused), announcements, and an
+  in-app notification centre (push via Firebase when configured)
+- Results published per exam, matched to students by roll number; students
+  see their rank and the class average
+- Charts for teachers (class trends, pass rates, grades, attendance,
+  leaderboard, students who need attention) and for students (own trend
+  against the class, grades, attendance)
+- CSV reports of class results and attendance
+- Profiles with photo, details and password change
 - Accounts: email/password (bcrypt), Google sign-in, emailed password-reset
   codes, in-app account deletion
 - Exams with a configurable number of questions and roll/registration digits

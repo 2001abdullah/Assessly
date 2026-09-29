@@ -99,6 +99,50 @@ user leaves the scan screen. Failed sheets keep their photo so they can be
 retried. The server also has a `POST /api/omr/batch` endpoint for
 multi-image uploads, but the app does not use it.
 
+## Roles, classes and students
+
+After onboarding, the user chooses **teacher** or **student**
+(`RoleSelectScreen`). The role is stored on the account (`users.role`) and
+travels in the JWT. `HomeShell` then shows that role's bottom navigation:
+
+| Teacher tabs | Student tabs |
+| --- | --- |
+| Home (class dashboard), Classes, Exams, Results, Profile | Home, Results, Progress, Attendance, Profile |
+
+**Classes** (`classes`, `class_students`): a teacher creates a class and gets
+a 6-character join code. A student can end up on the roster in two ways:
+- **Join code:** they sign up themselves, enter the code and their roll
+  number, and wait as `pending` until the teacher approves.
+- **Added by the teacher:** the teacher enters their name and roll number,
+  optionally generating a login (username `<code>-<roll>` plus a temporary
+  password that must be changed on first sign-in).
+
+**How a scanned sheet reaches a student:** exams belong to a class
+(`exams.class_id`). A sheet only carries a roll number, so a result belongs to
+the roster entry in the exam's class with the same roll number, ignoring
+leading zeros (`services/analytics.js`). This is resolved when data is read,
+so a student who joins after the scan still gets the result. Results stay
+private until the teacher **publishes** the exam (`results_published_at`).
+Students see their own marks, their rank and the class average/highest,
+never other students.
+
+**Attendance** is one session per class per day with a status per student
+(present, absent, late or excused). Late counts as attended; excused days are
+left out of the rate.
+
+**Notifications:** publishing results, posting an announcement, marking a
+student absent, join requests and approvals all create rows in
+`notifications` (the in-app inbox, polled every two minutes).
+`services/notify.js` also sends a Firebase push when
+`FIREBASE_SERVICE_ACCOUNT` is set on the server and the app has registered a
+device token.
+
+**Analytics** (`services/analytics.js`) are computed on request:
+- class: exam averages, pass rates, grade spread, daily attendance,
+  leaderboard, and students under 40% average or 75% attendance
+- student: score trend against the class average, grades, attendance, rank
+  per class
+
 ## Scoring rules
 
 Marks are exam-wide: the same values apply to every question.
@@ -153,6 +197,11 @@ users ─┬─< exams ─┬─< answer_keys           one row per keyed questi
        │          ├── exam_scoring_rules     one row per exam
        │          ├─< omr_scans ─< omr_answers   one row per question read
        │          └─< exam_results ── (1:1) omr_scans
+       ├─< classes ─┬─< class_students (roster; user_id optional)
+       │            ├─< attendance_sessions ─< attendance_records
+       │            ├─< announcements
+       │            └─< exams (class_id, optional)
+       ├─< notifications, device_tokens
        └─< password_reset_tokens
 ```
 

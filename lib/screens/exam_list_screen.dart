@@ -89,6 +89,8 @@ class _ExamListScreenState extends State<ExamListScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Your exams')),
       floatingActionButton: FloatingActionButton.extended(
+        // Unique: the tabs stay mounted side by side in the home shell.
+        heroTag: 'fab-exams',
         onPressed: () => Navigator.pushNamed(context, AppRoutes.createNewExam),
         icon: const Icon(Icons.add),
         label: const Text('New exam'),

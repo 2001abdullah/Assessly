@@ -31,6 +31,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Classes')),
       floatingActionButton: FloatingActionButton.extended(
+        // Unique: the tabs stay mounted side by side in the home shell.
+        heroTag: 'fab-classes',
         onPressed: () => Navigator.pushNamed(context, AppRoutes.createClass),
         icon: const Icon(Icons.add),
         label: const Text('New class'),
