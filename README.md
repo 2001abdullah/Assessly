@@ -155,8 +155,9 @@ CI runs all of these on every push (`.github/workflows/quality.yml`).
   builds a signed APK and AAB, and pushing a `v*` tag publishes them as a
   GitHub release.
 - **Push notifications (Android):** the app reads
-  `android/app/google-services.json` (Firebase project, committed; not a
-  secret). The backend sends pushes only when `FIREBASE_SERVICE_ACCOUNT`
+  `android/app/google-services.json` (download it from the Firebase
+  console; it is not committed, and CI writes it from the
+  `GOOGLE_SERVICES_JSON` repository secret). The backend sends pushes only when `FIREBASE_SERVICE_ACCOUNT`
   holds the Firebase service-account key (secret, set on Render only).
   Without it, notifications stay in the in-app notification centre.
 - **iOS:** **Actions → iOS Release** produces an unsigned archive. Installing

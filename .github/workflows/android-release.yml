@@ -44,6 +44,13 @@ jobs:
             "$PLAY_UPLOAD_KEY_PASSWORD" \
             "$PLAY_UPLOAD_KEY_ALIAS" > android/key.properties
 
+      - name: Write Firebase config
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          test -n "$GOOGLE_SERVICES_JSON"
+          printf '%s' "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+
       - name: Build Android release packages
         run: |
           flutter build appbundle --release \
