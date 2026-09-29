@@ -11,6 +11,7 @@ import 'package:assessly/widgets/exam_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Dashboard: greeting, recent exams, quick actions and background-scan status.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

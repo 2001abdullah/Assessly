@@ -1,8 +1,17 @@
+// Result routes, mounted at /api/results (JWT required). Read-only: results
+// are created by POST /api/scoring/score (or /api/omr/batch).
+//
+//   GET /:id                       one saved result (summary counts)
+//   GET /:id/details               + exam, rules and a per-question breakdown
+//   GET /exam/:exam_id             every result for an exam, best first
+//   GET /exam/:exam_id/export.csv  the same as a CSV download
+
 const express = require('express');
 const pool = require('../config/db');
+const { AMBIGUOUS_STATUSES } = require('../services/scoring');
+const { examParam, resultParam } = require('../middleware/ownership');
 
 const router = express.Router();
-const { examParam, resultParam } = require('../middleware/ownership');
 
 // :id is a result id; :exam_id is an exam id. Both must belong to the caller.
 router.param('id', resultParam);
@@ -200,6 +209,10 @@ router.get('/:id/details', async (req, res) => {
 
     // --------------------------------------------------
     // 5. Build question-by-question result
+    //
+    // Marks are recomputed for display with the CURRENT rules; the summary
+    // totals are the ones saved when the sheet was scored. Ambiguous marks
+    // treated as 'review' score 0 here.
     // --------------------------------------------------
 
     const questions =
@@ -226,11 +239,7 @@ router.get('/:id/details', async (req, res) => {
 
           status = 'not_keyed';
 
-        } else if (
-          row.status === 'multi' ||
-          row.status === 'faint' ||
-          row.status === 'unreadable'
-        ) {
+        } else if (AMBIGUOUS_STATUSES.has(row.status)) {
 
           status = 'ambiguous';
 

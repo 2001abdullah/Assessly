@@ -4,6 +4,12 @@ import 'package:assessly/services/auth_service.dart';
 import 'package:assessly/services/google_auth_service.dart';
 import 'package:flutter/material.dart';
 
+/// Who is signed in, and the actions that change it.
+///
+/// Lifecycle: [restoreSession] runs on the splash screen; [login],
+/// [loginWithGoogle] and [register] run from the auth screens; [logout] runs
+/// from the profile screen or automatically when any API call returns 401
+/// (see main.dart). Signing out also clears the other providers' caches.
 class AuthProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isLoggedIn = false;
@@ -24,22 +30,8 @@ class AuthProvider extends ChangeNotifier {
   Future<void> login(String email, String password) async {
     try {
       setLoading(true);
-
       final result = await ApiService.login(email, password);
-      final token = result['token'];
-
-      await AuthService.saveToken(token);
-
-      final profile = result['user'];
-      if (profile is Map<String, dynamic>) {
-        user = UserModel.fromJson(profile);
-        await AuthService.saveUser(profile);
-      } else {
-        user = null;
-        await loadProfile();
-      }
-
-      setLogIn(true);
+      await _saveSession(result);
     } finally {
       setLoading(false);
     }
@@ -56,6 +48,8 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// Stores the token + profile from a login response and marks the user
+  /// signed in. Falls back to `/auth/me` if the response had no profile.
   Future<void> _saveSession(Map<String, dynamic> result) async {
     final token = result['token']?.toString();
     if (token == null || token.isEmpty) {

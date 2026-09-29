@@ -2,29 +2,24 @@ import 'dart:convert';
 
 import "package:shared_preferences/shared_preferences.dart";
 
+/// Local session storage: the JWT and a cached copy of the user's profile.
+///
+/// Only persistence lives here. The sign-in flow itself is in
+/// [AuthProvider]; the HTTP calls are in [ApiService].
 class AuthService {
-  static const String tokenkey = 'auth_token';
+  AuthService._();
+
+  static const String tokenKey = 'auth_token';
   static const String userKey = 'auth_user';
 
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(tokenkey, token);
+    await prefs.setString(tokenKey, token);
   }
 
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(tokenkey);
-  }
-
-  static Future<void> removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(tokenkey);
-  }
-
-  static Future<bool> isLoggedIn() async {
-    final token = await getToken();
-
-    return token != null;
+    return prefs.getString(tokenKey);
   }
 
   /// Cached profile, so the name shows instantly (and offline) on next launch.
@@ -48,7 +43,7 @@ class AuthService {
   /// Signs out: forget the token AND the cached profile.
   static Future<void> clearSession() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(tokenkey);
+    await prefs.remove(tokenKey);
     await prefs.remove(userKey);
   }
 }

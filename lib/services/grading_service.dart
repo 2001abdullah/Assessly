@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'omr_service.dart';
-import 'scoring_services.dart';
+import 'scoring_service.dart';
 
 enum GradeStage { reading, scoring }
 

@@ -1,20 +1,22 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'api_config.dart';
 import 'authed_http.dart';
 
+/// Read side of scored results (`/api/results`). Results are created by
+/// [ScoringService]; this service lists, details and exports them.
 class ResultsService {
   static String get baseUrl => ApiConfig.baseUrl;
 
+  /// Every result for an exam, best percentage first.
   Future<List<Map<String, dynamic>>> getExamResults(String examId) async {
     final response = await AuthedHttp.get(
       Uri.parse('$baseUrl/api/results/exam/$examId'),
     );
+    final data = decodeJsonObject(response.body);
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to load student results');
+      throw Exception(data['message'] ?? 'Failed to load student results');
     }
-    final data = Map<String, dynamic>.from(jsonDecode(response.body) as Map);
     return List<Map<String, dynamic>>.from(data['results'] ?? const []);
   }
 
@@ -24,17 +26,16 @@ class ResultsService {
     final response = await AuthedHttp.get(
       Uri.parse('$baseUrl/api/results/$resultId/details'),
     );
-    final decoded = jsonDecode(response.body);
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(
-        decoded is Map && decoded['message'] != null
-            ? decoded['message'].toString()
-            : 'Failed to load result details',
-      );
+    final data = decodeJsonObject(response.body);
+    if (response.statusCode < 200 ||
+        response.statusCode >= 300 ||
+        data['result'] is! Map) {
+      throw Exception(data['message'] ?? 'Failed to load result details');
     }
-    return Map<String, dynamic>.from((decoded as Map)['result'] as Map);
+    return Map<String, dynamic>.from(data['result'] as Map);
   }
 
+  /// CSV bytes (one row per student) for saving or sharing.
   Future<Uint8List> downloadCsv(String examId) async {
     final response = await AuthedHttp.get(
       Uri.parse('$baseUrl/api/results/exam/$examId/export.csv'),

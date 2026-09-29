@@ -1,3 +1,7 @@
+// Outgoing email (password-reset codes) over SMTP.
+// Needs SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD and EMAIL_FROM; port
+// 465 uses implicit TLS, other ports STARTTLS. Throws if not configured.
+
 const nodemailer = require('nodemailer');
 
 function createTransport() {

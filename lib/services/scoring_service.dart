@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'api_config.dart';
 import 'authed_http.dart';
 
+/// Scores a stored OMR scan against its exam's answer key and scoring rules
+/// (`POST /api/scoring/score`). The server saves the result and returns
+/// `{result_id, result: {...marks, grade, passed...}}`.
 class ScoringService {
   static String get baseUrl => ApiConfig.baseUrl;
 
@@ -16,10 +19,7 @@ class ScoringService {
       body: jsonEncode({'exam_id': examId, 'scan_id': scanId}),
     );
 
-    final dynamic decodedBody = jsonDecode(response.body);
-    final data = decodedBody is Map<String, dynamic>
-        ? decodedBody
-        : <String, dynamic>{};
+    final data = decodeJsonObject(response.body);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception(
@@ -28,6 +28,6 @@ class ScoringService {
       );
     }
 
-    return Map<String, dynamic>.from(data);
+    return data;
   }
 }

@@ -1,3 +1,16 @@
+// Exam routes, mounted at /api/exam (JWT required).
+//
+//   POST   /             create an exam owned by the caller
+//   GET    /             the caller's exams, newest first
+//   GET    /:id          one exam
+//   PUT    /:id          update title / subject / question and digit counts
+//   DELETE /:id          delete (cascades to answer keys, rules, scans, results)
+//   GET    /:id/summary  pass/fail counts and mark statistics
+//
+// roll_digits / registration_digits control how many ID bubble columns the
+// generated answer sheet has, so changing them after printing sheets makes
+// old sheets unreadable.
+
 const express = require('express');
 const crypto = require('crypto');
 const pool = require('../config/db');

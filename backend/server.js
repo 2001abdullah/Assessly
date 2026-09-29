@@ -1,3 +1,23 @@
+// Assessly API entry point.
+//
+// Request flow:
+//   JSON body parser (1 MB) -> request logger (pino, x-request-id) -> metrics
+//   -> security headers -> router -> error handler
+//
+// Routers:
+//   /api/auth           public, rate-limited      routes/auth.js
+//   /api/omr            JWT + upload rate limit   routes/omr.js
+//   /api/exam           JWT                       routes/exam.js
+//   /api/answer-key     JWT                       routes/answerKeys.js
+//   /api/scoring-rules  JWT                       routes/scoringRules.js
+//   /api/scoring        JWT                       routes/scoring.js
+//   /api/results        JWT                       routes/results.js
+//   /health             public, checks PostgreSQL
+//   /metrics            Prometheus; requires Bearer METRICS_TOKEN (404 otherwise)
+//
+// Every JWT router additionally restricts access to the caller's own exams
+// (middleware/ownership.js).
+
 require('dotenv').config();
 
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
@@ -5,22 +25,23 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
 }
 
 const express = require('express');
+const { rateLimit } = require('express-rate-limit');
 const pool = require('./config/db');
+const authMiddleware = require('./middleware/authMiddleware');
+const { metricsHandler, metricsMiddleware, requestLogger } = require('./middleware/observability');
 const authRoutes = require('./routes/auth');
-const loginRoutes = require('./routes/login');
 const omrRoutes = require('./routes/omr');
-const examRoutes= require('./routes/exam');
+const examRoutes = require('./routes/exam');
 const answerKeyRoutes = require('./routes/answerKeys');
 const scoringRoutes = require('./routes/scoring');
 const resultRoutes = require('./routes/results');
 const scoringRulesRoutes = require('./routes/scoringRules');
-const authMiddleware = require('./middleware/authMiddleware');
-const { rateLimit } = require('express-rate-limit');
-const { metricsHandler, metricsMiddleware, requestLogger } = require('./middleware/observability');
 
 const app = express();
 
 app.disable('x-powered-by');
+// One proxy hop (Render's load balancer) so req.ip, and therefore rate
+// limiting, uses the real client address.
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '1mb' }));
 app.use(requestLogger);
@@ -32,12 +53,11 @@ app.use((_req, res, next) => {
   next();
 });
 
+// Per client IP, per 15 minutes.
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: 'draft-8', legacyHeaders: false });
 const uploadLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 60, standardHeaders: 'draft-8', legacyHeaders: false });
-app.use('/api/auth', authLimiter, authRoutes, loginRoutes);
 
-// Everything below requires a signed-in user; each router then limits access
-// to that user's own exams (see middleware/ownership.js).
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/omr', uploadLimiter, authMiddleware, omrRoutes);
 app.use('/api/exam', authMiddleware, examRoutes);
 app.use('/api/answer-key', authMiddleware, answerKeyRoutes);
@@ -46,13 +66,10 @@ app.use('/api/results', authMiddleware, resultRoutes);
 app.use('/api/scoring-rules', authMiddleware, scoringRulesRoutes);
 
 app.get('/', (_req, res) => {
-  res.json({
-    status: 'ok',
-    service: 'Assessly backend',
-    omr_scan_endpoint: 'POST /api/omr/scan',
-  });
+  res.json({ status: 'ok', service: 'Assessly backend' });
 });
 
+// Used by Render's health check and for manual connectivity tests.
 app.get('/health', async (_req, res) => {
   try {
     await pool.query('SELECT 1');
@@ -63,19 +80,35 @@ app.get('/health', async (_req, res) => {
     });
   } catch (error) {
     console.error('Health check database error:', error);
-    return res.status(503).json({
-      status: 'degraded',
-      database: 'disconnected',
-    });
+    return res.status(503).json({ status: 'degraded', database: 'disconnected' });
   }
 });
 
-const port = Number(process.env.PORT || 5000);
+// Answers 404 (not 401) without the token so the endpoint is not advertised.
+app.get('/metrics', (req, res, next) => {
+  const token = process.env.METRICS_TOKEN;
+  if (!token || req.headers.authorization !== `Bearer ${token}`) {
+    return res.status(404).end();
+  }
+  return metricsHandler(req, res, next);
+});
+
+// Last resort for errors a route did not handle (Express 5 also routes
+// rejected async handlers here). Never leaks internals to the client.
+app.use((error, _req, res, _next) => {
+  if (error instanceof Error && error.name === 'MulterError') {
+    return res.status(400).json({ message: error.message });
+  }
+  console.error('Unhandled request error:', error);
+  if (res.headersSent) return undefined;
+  return res.status(500).json({ message: 'Internal server error' });
+});
 
 pool.on('error', (error) => {
   console.error('Unexpected PostgreSQL pool error:', error);
 });
 
+const port = Number(process.env.PORT || 5000);
 const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Assessly server running on port ${port}`);
 });
@@ -84,22 +117,8 @@ server.on('error', (error) => {
   console.error(`Backend server error on port ${port}:`, error);
 });
 
-app.use((error, _req, res, _next) => {
-  console.error('Unhandled request error:', error);
-
-  if (res.headersSent) {
-    return;
-  }
-
-  res.status(500).json({
-    message: 'Internal server error',
-  });
-});
-
 pool.query('SELECT NOW()')
-  .then((result) => {
-    console.log('Database connected successfully:', result.rows[0]);
-  })
+  .then(() => console.log('Database connected successfully'))
   .catch((error) => {
     console.error(
       'Database is unavailable at startup. The server will remain online and retry on requests:',
@@ -107,13 +126,12 @@ pool.query('SELECT NOW()')
     );
   });
 
+// Graceful shutdown: stop accepting connections, let in-flight requests
+// finish, then close the database pool.
 let isShuttingDown = false;
 
 const shutdown = (signal) => {
-  if (isShuttingDown) {
-    return;
-  }
-
+  if (isShuttingDown) return;
   isShuttingDown = true;
   console.log(`${signal} received. Closing backend server...`);
 
@@ -123,11 +141,8 @@ const shutdown = (signal) => {
       process.exitCode = 1;
       return;
     }
-
     pool.end()
-      .then(() => {
-        console.log('Backend server and database pool closed');
-      })
+      .then(() => console.log('Backend server and database pool closed'))
       .catch((poolError) => {
         console.error('Error while closing database pool:', poolError);
         process.exitCode = 1;
@@ -139,17 +154,11 @@ process.once('SIGINT', () => shutdown('SIGINT'));
 process.once('SIGTERM', () => shutdown('SIGTERM'));
 process.once('uncaughtException', (error) => {
   console.error('Uncaught exception; shutting down safely:', error);
+  process.exitCode = 1;
   shutdown('uncaughtException');
 });
 process.once('unhandledRejection', (reason) => {
   console.error('Unhandled promise rejection; shutting down safely:', reason);
+  process.exitCode = 1;
   shutdown('unhandledRejection');
-});
-
-app.get('/metrics', (req, res, next) => {
-  const token = process.env.METRICS_TOKEN;
-  if (!token || req.headers.authorization !== `Bearer ${token}`) {
-    return res.status(404).end();
-  }
-  return metricsHandler(req, res, next);
 });

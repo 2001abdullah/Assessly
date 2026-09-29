@@ -3,6 +3,7 @@ import 'package:assessly/themes/app_colors.dart';
 import 'package:assessly/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Two-step password reset: request an emailed 6-digit code, then set a new password.
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
 

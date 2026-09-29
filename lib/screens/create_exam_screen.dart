@@ -5,6 +5,7 @@ import 'package:assessly/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Form for a new exam: title, subject, question count and ID digit counts.
 class CreateExamScreen extends StatefulWidget {
   const CreateExamScreen({super.key});
 

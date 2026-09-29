@@ -1,9 +1,18 @@
+// Answer-key routes, mounted at /api/answer-key (JWT required).
+//
+//   POST /                 add one answer { exam_id, question_number, correct_answer }
+//   POST /batch            replace the whole key { exam_id, answers: [...] }  (used by the app)
+//   GET  /exam/:exam_id    the exam's answers, by question number
+//
+// Answers are stored upper-cased. The per-question marks / negative_marks
+// columns are legacy: scoring uses the exam-wide rules in exam_scoring_rules.
+
 const express = require('express');
 const crypto = require('crypto');
 const pool = require('../config/db');
+const { examParam, requireExamInBody } = require('../middleware/ownership');
 
 const router = express.Router();
-const { examParam, requireExamInBody } = require('../middleware/ownership');
 
 router.param('exam_id', examParam);
 
@@ -26,7 +35,7 @@ const createAnswerKey = async (req, res) => {
   // Validate required fields
   // -----------------------------
 
-  if (!exam_id || !question_number || !correct_answer) {
+  if (!exam_id || !question_number || typeof correct_answer !== 'string' || !correct_answer.trim()) {
     return res.status(400).json({
       message: 'exam_id, question_number and correct_answer are required',
     });
@@ -101,7 +110,7 @@ const createAnswerKey = async (req, res) => {
         id,
         exam_id,
         Number(question_number),
-        correct_answer.toUpperCase(),
+        correct_answer.trim().toUpperCase(),
         marks !== undefined ? Number(marks) : 1,
         negative_marks !== undefined ? Number(negative_marks) : 0,
       ],
@@ -113,6 +122,11 @@ const createAnswerKey = async (req, res) => {
     });
 
   } catch (error) {
+    if (error.code === '23505') {
+      return res.status(409).json({
+        message: 'This question already has an answer; use /batch to change it',
+      });
+    }
     console.error('Create answer key error:', error);
 
     return res.status(500).json({

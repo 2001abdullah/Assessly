@@ -10,6 +10,7 @@ import '../themes/app_text_styles.dart';
 import '../widgets/app_widgets.dart';
 import 'results_hub_screen.dart';
 
+/// Every student's result for one exam, with summary statistics and CSV export.
 class StudentResultsScreen extends StatefulWidget {
   final Map<String, dynamic> exam;
 

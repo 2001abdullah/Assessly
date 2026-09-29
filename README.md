@@ -1,335 +1,162 @@
 # Assessly
 
-Assessly is an exam assessment platform designed to make objective-test
-evaluation faster, more consistent, and easier to manage. It combines a
-cross-platform Flutter application with a Node.js API, PostgreSQL persistence,
-and a Python-based optical mark recognition (OMR) pipeline.
+Assessly grades paper multiple-choice exams from a phone photo. A teacher
+creates an exam, prints the answer sheet Assessly generates for it, sets the
+answer key and marking scheme, and scans completed sheets with the camera.
+Each sheet is read by an optical mark recognition (OMR) engine, scored, and
+saved with marks, percentage, grade, pass/fail and a per-question breakdown.
 
-## Android builds
+It has three parts:
 
-There is currently no published Android or iOS release. Signed Android builds
-can be produced after the repository signing secrets are configured.
+| Part | Tech | Lives in |
+| --- | --- | --- |
+| Mobile app | Flutter (Android, iOS) | `lib/` |
+| REST API | Node.js, Express 5, PostgreSQL | `backend/` |
+| OMR engine | Python, OpenCV, ReportLab | `backend/omr/` |
 
-[Build/download an Android release with GitHub Actions](https://github.com/2001abdullah/Assessly/actions/workflows/android-release.yml)
+**Status:** beta. The full workflow works end to end. See
+[PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) for what still has to happen
+before a public launch.
 
-## The problem
+## Documentation
 
-Evaluating paper-based multiple-choice exams manually is repetitive and
-time-consuming. It also introduces avoidable risks:
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the pieces fit, what
+  happens during a scan, the data model, and where to find things in the code.
+  Start here.
+- [docs/API.md](docs/API.md): every HTTP endpoint.
+- [backend/omr/README.md](backend/omr/README.md): the Python OMR engine and
+  its command-line scripts.
+- [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md): release assessment and
+  deployment checklist.
+- [PRIVACY_POLICY.md](PRIVACY_POLICY.md) and
+  [ACCOUNT_DELETION.md](ACCOUNT_DELETION.md): public pages required by the app
+  stores.
 
-- Human errors when transferring answers from paper to a score sheet
-- Slow result turnaround for teachers and administrators
-- Difficulty applying consistent negative-marking and pass/fail rules
-- Scattered exam definitions, answer keys, and student results
-- Limited visibility into the quality of scanned answer sheets
+## Features
 
-Assessly addresses this workflow by letting an examiner create an exam,
-configure its answer key and scoring rules, upload or select a scanned answer
-sheet, and receive a structured result with marks, percentage, grade, and
-answer statistics.
-
-## Current status
-
-Assessly is an active MVP project. The core assessment workflow is implemented,
-while additional production hardening and reporting features are planned.
-
-### Currently working
-
-- User registration and login flow
-- Password hashing with bcrypt
-- Exam creation, listing, details, and deletion
-- Answer-key configuration for objective questions
-- Configurable scoring rules, including:
-  - Marks for correct answers
-  - Marks for wrong answers
-  - Marks for blank answers
-  - Pass percentage
-  - Treatment of ambiguous answers
-  - Optional negative-score clamping
-- OMR answer-sheet image selection and camera capture from the Flutter application
-- Reusable pure-Dart OMR frame analyzer in
-  `lib/services/omr_frame_analyzer.dart` for sheet detection and capture coaching
-- OMR scanning through the backend and Python processing boundary
-- Scan validation and structured scan-result persistence
-- Automatic scoring of a completed scan against the selected exam
-- Result screen showing:
-  - Pass/fail status
-  - Marks and maximum marks
-  - Percentage and grade
-  - Roll and registration information
-  - Correct, wrong, blank, and ambiguous answer counts
-- Health-check endpoint for backend and PostgreSQL connectivity
-- Input validation and user-facing error handling across the main workflow
-
-## Planned improvements
-
-The following items are planned for future iterations:
-
-- Persistent result history and result search/filtering
-- Teacher and administrator dashboards with aggregate analytics
-- Exporting results to CSV and PDF
-- Batch scanning and bulk result processing
-- Student-specific result sharing
-- Improved scan review tools for low-confidence or ambiguous responses
-- Role-based access control for teachers, administrators, and students
-- Cloud deployment with managed PostgreSQL and object storage
-- Seed data and broader end-to-end test coverage
-- Production alert routing and operational dashboards
-- Polished onboarding, profile management, and account recovery flows
-
-## Technology stack
-
-### Client application
-
-- **Flutter**
-- **Dart**
-- **Provider** for application state management
-- **HTTP** for REST API communication
-- **File Picker** for selecting answer-sheet images
-- **Image Picker** for taking answer-sheet pictures with the device camera
-- **Shared Preferences** for local preferences and session-related storage
-
-### Backend
-
-- **Node.js**
-- **Express 5**
-- **PostgreSQL**
-- **node-postgres (`pg`)** for database access
-- **JWT** for authentication tokens
-- **bcrypt** for password hashing
-- **Multer** for multipart image uploads
-- **PDFKit** for PDF-related generation
-- **QRCode** for QR-code functionality
-
-### OMR and scoring
-
-- **Python**
-- OpenCV-compatible image processing through the OMR engine
-- JSON-based process boundary between the Node.js API and Python scanner
-- Configurable answer-sheet templates
-- Confidence and quality information for scanned fields and answers
-
-## High-level architecture
-
-```text
-Flutter application
-        |
-        | REST / JSON / multipart upload
-        v
-Node.js + Express API
-        |
-        +--> PostgreSQL
-        |
-        +--> Python OMR scanner
-                    |
-                    +--> Structured scan result
-        |
-        +--> Scoring and result APIs
-```
-
-The Node.js API owns request validation, exam and scoring-rule persistence,
-file handling, and orchestration. The Python process focuses on interpreting
-the answer-sheet image and returning structured JSON. The Flutter client
-consumes the API and presents the workflow and results to the user.
-
-## Project structure
-
-```text
-lib/                  Flutter application
-  screens/            Authentication, exam, scanning, and result screens
-  services/           API-facing client services
-  providers/          Flutter state providers
-  models/             Client-side models
-backend/              Node.js API
-  routes/             Authentication, exam, answer-key, scoring, and OMR APIs
-  config/             PostgreSQL connection setup
-  omr/                Python OMR and scoring process boundary
-android/, ios/, ...   Flutter platform projects
-```
+- Accounts: email/password (bcrypt), Google sign-in, emailed password-reset
+  codes, in-app account deletion
+- Exams with a configurable number of questions and roll/registration digits
+- A printable, exam-specific OMR answer sheet (PDF)
+- Answer key entry and a per-exam marking scheme: marks for correct, wrong and
+  blank answers, a pass percentage, how to treat ambiguous marks, and optional
+  clamping of negative totals to zero
+- A live camera scanner that finds the sheet, coaches the user ("move closer",
+  "too dark", "glare"...) and captures automatically; gallery import as well
+- Batch scanning: capture sheet after sheet while they are graded in the
+  background
+- Results per exam and per student, question-by-question review, CSV export
+- Strict per-user data isolation: users only ever see their own exams
 
 ## Local development
 
 ### Prerequisites
 
-- Flutter SDK
-- Dart SDK compatible with the version specified in `pubspec.yaml`
-- Node.js and npm
-- PostgreSQL
-- Python with the dependencies required by the OMR engine
+- Flutter SDK (Dart `^3.13`)
+- Node.js 20+ and npm
+- PostgreSQL 14+
+- Python 3.10+
 
-### 1. Configure the backend
-
-Create `backend/.env` locally. Do not commit this file:
-
-```env
-DB_USER=your_postgres_user
-DB_HOST=localhost
-DB_NAME=assessly
-DB_PASSWORD=your_postgres_password
-DB_PORT=5432
-JWT_SECRET=replace_with_a_long_random_secret
-METRICS_TOKEN=replace_with_a_separate_random_secret
-OMR_PYTHON=path_to_your_python_executable
-SMTP_HOST=your_smtp_host
-SMTP_PORT=587
-SMTP_USER=your_smtp_username
-SMTP_PASSWORD=your_smtp_password
-EMAIL_FROM=Assessly <no-reply@example.com>
-GOOGLE_CLIENT_ID=your_google_web_oauth_client_id
-```
-
-Create the required PostgreSQL database and ensure the schema used by the
-backend is available before starting the API.
-
-### 2. Install backend dependencies and start the API
+### 1. Backend
 
 ```bash
 cd backend
+cp .env.example .env          # then fill in the values
 npm install
-npm start
+python -m venv omr/.venv
+omr/.venv/bin/pip install -r requirements.txt    # Windows: omr\.venv\Scripts\pip ...
+npm run migrate               # create / upgrade the schema
+npm run dev                   # restarts on file changes
 ```
 
-The API runs on port `5000` by default. For development with automatic
-restarts:
+On Windows the API finds `omr/.venv` automatically. On macOS and Linux, set
+`OMR_PYTHON=omr/.venv/bin/python` in `.env`; otherwise `python3` from `PATH`
+is used.
 
-```bash
-npm run dev
-```
+Create the empty database named in `DB_NAME` first. `npm start` also runs
+the migrations before starting the server.
 
-The health endpoint is available at:
+The API listens on port `5000`. Check it with
+`http://localhost:5000/health`.
 
-```text
-http://localhost:5000/health
-```
+Only `DB_*` (or `DATABASE_URL`) and `JWT_SECRET` are required locally.
+Password reset needs the `SMTP_*` variables, and Google sign-in needs
+`GOOGLE_CLIENT_ID`. Every variable is described in
+[backend/.env.example](backend/.env.example).
 
-### 3. Run the Flutter application
-
-From the repository root:
+### 2. App
 
 ```bash
 flutter pub get
 flutter run
 ```
 
-The Flutter client defaults to `http://10.0.2.2:5000` on Android emulators
-because that address points to the host computer from the emulator. A
-physical Android phone cannot use `10.0.2.2`; connect the phone and computer
-to the same network and start the app with the computer's LAN IPv4 address:
+Without configuration the app talks to `http://10.0.2.2:5000` on an Android
+emulator (the host computer) and `http://127.0.0.1:5000` elsewhere. On a
+physical phone, put the phone and computer on the same network, allow
+inbound TCP 5000 through the computer's firewall, and pass the computer's LAN
+address:
 
 ```bash
 flutter run --dart-define=API_BASE_URL=http://192.168.1.123:5000
 ```
 
-Replace `192.168.1.123` with the computer's actual LAN address. The backend
-must be running on port `5000`, and the computer firewall must allow inbound
-TCP connections to that port. Verify connectivity from the phone browser
-using `http://192.168.1.123:5000/health` before trying to register or log in.
+Open `http://192.168.1.123:5000/health` in the phone's browser first to
+confirm that the phone can reach the server.
 
-For Google sign-in, create Android and Web OAuth clients in the same Google
-Cloud project. Register `com.abdullah.assessly` plus the debug and Play App
-Signing SHA-1/SHA-256 fingerprints. Set the Web client ID as
-`GOOGLE_CLIENT_ID` on the backend and pass that same value to Flutter:
+For Google sign-in, also pass the Web OAuth client ID. It must be the same
+value as the backend's `GOOGLE_CLIENT_ID`:
 
 ```bash
 flutter run \
   --dart-define=API_BASE_URL=http://192.168.1.123:5000 \
-  --dart-define=GOOGLE_WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
+  --dart-define=GOOGLE_WEB_CLIENT_ID=1234-abc.apps.googleusercontent.com
 ```
 
-Set the `GOOGLE_WEB_CLIENT_ID` GitHub Actions secret before building a release.
+In Google Cloud, create an Android client and a Web client in the same
+project. Register the package name `com.abdullah.assessly` with the SHA-1 and
+SHA-256 fingerprints of the debug key, the upload key and the Play App Signing
+key.
 
-To build a phone APK against the deployed Render backend locally:
-
-```bash
-flutter build apk --release --dart-define=API_BASE_URL=https://assessly-api.onrender.com
-```
-
-You can also build it from GitHub without changing source code. Open
-**Actions > Android Release > Run workflow**, enter the current Render API URL
-in `api_base_url`, and download the `assessly-android-release` artifact. If a
-release tag is supplied, the workflow also attaches the installable APK and
-the Play Store AAB to a GitHub release.
-
-### iOS release
-
-Open **Actions > iOS Release > Run workflow**, enter the Render API URL, and
-download the `assessly-ios-unsigned` artifact. This workflow runs on a macOS
-runner and provides an unsigned Xcode archive. Installing the app on a
-physical iPhone or publishing to the App Store requires an Apple Developer
-account, a registered bundle ID, and signing certificates/profiles.
-The current iOS bundle ID is `com.example.assessly`.
-
-## API overview
-
-The backend currently exposes endpoints for:
-
-- Authentication and login
-- Exam management
-- Answer-key management
-- Scoring-rule management
-- OMR image scanning
-- Scan scoring
-- Result retrieval
-- Service and database health checks
-
-For OMR scanning, the API accepts a multipart image upload at
-`POST /api/omr/scan`. The scan is associated with an exam and returns a
-structured result that can then be passed to the scoring workflow.
-
-Scan data and answers are stored in PostgreSQL. Uploaded answer-sheet images,
-generated templates, and PDFs are temporary processing files and are deleted
-after each request. The backend does not retain the original image.
-
-The scan screen supports both **Take Photo** and **Gallery**. The reusable
-analyzer in `lib/services/omr_frame_analyzer.dart` is platform-independent
-and accepts luminance frames through `LumaFrame`, so live-camera coaching can
-be connected without coupling detection logic to Flutter or a camera plugin.
-The current capture flow takes a high-quality still image and sends it through
-the existing backend OMR pipeline.
-
-## Account status
-
-Registration, JWT login, local token persistence, token removal on logout,
-and per-user exam ownership checks are implemented. Protected API routers
-require a valid JWT, and ownership middleware prevents one user from reading
-or changing another user's exams and results. Password recovery uses emailed,
-single-use reset codes that expire after 15 minutes.
-
-Users can permanently delete their account from the Profile screen. This also
-deletes their exams, answer keys, scans, and results through database cascades.
-
-## Verification
-
-Run the same checks expected before a release:
+## Tests
 
 ```bash
 flutter analyze
-flutter test
+flutter test                 # widget tests + OMR frame analyzer
+
 cd backend
-npm test
+npm test                     # ownership + Python path checks (no database)
+npm run migrate && npm run test:db   # schema checks (needs a database)
 ```
 
-See [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md) for the current release
-assessment, known blockers, and deployment checklist.
+CI runs all of these on every push (`.github/workflows/quality.yml`).
 
-## Security
+## Builds and deployment
 
-- Never commit `backend/.env` or other secret files.
-- Use a strong, unique `JWT_SECRET` outside local development.
+- **Backend:** `render.yaml` deploys `backend/Dockerfile` (Node 20 + a Python
+  virtualenv) and a managed PostgreSQL database to Render. Migrations run on
+  every start.
+- **Android:** `flutter build apk --release --dart-define=API_BASE_URL=https://<api>`.
+  A release build needs `android/key.properties` and the upload keystore, and
+  deliberately fails without them. In GitHub, **Actions → Android Release**
+  builds a signed APK and AAB, and pushing a `v*` tag publishes them as a
+  GitHub release.
+- **iOS:** **Actions → iOS Release** produces an unsigned archive. Installing
+  on devices or shipping to the App Store needs an Apple Developer account and
+  signing. The bundle ID is still `com.example.assessly` and must be changed
+  before release.
+
+## Security notes
+
+- Never commit `backend/.env`, `android/key.properties` or keystores. They
+  are already in `.gitignore`.
+- Use a long random `JWT_SECRET` (the server refuses to start with fewer than
+  32 characters) and a separate `METRICS_TOKEN`.
 - Use separate database credentials for development and production.
-- Rotate any credential that has ever been exposed publicly.
-- Review the repository history before making the GitHub repository public.
-
-## Contributing
-
-Contributions are welcome. Before opening a pull request:
-
-1. Keep secrets and local environment files out of Git.
-2. Explain the user-facing or architectural impact of the change.
-3. Test the affected Flutter and backend workflows locally.
-4. Keep API and README documentation aligned with the implementation.
+- Uploaded sheet photos are processed in a temporary directory and deleted.
+  Only the structured scan results are stored.
 
 ## License
 
-No license has been selected for this project yet. Until a license is added,
-all rights are reserved by the project owner.
+No license has been chosen yet. Until one is added, all rights are reserved by
+the project owner.

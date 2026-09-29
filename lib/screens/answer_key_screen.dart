@@ -3,6 +3,7 @@ import 'package:assessly/themes/app_colors.dart';
 import 'package:assessly/themes/app_text_styles.dart';
 import 'package:assessly/services/answer_key_service.dart';
 
+/// Pick the correct option for each question; saves the whole key at once.
 class AnswerKeyScreen extends StatefulWidget {
   final Map<String, dynamic> exam;
 

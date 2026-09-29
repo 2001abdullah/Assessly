@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'api_config.dart';
 import 'authed_http.dart';
 
+/// Correct answers for an exam (`/api/answer-key`).
 class AnswerKeyService {
   static String get baseUrl => ApiConfig.baseUrl;
 
+  /// Replaces the exam's whole answer key with [answers]
+  /// (`[{question_number: 1, correct_answer: 'A'}, ...]`). Questions left out
+  /// become un-keyed and are not scored.
   Future<void> saveAnswerKey({
     required String examId,
     required List<Map<String, dynamic>> answers,
@@ -16,7 +20,7 @@ class AnswerKeyService {
       body: jsonEncode({'exam_id': examId, 'answers': answers}),
     );
 
-    final data = jsonDecode(response.body);
+    final data = decodeJsonObject(response.body);
 
     if (response.statusCode != 200) {
       throw Exception(data['message'] ?? 'Failed to save answer key');
@@ -28,12 +32,12 @@ class AnswerKeyService {
       Uri.parse('$baseUrl/api/answer-key/exam/$examId'),
     );
 
-    final data = jsonDecode(response.body);
+    final data = decodeJsonObject(response.body);
 
     if (response.statusCode != 200) {
       throw Exception(data['message'] ?? 'Failed to load answer key');
     }
 
-    return data['answer_keys'];
+    return data['answer_keys'] as List<dynamic>? ?? const [];
   }
 }

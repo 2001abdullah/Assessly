@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Hub for one exam: setup (answer key, scoring rules), sheet download, scanning and results.
 class ExamDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> exam;
   const ExamDetailsScreen({super.key, required this.exam});

@@ -4,6 +4,7 @@ import 'package:assessly/widgets/auth_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Creates a password account, then returns to Login.
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 

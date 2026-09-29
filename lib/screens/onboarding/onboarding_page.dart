@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// One slide of the onboarding carousel.
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({
     super.key,

@@ -1,4 +1,8 @@
-import 'package:assessly/providers/app_provider.dart';
+// App entry point.
+//
+// Builds the app-wide providers (auth, exams, results, batch-scan queue),
+// wires them together, and installs the global "401 -> sign out" handler.
+// Screens read these providers with context.read / context.watch.
 import 'package:assessly/providers/auth_provider.dart';
 import 'package:assessly/providers/batch_scan_provider.dart';
 import 'package:assessly/providers/exam_provider.dart';
@@ -10,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import 'themes/app_theme.dart';
 
+/// Lets non-widget code (the 401 handler below) navigate without a context.
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
@@ -36,7 +41,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: ((_) => AppProvider())),
         ChangeNotifierProvider.value(value: auth),
         ChangeNotifierProvider.value(value: exams),
         ChangeNotifierProvider.value(value: results),

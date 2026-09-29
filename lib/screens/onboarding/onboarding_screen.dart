@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'onboarding_page.dart';
 
+/// Intro carousel shown to signed-out users; ends at Login / Register.
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 

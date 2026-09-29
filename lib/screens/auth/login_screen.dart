@@ -4,6 +4,7 @@ import 'package:assessly/widgets/auth_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Email/password and Google sign-in.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

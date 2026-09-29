@@ -1,8 +1,16 @@
+// Scoring-rule routes, mounted at /api/scoring-rules (JWT required).
+//
+//   PUT /:exam_id  create or replace the exam's marking scheme
+//   GET /:exam_id  read it (404 until one is saved)
+//
+// An exam cannot be scored until it has rules. The same checks are enforced
+// by CHECK constraints on exam_scoring_rules.
+
 const express = require('express');
 const pool = require('../config/db');
+const { examParam } = require('../middleware/ownership');
 
 const router = express.Router();
-const { examParam } = require('../middleware/ownership');
 
 router.param('exam_id', examParam);
 

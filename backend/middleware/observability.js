@@ -1,3 +1,11 @@
+// Logging and metrics.
+//
+// requestLogger     one JSON log line per request (pino). Reuses an incoming
+//                   x-request-id or generates one and echoes it back.
+//                   Passwords, tokens and Authorization headers are redacted.
+// metricsMiddleware records assessly_http_request_duration_seconds.
+// metricsHandler    Prometheus text output (exposed at /metrics in server.js).
+
 const crypto = require('crypto');
 const pinoHttp = require('pino-http');
 const client = require('prom-client');
@@ -23,7 +31,9 @@ function metricsMiddleware(req, res, next) {
   const end = requests.startTimer();
   res.once('finish', () => end({
     method: req.method,
-    route: req.route?.path || req.path || 'unknown',
+    // The route pattern (/api/exam/:id), never the raw path: raw paths contain
+    // ids and would create one time series per exam/result.
+    route: req.route?.path ? `${req.baseUrl || ''}${req.route.path}` : 'unmatched',
     status_code: String(res.statusCode),
   }));
   next();

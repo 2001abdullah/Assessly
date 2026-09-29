@@ -14,6 +14,7 @@ import '../utils/scan_errors.dart';
 import '../widgets/app_widgets.dart';
 import 'camera_scan_screen.dart';
 
+/// Scan entry point for an exam: single scan (camera or gallery) or batch camera mode, plus the batch queue.
 class ScanOmrScreen extends StatefulWidget {
   final Map<String, dynamic> exam;
 

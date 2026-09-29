@@ -3,6 +3,7 @@ import 'package:assessly/themes/app_colors.dart';
 import 'package:assessly/themes/app_text_styles.dart';
 import 'package:assessly/services/scoring_rules_service.dart';
 
+/// Edit the exam's marking scheme (marks per outcome, pass mark, ambiguous handling).
 class ScoringRulesScreen extends StatefulWidget {
   final Map<String, dynamic> exam;
 

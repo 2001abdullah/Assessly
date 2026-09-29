@@ -8,6 +8,7 @@ import 'package:assessly/themes/app_colors.dart';
 import 'package:assessly/widgets/app_widgets.dart';
 import 'package:assessly/widgets/exam_card.dart';
 
+/// All of the user's exams (from ExamProvider), with delete.
 class ExamListScreen extends StatefulWidget {
   const ExamListScreen({super.key});
 

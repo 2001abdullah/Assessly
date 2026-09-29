@@ -1,173 +1,110 @@
+// OMR routes, mounted at /api/omr (JWT required, upload rate limit).
+//
+//   POST /scan                multipart: image, exam_id, optional template
+//                             -> engine scan JSON + result_id (the scan id)
+//   POST /batch               multipart: images[], exam_id
+//                             -> scans AND scores each image
+//   GET  /exam/:exam_id/sheet -> printable answer-sheet PDF for the exam
+//
+// Every request works in its own temp directory, which is deleted afterwards.
+// Uploaded images are never kept; only the structured scan is stored
+// (omr_scans + omr_answers).
+//
+// Answer-sheet layout: unless a template JSON is uploaded, the template is
+// regenerated from the exam (question count, roll/registration digits) with
+// omr/generate.py. Generation is deterministic, so this matches the PDF the
+// teacher printed from GET /exam/:exam_id/sheet.
+
 const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { spawn } = require('child_process');
 const express = require('express');
 const multer = require('multer');
 const pool = require('../config/db');
-const { scoreScan } = require('../services/scoring');
+const { runPythonJson, saveResult, scoreScan } = require('../services/scoring');
+const { userOwnsExam } = require('../middleware/ownership');
 
 const router = express.Router();
-const { userOwnsExam } = require('../middleware/ownership');
+
+const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
+// Uploads are held in memory, so this bounds one batch request's RAM use.
+const MAX_BATCH_IMAGES = 20;
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 15 * 1024 * 1024 },
+  limits: { fileSize: MAX_IMAGE_BYTES },
 });
 
-const backendRoot = path.resolve(__dirname, '..');
+const OMR_DIR = path.resolve(__dirname, '..', 'omr');
+const SCAN_SCRIPT = path.join(OMR_DIR, 'scan.py');
+const GENERATE_SCRIPT = path.join(OMR_DIR, 'generate.py');
 
-const defaultTemplate = path.join(
-  backendRoot,
-  'omr',
-  'templates',
-  'sample_template.json',
-);
+async function withTempDir(prefix, fn) {
+  const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), prefix));
+  try {
+    return await fn(dir);
+  } finally {
+    await fs.promises.rm(dir, { recursive: true, force: true });
+  }
+}
 
-const pythonScript = path.join(
-  backendRoot,
-  'omr',
-  'scan.py',
-);
+async function loadExam(examId) {
+  const result = await pool.query(
+    'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
+    [examId],
+  );
+  return result.rows[0];
+}
 
-const generatorScript = path.join(
-  backendRoot,
-  'omr',
-  'generate.py',
-);
-
-const bundledPython = path.join(
-  backendRoot,
-  'omr',
-  '.venv',
-  'Scripts',
-  'python.exe',
-);
-
-
+// Runs omr/scan.py on one image; resolves with the engine's SheetScan JSON.
 function runScanner(imagePath, templatePath, sourceName) {
-  const python = process.env.OMR_PYTHON
-    || (
-      process.platform === 'win32' &&
-      fs.existsSync(bundledPython)
-        ? bundledPython
-        : (
-          process.platform === 'win32'
-            ? 'python'
-            : 'python3'
-        )
-    );
-
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      python,
-      [
-        pythonScript,
-        '--image',
-        imagePath,
-        '--template',
-        templatePath,
-        '--source-name',
-        sourceName,
-      ],
-      {
-        cwd: backendRoot,
-        windowsHide: true,
-      },
-    );
-
-    let stdout = '';
-    let stderr = '';
-
-    child.stdout.on(
-      'data',
-      (chunk) => {
-        stdout += chunk.toString();
-      },
-    );
-
-    child.stderr.on(
-      'data',
-      (chunk) => {
-        stderr += chunk.toString();
-      },
-    );
-
-    child.on(
-      'error',
-      (error) => {
-        reject(error);
-      },
-    );
-
-    child.on(
-      'close',
-      (code) => {
-        if (code !== 0) {
-          reject(
-            new Error(
-              stderr.trim()
-              || `OMR scanner exited with code ${code}`,
-            ),
-          );
-
-          return;
-        }
-
-        try {
-          resolve(
-            JSON.parse(stdout),
-          );
-        } catch (error) {
-          reject(
-            new Error(
-              `OMR scanner returned invalid JSON: ${error.message}`,
-            ),
-          );
-        }
-      },
-    );
-  });
+  return runPythonJson(SCAN_SCRIPT, [
+    '--image', imagePath,
+    '--template', templatePath,
+    '--source-name', sourceName,
+  ]);
 }
 
-function runGenerator(outputPath, exam, templateOutput) {
-  const python = process.env.OMR_PYTHON
-    || (process.platform === 'win32' ? 'python' : 'python3');
-
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      python,
-      [
-        generatorScript,
-        '--exam-name',
-        String(exam.title),
-        '--subject',
-        String(exam.subject || ''),
-        '--questions',
-        String(exam.total_questions),
-        '--roll-digits',
-        String(exam.roll_digits ?? 7),
-        '--registration-digits',
-        String(exam.registration_digits ?? 10),
-        '--output',
-        outputPath,
-        ...(templateOutput ? ['--template-output', templateOutput] : []),
-      ],
-      { cwd: backendRoot, windowsHide: true },
-    );
-
-    let stderr = '';
-    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
-    child.on('error', reject);
-    child.on('close', (code) => {
-      if (code === 0) return resolve();
-      reject(new Error(stderr.trim() || `OMR generator exited with code ${code}`));
-    });
-  });
+// Renders the exam's answer sheet to `pdfPath` and, if given, writes the
+// matching template JSON (bubble positions) to `templatePath`.
+function runGenerator(pdfPath, exam, templatePath) {
+  return runPythonJson(GENERATE_SCRIPT, [
+    '--exam-name', String(exam.title),
+    '--subject', String(exam.subject || ''),
+    '--questions', String(exam.total_questions),
+    '--roll-digits', String(exam.roll_digits ?? 7),
+    '--registration-digits', String(exam.registration_digits ?? 10),
+    '--output', pdfPath,
+    ...(templatePath ? ['--template-output', templatePath] : []),
+  ], { parseJson: false });
 }
 
-async function saveScanResult({ examId, requestId, result, sourceName }) {
+async function generateTemplate(dir, exam) {
+  const templatePath = path.join(dir, 'exam-template.json');
+  await runGenerator(path.join(dir, 'exam-sheet.pdf'), exam, templatePath);
+  return templatePath;
+}
+
+// Scans one uploaded image in `dir` and stores the result. Returns
+// { scanId, result }.
+async function scanImage({ dir, image, templatePath, examId }) {
+  const scanId = crypto.randomUUID();
+  const sourceName = image.originalname || scanId;
+  // Fixed file name: the client-supplied name is only used as a label.
+  const extension = path.extname(sourceName);
+  const safeExtension = /^\.[a-z0-9]{1,5}$/i.test(extension) ? extension : '';
+  const imagePath = path.join(dir, `upload-${scanId}${safeExtension}`);
+  await fs.promises.writeFile(imagePath, image.buffer);
+
+  const result = await runScanner(imagePath, templatePath, sourceName);
+  await saveScanResult({ examId, scanId, result, sourceName });
+  return { scanId, result };
+}
+
+// Stores the engine output: one omr_scans row (summary + raw JSON) and one
+// omr_answers row per question, in a single transaction.
+async function saveScanResult({ examId, scanId, result, sourceName }) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -182,7 +119,7 @@ async function saveScanResult({ examId, requestId, result, sourceName }) {
                 $11::jsonb, $12::jsonb, $13::jsonb)
       `,
       [
-        requestId, examId, result.source || sourceName || '', result.template_id,
+        scanId, examId, result.source || sourceName || '', result.template_id,
         result.ok, result.roll?.value || null, result.registration?.value || null,
         result.qr_payload || '', result.needs_review, JSON.stringify(result.quality || {}),
         JSON.stringify(result.warnings || []), JSON.stringify(result.errors || []),
@@ -197,7 +134,7 @@ async function saveScanResult({ examId, requestId, result, sourceName }) {
             (scan_id, question_number, value, status, confidence, scores)
           VALUES ($1, $2, $3, $4, $5, $6::jsonb)
         `,
-        [requestId, answer.index, answer.value || null, answer.status,
+        [scanId, answer.index, answer.value || null, answer.status,
           answer.confidence, JSON.stringify(answer.scores || [])],
       );
     }
@@ -210,7 +147,45 @@ async function saveScanResult({ examId, requestId, result, sourceName }) {
   }
 }
 
-router.post('/batch', upload.array('images', 100), async (req, res) => {
+router.post(
+  '/scan',
+  upload.fields([{ name: 'image', maxCount: 1 }, { name: 'template', maxCount: 1 }]),
+  async (req, res) => {
+    const image = req.files?.image?.[0];
+    const template = req.files?.template?.[0];
+    const { exam_id: examId } = req.body;
+
+    if (!image) return res.status(400).json({ message: 'image file is required' });
+    if (!examId) return res.status(400).json({ message: 'exam_id is required' });
+    // Only the exam's owner may upload scans for it (404 for anyone else).
+    if (!(await userOwnsExam(examId, req.user.id))) {
+      return res.status(404).json({ message: 'Exam not found' });
+    }
+
+    try {
+      const { scanId, result } = await withTempDir('assessly-omr-', async (dir) => {
+        let templatePath;
+        if (template) {
+          templatePath = path.join(dir, 'uploaded-template.json');
+          await fs.promises.writeFile(templatePath, template.buffer);
+        } else {
+          templatePath = await generateTemplate(dir, await loadExam(examId));
+        }
+        return scanImage({ dir, image, templatePath, examId });
+      });
+
+      // result_id is the scan id; pass it as scan_id to POST /api/scoring/score.
+      return res.status(200).json({ ...result, result_id: scanId, exam_id: examId });
+    } catch (error) {
+      console.error('OMR scan error:', error.message);
+      return res.status(500).json({ message: 'OMR scan could not be completed' });
+    }
+  },
+);
+
+// Scans and scores up to MAX_BATCH_IMAGES sheets one after another. One bad
+// image does not fail the batch: each entry reports ok / error separately.
+router.post('/batch', upload.array('images', MAX_BATCH_IMAGES), async (req, res) => {
   const images = req.files || [];
   const { exam_id: examId } = req.body;
   if (!examId) return res.status(400).json({ message: 'exam_id is required' });
@@ -219,48 +194,47 @@ router.post('/batch', upload.array('images', 100), async (req, res) => {
     return res.status(404).json({ message: 'Exam not found' });
   }
 
-  const results = [];
-  const examQuery = await pool.query(
-    'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
-    [examId],
-  );
-  const exam = examQuery.rows[0];
-  for (const image of images) {
-    const requestId = crypto.randomUUID();
-    let temporaryDirectory;
-    try {
-      temporaryDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'assessly-omr-batch-'));
-      const imagePath = path.join(temporaryDirectory, path.basename(image.originalname || 'scan-image'));
-      const templatePath = path.join(temporaryDirectory, 'exam-template.json');
-      await runGenerator(path.join(temporaryDirectory, 'template.pdf'), exam, templatePath);
-      await fs.promises.writeFile(imagePath, image.buffer);
-      const scan = await runScanner(imagePath, templatePath, image.originalname || requestId);
-      await saveScanResult({ examId, requestId, result: scan, sourceName: image.originalname });
-      const scored = await scoreScan({ examId, scanId: requestId, name: '' });
-      const resultId = crypto.randomUUID();
-      await pool.query(
-        `
-          INSERT INTO exam_results
-            (id, exam_id, scan_id, roll_number, registration_number, correct,
-             wrong, blank, ambiguous, marks, max_marks, percentage, grade,
-             passed, needs_review)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-        `,
-        [resultId, examId, requestId, scored.roll || null, scored.registration || null,
-          scored.correct, scored.wrong, scored.blank, scored.ambiguous, scored.marks,
-          scored.max_marks, scored.percentage, scored.grade, scored.passed,
-          scored.ambiguous > 0],
-      );
-      results.push({ source: image.originalname, ok: true, result_id: resultId, scan_id: requestId,
-        roll_number: scored.roll || null, registration_number: scored.registration || null,
-        marks: scored.marks, percentage: scored.percentage });
-    } catch (error) {
-      results.push({ source: image.originalname, ok: false, error: error.message });
-    } finally {
-      if (temporaryDirectory) await fs.promises.rm(temporaryDirectory, { recursive: true, force: true });
-    }
+  try {
+    const results = await withTempDir('assessly-omr-batch-', async (dir) => {
+      const templatePath = await generateTemplate(dir, await loadExam(examId));
+      const entries = [];
+      for (const image of images) {
+        try {
+          const { scanId, result: scan } = await scanImage({ dir, image, templatePath, examId });
+          // Not a readable sheet: report it instead of saving a 0-mark result.
+          if (!scan.ok) {
+            entries.push({
+              source: image.originalname,
+              ok: false,
+              scan_id: scanId,
+              error: (scan.errors || []).join('; ') || 'This sheet could not be read',
+            });
+            continue;
+          }
+          const scored = await scoreScan({ examId, scanId });
+          const resultId = await saveResult({ examId, scanId, scored });
+          entries.push({
+            source: image.originalname,
+            ok: true,
+            result_id: resultId,
+            scan_id: scanId,
+            roll_number: scored.roll || null,
+            registration_number: scored.registration || null,
+            marks: scored.marks,
+            percentage: scored.percentage,
+          });
+        } catch (error) {
+          console.error('OMR batch item error:', error.message);
+          entries.push({ source: image.originalname, ok: false, error: 'This sheet could not be read' });
+        }
+      }
+      return entries;
+    });
+    return res.status(200).json({ exam_id: examId, count: results.length, results });
+  } catch (error) {
+    console.error('OMR batch error:', error.message);
+    return res.status(500).json({ message: 'OMR batch could not be completed' });
   }
-  return res.status(200).json({ exam_id: examId, count: results.length, results });
 });
 
 router.get('/exam/:exam_id/sheet', async (req, res) => {
@@ -269,397 +243,21 @@ router.get('/exam/:exam_id/sheet', async (req, res) => {
     return res.status(404).json({ message: 'Exam not found' });
   }
 
-  const examQuery = await pool.query(
-    'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
-    [examId],
-  );
-  const exam = examQuery.rows[0];
-  const temporaryDirectory = await fs.promises.mkdtemp(
-    path.join(os.tmpdir(), 'assessly-omr-sheet-'),
-  );
-  const outputPath = path.join(temporaryDirectory, 'omr-sheet.pdf');
+  const exam = await loadExam(examId);
+  const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'assessly-omr-sheet-'));
+  const cleanup = () => fs.promises.rm(dir, { recursive: true, force: true });
+  const outputPath = path.join(dir, 'omr-sheet.pdf');
 
   try {
     await runGenerator(outputPath, exam);
-    return res.download(outputPath, `${String(exam.title).replace(/[^a-z0-9]+/gi, '-')}-omr.pdf`, async () => {
-      await fs.promises.rm(temporaryDirectory, { recursive: true, force: true });
-    });
+    const fileName = `${String(exam.title).replace(/[^a-z0-9]+/gi, '-')}-omr.pdf`;
+    // res.download streams asynchronously, so clean up in its callback.
+    return res.download(outputPath, fileName, cleanup);
   } catch (error) {
-    await fs.promises.rm(temporaryDirectory, { recursive: true, force: true });
+    await cleanup();
     console.error('OMR generation error:', error.message);
-    return res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: 'Could not generate the answer sheet' });
   }
 });
-
-
-router.post(
-  '/scan',
-  upload.fields([
-    {
-      name: 'image',
-      maxCount: 1,
-    },
-    {
-      name: 'template',
-      maxCount: 1,
-    },
-  ]),
-  async (req, res) => {
-
-    const image =
-      req.files?.image?.[0];
-
-    const template =
-      req.files?.template?.[0];
-
-    const { exam_id } =
-      req.body;
-
-
-    // ------------------------------------------------------------
-    // Validate image
-    // ------------------------------------------------------------
-
-    if (!image) {
-      return res.status(400).json({
-        message: 'image file is required',
-      });
-    }
-
-
-    // ------------------------------------------------------------
-    // Validate exam_id
-    // ------------------------------------------------------------
-
-    if (!exam_id) {
-      return res.status(400).json({
-        message: 'exam_id is required',
-      });
-    }
-
-
-    // ------------------------------------------------------------
-    // Verify that the exam exists
-    // ------------------------------------------------------------
-
-    // Only the exam's owner may upload scans for it (404 for anyone else).
-    const ownsExam = await userOwnsExam(exam_id, req.user.id);
-
-    if (!ownsExam) {
-      return res.status(404).json({
-        message: 'Exam not found',
-      });
-    }
-
-
-    const requestId =
-      crypto.randomUUID();
-
-    let temporaryDirectory;
-
-
-    try {
-
-      // ----------------------------------------------------------
-      // Create temporary directory
-      // ----------------------------------------------------------
-
-      temporaryDirectory =
-        await fs.promises.mkdtemp(
-          path.join(
-            os.tmpdir(),
-            'assessly-omr-',
-          ),
-        );
-
-
-      // ----------------------------------------------------------
-      // Temporary image path
-      // ----------------------------------------------------------
-
-      const imagePath =
-        path.join(
-          temporaryDirectory,
-          path.basename(
-            image.originalname
-              || 'scan-image',
-          ),
-        );
-
-
-      // ----------------------------------------------------------
-      // Template path
-      // ----------------------------------------------------------
-
-      let templatePath =
-        template
-          ? path.join(
-              temporaryDirectory,
-              path.basename(
-                template.originalname
-                  || 'template.json',
-              ),
-            )
-          : defaultTemplate;
-
-
-      // ----------------------------------------------------------
-      // Save uploaded image
-      // ----------------------------------------------------------
-
-      await fs.promises.writeFile(
-        imagePath,
-        image.buffer,
-      );
-
-
-      // ----------------------------------------------------------
-      // Save uploaded template if provided
-      // ----------------------------------------------------------
-
-      if (template) {
-        await fs.promises.writeFile(
-          templatePath,
-          template.buffer,
-        );
-      } else {
-        const examQuery = await pool.query(
-          'SELECT title, subject, total_questions, roll_digits, registration_digits FROM exams WHERE id = $1',
-          [exam_id],
-        );
-        await runGenerator(
-          path.join(temporaryDirectory, 'template.pdf'),
-          examQuery.rows[0],
-          templatePath,
-        );
-      }
-
-
-      // ----------------------------------------------------------
-      // Run Python OMR scanner
-      // ----------------------------------------------------------
-
-      const result =
-        await runScanner(
-          imagePath,
-          templatePath,
-          image.originalname
-            || requestId,
-        );
-
-
-      // ----------------------------------------------------------
-      // Database transaction
-      // ----------------------------------------------------------
-
-      const client =
-        await pool.connect();
-
-      try {
-
-        await client.query(
-          'BEGIN',
-        );
-
-
-        // --------------------------------------------------------
-        // Save OMR scan
-        // --------------------------------------------------------
-
-        await client.query(
-          `
-            INSERT INTO omr_scans (
-              id,
-              exam_id,
-              source_name,
-              template_id,
-              ok,
-              roll_number,
-              registration_number,
-              qr_payload,
-              needs_review,
-              quality,
-              warnings,
-              errors,
-              raw_result
-            )
-            VALUES (
-              $1,
-              $2,
-              $3,
-              $4,
-              $5,
-              $6,
-              $7,
-              $8,
-              $9,
-              $10::jsonb,
-              $11::jsonb,
-              $12::jsonb,
-              $13::jsonb
-            )
-          `,
-          [
-            requestId,
-
-            exam_id,
-
-            result.source
-              || image.originalname
-              || '',
-
-            result.template_id,
-
-            result.ok,
-
-            result.roll?.value
-              || null,
-
-            result.registration?.value
-              || null,
-
-            result.qr_payload
-              || '',
-
-            result.needs_review,
-
-            JSON.stringify(
-              result.quality
-                || {},
-            ),
-
-            JSON.stringify(
-              result.warnings
-                || [],
-            ),
-
-            JSON.stringify(
-              result.errors
-                || [],
-            ),
-
-            JSON.stringify(
-              result,
-            ),
-          ],
-        );
-
-
-        // --------------------------------------------------------
-        // Save individual answers
-        // --------------------------------------------------------
-
-        for (
-          const answer
-          of result.answers || []
-        ) {
-
-          await client.query(
-            `
-              INSERT INTO omr_answers (
-                scan_id,
-                question_number,
-                value,
-                status,
-                confidence,
-                scores
-              )
-              VALUES (
-                $1,
-                $2,
-                $3,
-                $4,
-                $5,
-                $6::jsonb
-              )
-            `,
-            [
-              requestId,
-
-              answer.index,
-
-              answer.value
-                || null,
-
-              answer.status,
-
-              answer.confidence,
-
-              JSON.stringify(
-                answer.scores
-                  || [],
-              ),
-            ],
-          );
-        }
-
-
-        // --------------------------------------------------------
-        // Commit transaction
-        // --------------------------------------------------------
-
-        await client.query(
-          'COMMIT',
-        );
-
-      } catch (error) {
-
-        await client.query(
-          'ROLLBACK',
-        );
-
-        throw error;
-
-      } finally {
-
-        client.release();
-      }
-
-
-      // ----------------------------------------------------------
-      // Response
-      // ----------------------------------------------------------
-
-      return res.status(200).json({
-        ...result,
-
-        result_id:
-          requestId,
-
-        exam_id,
-      });
-
-    } catch (error) {
-
-      console.error(
-        'OMR scan error:',
-        error.message,
-      );
-
-      return res.status(500).json({
-        message:
-          'OMR scan could not be completed',
-      });
-
-    } finally {
-
-      // ----------------------------------------------------------
-      // Remove temporary directory
-      // ----------------------------------------------------------
-
-      if (temporaryDirectory) {
-
-        await fs.promises.rm(
-          temporaryDirectory,
-          {
-            recursive: true,
-            force: true,
-          },
-        );
-      }
-    }
-  },
-);
-
 
 module.exports = router;

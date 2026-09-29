@@ -5,6 +5,7 @@ import 'package:assessly/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+/// First screen: restores the saved session, then opens Home (signed in) or Onboarding.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

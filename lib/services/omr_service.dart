@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -8,6 +7,11 @@ import '../utils/image_optimizer.dart';
 import 'api_config.dart';
 import 'authed_http.dart';
 
+/// Uploads one answer-sheet photo to `POST /api/omr/scan`.
+///
+/// The server reads the bubbles with the Python engine, stores the scan and
+/// returns the engine's JSON plus `result_id` (the scan id to pass to
+/// [ScoringService]). Scoring is a separate step; see [GradingService].
 class OmrService {
   static String get baseUrl => ApiConfig.baseUrl;
 
@@ -39,15 +43,7 @@ class OmrService {
 
       AuthedHttp.notifyIfUnauthorized(response.statusCode);
 
-      dynamic decodedBody;
-      try {
-        decodedBody = jsonDecode(response.body);
-      } on FormatException {
-        decodedBody = null;
-      }
-      final data = decodedBody is Map<String, dynamic>
-          ? decodedBody
-          : <String, dynamic>{};
+      final data = decodeJsonObject(response.body);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
         throw Exception(

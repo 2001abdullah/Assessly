@@ -31,6 +31,8 @@ END $$;
 
 CREATE INDEX IF NOT EXISTS idx_exams_user_id ON exams (user_id);
 
+COMMIT;
+
 -- ---------------------------------------------------------------------------
 -- EXISTING EXAMS: they have no owner yet, and the API only shows a user their
 -- own exams, so until you assign them nobody will see them.

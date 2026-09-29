@@ -1,37 +1,22 @@
-const jwt=require('jsonwebtoken');
+// Requires `Authorization: Bearer <JWT>` (issued by routes/auth.js).
+// On success sets req.user = { id, email, name, iat, exp }; otherwise 401.
+// The app treats any 401 as "session expired" and signs the user out.
 
-const authMiddleware= (req,res,next)=>{
-    const authHeader=req.headers.authorization;
+const jwt = require('jsonwebtoken');
 
-    if(!authHeader)
-    {
-        return res.status(401).json(
-            {
-                message:"authorization token required"
-            }
-        );
-    }
+function authMiddleware(req, res, next) {
+  const [scheme, token] = String(req.headers.authorization || '').split(' ');
 
-    const token=authHeader.split(" ")[1];
+  if (scheme !== 'Bearer' || !token) {
+    return res.status(401).json({ message: 'authorization token required' });
+  }
 
-    try{
-        const decoded= jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        );
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    return next();
+  } catch (_error) {
+    return res.status(401).json({ message: 'invalid or expired token' });
+  }
+}
 
-        req.user=decoded;
-
-        next();
-    }
-    catch(error)
-    {
-        return res.status(401).json(
-            {
-                message:'invalid or expired token'
-            }
-        )
-    }
-};
-
-module.exports=authMiddleware;
+module.exports = authMiddleware;
