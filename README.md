@@ -7,7 +7,7 @@ and a Python-based optical mark recognition (OMR) pipeline.
 
 ## Install the Android beta
 
-[Download Assessly v1.0.0 Beta 2 for Android](https://github.com/2001abdullah/Assessly/releases/download/v1.0.0-beta.2/Assessly-v1.0.0-beta.2.apk)
+[Download Assessly v1.0.0 Beta 3 for Android](https://github.com/2001abdullah/Assessly/releases/download/v1.0.0-beta.3/Assessly-v1.0.0-beta.3.apk)
 
 [Download the latest Android APK release](https://github.com/2001abdullah/Assessly/releases/latest)
 
@@ -258,8 +258,8 @@ flutter build apk --release --dart-define=API_BASE_URL=https://assessly-api.onre
 You can also build it from GitHub without changing source code. Open
 **Actions > Android Release > Run workflow**, enter the current Render API URL
 in `api_base_url`, and download the `assessly-android-release` artifact. If a
-release tag is supplied, the workflow also attaches the APK to a GitHub
-release.
+release tag is supplied, the workflow also attaches the installable APK and
+the Play Store AAB to a GitHub release.
 
 ### iOS release
 
